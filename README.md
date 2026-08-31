@@ -92,10 +92,10 @@ and comparative model performance.
 
 **Focus:** Classification • Data Analysis • ML
 
-![GitHub Stats](STATS_URL)
+
 ## 📊 GitHub Activity
 
-[GitHub Statistics]
+![GitHub Stats](STATS_URL)
 
 [Contribution Graph]
 
