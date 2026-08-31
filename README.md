@@ -1,10 +1,8 @@
 ## Hi there 👋
 
-
-## `$ whoami`
 <div align="center">
 
-<h1>Hi, I'm Shrijit 👋</h1>
+<h1>Hi, I'm Shrijit </h1>
 
 <h3>Software Developer • AI/ML Enthusiast • Problem Solver</h3>
 
@@ -17,7 +15,7 @@ technology that solves real-world problems.
 I enjoy understanding how systems work, experimenting with
 new technologies, and turning ideas into practical projects.
 
-Software Developer | AI/ML Enthusiast | Problem Solver | Tech Explorer
+<h3>Software Developer | AI/ML Enthusiast | Problem Solver | Tech Explorer</h3>
 <p align="center">
 
 <a href="YOUR_LINKEDIN">
