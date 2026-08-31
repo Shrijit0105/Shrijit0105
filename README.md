@@ -67,7 +67,7 @@ Git • GitHub • VS Code
 
 ## 🧠 Currently Learning
 
-```text
+
 01  Data Structures & Algorithms
 02  Advanced Python
 03  Software Engineering
