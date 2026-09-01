@@ -17,13 +17,16 @@ new technologies, and turning ideas into practical projects.
 
 <h3>Software Developer | AI/ML Enthusiast | Problem Solver | Tech Explorer</h3>
 <p align="center">
+    
+<h5>Connect with me</h5>
 
 <a href="https://www.linkedin.com/in/shrijit-sengupta-7815a5323">
-<img srcimg width="2737" height="883" alt="linkedIn_PNG34" src="https://github.com/user-attachments/assets/7e7379f5-6d4e-471e-b591-ba17f659a30b" />
+<img width="2737" height="883" alt="linkedIn_PNG34" src="https://github.com/user-attachments/assets/7e7379f5-6d4e-471e-b591-ba17f659a30b" />
 </a>
 
+
 <a href="detectives0105@gmail.com">
-<img src="..." />
+<img src="https://static.vecteezy.com/system/resources/previews/022/484/516/original/google-mail-gmail-icon-logo-symbol-free-png.png" />
 </a>
 
 <a href="YOUR_PORTFOLIO">
