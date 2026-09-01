@@ -1,4 +1,4 @@
-## Hi there 👋
+## Hi there 
 
 <div align="center">
 
@@ -32,7 +32,7 @@ new technologies, and turning ideas into practical projects.
 
 </p>
 
-## ⚡ Tech Stack
+##  Tech Stack
 
 ### Languages
 
@@ -58,21 +58,21 @@ Linux • AWS • Virtual Machines
 
 Git • GitHub • VS Code
 
-🐍 Python
-☕ Java
-🐧 Linux
-🔧 Git
+<li>🐍 Python </li>
+<li>☕ Java </li>
+<li>🐧 Linux </li>
+<li>🔧 Git </li>
 
 ## 🧠 Currently Learning
 
 
-01  Data Structures & Algorithms
-02  Advanced Python
-03  Software Engineering
-04  Cloud Computing
-05  Docker & Containers
-06  Machine Learning
-07  Backend Development
+<li>01  Data Structures & Algorithms
+    02  Advanced Python
+    03  Software Engineering
+    04  Cloud Computing
+    05  Docker & Containers
+    06  Machine Learning
+    07  Backend Development </li>
 
 ## 🚀 Currently Building
 
