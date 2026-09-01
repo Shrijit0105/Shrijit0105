@@ -18,11 +18,12 @@ new technologies, and turning ideas into practical projects.
 <h3>Software Developer | AI/ML Enthusiast | Problem Solver | Tech Explorer</h3>
 <p align="center">
 
-<a href="YOUR_LINKEDIN">
-<img src="..." />
+<a href="https://www.linkedin.com/in/shrijit-sengupta-7815a5323">
+<img src="<img width="2737" height="883" alt="linkedIn_PNG34" src="https://github.com/user-attachments/assets/7e7379f5-6d4e-471e-b591-ba17f659a30b" />
+" />
 </a>
 
-<a href="YOUR_EMAIL">
+<a href="detectives0105@gmail.com">
 <img src="..." />
 </a>
 
