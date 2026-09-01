@@ -19,8 +19,7 @@ new technologies, and turning ideas into practical projects.
 <p align="center">
 
 <a href="https://www.linkedin.com/in/shrijit-sengupta-7815a5323">
-<img src="<img width="2737" height="883" alt="linkedIn_PNG34" src="https://github.com/user-attachments/assets/7e7379f5-6d4e-471e-b591-ba17f659a30b" />
-" />
+<img srcimg width="2737" height="883" alt="linkedIn_PNG34" src="https://github.com/user-attachments/assets/7e7379f5-6d4e-471e-b591-ba17f659a30b" />
 </a>
 
 <a href="detectives0105@gmail.com">
