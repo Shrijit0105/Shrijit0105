@@ -66,13 +66,14 @@ new technologies, and turning ideas into practical projects.
 ## 🧠 Currently Learning
 
 
-<li>01  Data Structures & Algorithms
-    02  Advanced Python
-    03  Software Engineering
-    04  Cloud Computing
-    05  Docker & Containers
-    06  Machine Learning
-    07  Backend Development </li>
+<li><ol>01 Data Structures & Algorithms</ol>
+    <ol>02 Advanced Python</ol>
+    <ol>03 Software Engineering</ol>
+    <ol>04 Cloud Computing</ol>
+    <ol>05 Docker & Containers</ol>
+    <ol>06 Machine Learning</ol>
+     <ol>07 Backend Development</ol> 
+</li>
 
 ## 🚀 Currently Building
 
