@@ -34,9 +34,9 @@ new technologies, and turning ideas into practical projects.
 ##  Tech Stack
 
 ### Languages
-<li>Python</li> 
-<li>Java</li> 
-<li>C</li> 
+<li><img width="85" height="83" alt="py_PNG34" src="https://www.pngmart.com/files/23/Python-Logo-PNG-Clipart.png"/>Python</li> 
+<li><img width="85" height="83" alt="Java_PNG34" src="https://www.citypng.com/public/uploads/preview/hd-java-logo-transparent-background-701751694771845zainlxmlfo.png" />Java</li> 
+<li><img width="85" height="83" alt="C_PNG34" src="https://pngimg.com/uploads/letter_c/letter_c_PNG22.png"/>C</li> 
 
 
 ### AI / Machine Learning
