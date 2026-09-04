@@ -40,11 +40,11 @@ new technologies, and turning ideas into practical projects.
 
 
 ### AI / Machine Learning
-<li><img width="85" height="83" alt="np_PNG34" src="https://www.pngrepo.com/download/373938/numpy.png" />NumPy 
-<img width="85" height="83" alt="pd_PNG34" src="https://hutsons-hacks.info/wp-content/uploads/2020/09/1200px-Pandas_logo.svg_-1-1024x414.png" />Pandas 
-<img width="85" height="83" alt="skl_PNG34" src="https://vectorseek.com/wp-content/uploads/2023/02/Scikit-learn-Logo-Vector.jpg" />Scikit-learn 
-<img width="85" height="83" alt="xgb_PNG34" src="https://miro.medium.com/max/720/1*yhE3CBwTrlXcAIvNJNTQiA.png" />XG Boost 
-<img width="85" height="83" alt="rf_PNG34" src="https://static.thenounproject.com/png/961660-200.png" />Random Forest</li>
+<li><img width="85" height="83" alt="np_PNG34" src="https://www.pngrepo.com/download/373938/numpy.png" />NumPy </li>
+<li><img width="85" height="83" alt="pd_PNG34" src="https://hutsons-hacks.info/wp-content/uploads/2020/09/1200px-Pandas_logo.svg_-1-1024x414.png"/>Pandas</li> 
+<li><img width="85" height="83" alt="skl_PNG34" src="https://vectorseek.com/wp-content/uploads/2023/02/Scikit-learn-Logo-Vector.jpg" />Scikit-learn </li>
+<li><img width="85" height="83" alt="xgb_PNG34" src="https://miro.medium.com/max/720/1*yhE3CBwTrlXcAIvNJNTQiA.png" />XG Boost </li>
+<li><img width="85" height="83" alt="rf_PNG34" src="https://static.thenounproject.com/png/961660-200.png" />Random Forest</li>
 
 ### Development
 <li><img width="85" height="80" alt="html_PNG34" src="https://th.bing.com/th/id/OIP.lxMbLFRw0sgOlOwjC62ySwHaKc?r=0&o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3"/>HTML </li> 
