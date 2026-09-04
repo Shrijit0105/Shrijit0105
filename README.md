@@ -50,7 +50,7 @@ NumPy • Pandas • Scikit-learn • XGBoost
 HTML • CSS • JavaScript • Streamlit
 
 ### Databases
-<li><img width="173" height="83" alt="sql_PNG34" src="https://img.icons8.com/fluent/1200/sql.jpg"/>SQL</li>
+<li><img width="80" height="80" alt="sql_PNG34" src="https://img.icons8.com/fluent/1200/sql.jpg"/>SQL</li>
 MongoDB
 
 ### Cloud / Systems
