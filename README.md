@@ -46,21 +46,20 @@ Python • Java • C • JavaScript
 NumPy • Pandas • Scikit-learn • XGBoost 
 
 ### Development
-
-HTML • CSS • JavaScript • Streamlit
+HTML  
+CSS  
+JavaScript 
+Streamlit
 
 ### Databases
-<li><img width="80" height="80" alt="sql_PNG34" src="https://img.icons8.com/fluent/1200/sql.jpg"/>SQL</li>
-MongoDB
+<li><img width="80" height="80" alt="sql_JPG34" src="https://img.icons8.com/fluent/1200/sql.jpg"/>SQL</li>
+<li><img width="80" height="80" alt="mongo_PNG34" src="https://images.seeklogo.com/logo-png/50/1/mongodb-icon-logo-png_seeklogo-503274.png"/>MongoDB</li>
 
-### Cloud / Systems
 
-Linux 
-Virtual Machines
+### Version Control
 
-### Tools
-
-Git • GitHub • VS Code
+<li><img width="80" height="80" alt="git_PNG34" src="https://cdn.freebiesupply.com/logos/large/2x/git-icon-logo-png-transparent.png"/>Git </li>
+<li><img width="80" height="80" alt="github_PNG34" src="https://www.pngall.com/wp-content/uploads/13/Github-Logo-Transparent.png"/>GitHub</li>
 
 
 
@@ -96,7 +95,7 @@ and comparative model performance.
 
 ## 📊 GitHub Activity
 
-![GitHub Stats](https://ghstats.dev/api/card?username=Shrijit)
+![GitHub Stats](https://ghstats.dev/api/card?username=Shrijit0105)
 
 
 
