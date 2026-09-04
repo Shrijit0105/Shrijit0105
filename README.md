@@ -40,7 +40,7 @@ new technologies, and turning ideas into practical projects.
 
 
 ### AI / Machine Learning
-<li><img width="85" height="83" alt="np_PNG34" src="https://www.pngrepo.com/download/373938/numpy.png" />NumPy </li>
+<li><img width="85" height="83" alt="np_PNG34" src="https://vectorseek.com/wp-content/uploads/2023/08/Numpy-Logo-Vector.svg-.png" />NumPy </li>
 <li><img width="85" height="83" alt="pd_PNG34" src="https://hutsons-hacks.info/wp-content/uploads/2020/09/1200px-Pandas_logo.svg_-1-1024x414.png"/>Pandas</li> 
 <li><img width="85" height="83" alt="skl_PNG34" src="https://vectorseek.com/wp-content/uploads/2023/02/Scikit-learn-Logo-Vector.jpg" />Scikit-learn </li>
 <li><img width="85" height="83" alt="xgb_PNG34" src="https://miro.medium.com/max/720/1*yhE3CBwTrlXcAIvNJNTQiA.png" />XG Boost </li>
