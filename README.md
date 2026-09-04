@@ -29,37 +29,37 @@ new technologies, and turning ideas into practical projects.
 <img width="173" height="83" alt="gmail_PNG34" src="https://www.pngall.com/wp-content/uploads/12/Gmail-By-Google-PNG-Pic.png" />
 </a>
 
-<a href="YOUR_PORTFOLIO">
-<img src="..." />
-</a>
-
 </p>
 
 ##  Tech Stack
 
 ### Languages
+<li>Python</li> 
+<li>Java</li> 
+<li>C</li> 
 
-Python • Java • C • JavaScript
 
 ### AI / Machine Learning
 
-NumPy • Pandas • Scikit-learn • XGBoost 
-
+NumPy 
+Pandas 
+Scikit-learn 
+XG Boost 
+Random Forest
 ### Development
-HTML  
-CSS  
-JavaScript 
-Streamlit
+<li><img width="85" height="80" alt="html_PNG34" src="https://th.bing.com/th/id/OIP.lxMbLFRw0sgOlOwjC62ySwHaKc?r=0&o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3"/>HTML </li> 
+<li><img width="85" height="80" alt="css_PNG34" src="https://toppng.com/uploads/preview/css3-logo-vector-download-11573943110ujyqmvcq4d.png"/>CSS </li> 
+<li><img width="85" height="80" alt="js_PNG34" src="https://www.clipartmax.com/png/middle/470-4707396_javascript-icon-html-css-js-icons.png"/>JavaScript</li>
 
 ### Databases
-<li><img width="80" height="80" alt="sql_JPG34" src="https://img.icons8.com/fluent/1200/sql.jpg"/>SQL</li>
-<li><img width="80" height="80" alt="mongo_PNG34" src="https://images.seeklogo.com/logo-png/50/1/mongodb-icon-logo-png_seeklogo-503274.png"/>MongoDB</li>
+<li><img width="85" height="80" alt="sql_JPG34" src="https://img.icons8.com/fluent/1200/sql.jpg"/>SQL</li>
+<li><img width="85" height="80" alt="mongo_PNG34" src="https://images.seeklogo.com/logo-png/50/1/mongodb-icon-logo-png_seeklogo-503274.png"/>MongoDB</li>
 
 
 ### Version Control
 
-<li><img width="80" height="80" alt="git_PNG34" src="https://cdn.freebiesupply.com/logos/large/2x/git-icon-logo-png-transparent.png"/>Git </li>
-<li><img width="80" height="80" alt="github_PNG34" src="https://www.pngall.com/wp-content/uploads/13/Github-Logo-Transparent.png"/>GitHub</li>
+<li><img width="85" height="80" alt="git_PNG34" src="https://cdn.freebiesupply.com/logos/large/2x/git-icon-logo-png-transparent.png"/>Git </li>
+<li><img width="85" height="80" alt="github_PNG34" src="https://www.pngall.com/wp-content/uploads/13/Github-Logo-Transparent.png"/>GitHub</li>
 
 
 
