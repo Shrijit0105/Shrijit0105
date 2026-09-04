@@ -98,7 +98,7 @@ and comparative model performance.
 
 ## 📊 GitHub Activity
 
-![GitHub Stats](https://ghstats.dev/api/card?username=octocat)
+![GitHub Stats](https://ghstats.dev/api/card?username=Shrijit)
 
 [Contribution Graph]
 
