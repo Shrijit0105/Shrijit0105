@@ -26,7 +26,7 @@ new technologies, and turning ideas into practical projects.
 
 
 <a href="detectives0105@gmail.com">
-<img width="273" height="83" alt="gmail_PNG34" src="https://www.pngall.com/wp-content/uploads/12/Gmail-By-Google-PNG-Pic.png" />
+<img width="173" height="83" alt="gmail_PNG34" src="https://www.pngall.com/wp-content/uploads/12/Gmail-By-Google-PNG-Pic.png" />
 </a>
 
 <a href="YOUR_PORTFOLIO">
@@ -43,28 +43,26 @@ Python • Java • C • JavaScript
 
 ### AI / Machine Learning
 
-NumPy • Pandas • Scikit-learn • XGBoost
+NumPy • Pandas • Scikit-learn • XGBoost 
 
 ### Development
 
 HTML • CSS • JavaScript • Streamlit
 
 ### Databases
-
 SQL
+MongoDB
 
 ### Cloud / Systems
 
-Linux • AWS • Virtual Machines
+Linux 
+Virtual Machines
 
 ### Tools
 
 Git • GitHub • VS Code
 
-<li>🐍 Python </li>
-<li>☕ Java </li>
-<li>🐧 Linux </li>
-<li>🔧 Git </li>
+
 
 ## 🧠 Currently Learning
 
@@ -100,7 +98,6 @@ and comparative model performance.
 
 ![GitHub Stats](https://ghstats.dev/api/card?username=Shrijit)
 
-[Contribution Graph]
 
 
 ## 🎯 Goals
