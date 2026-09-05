@@ -1,4 +1,24 @@
 ## Hi there 
+[![All Contributors](https://img.shields.io/badge/all_contributors-17-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
+
+[![Build](https://github.com/Shrijit0105/fancy-git/actions/workflows/main.yml/badge.svg)](https://github.com/Shrijit0105/fancy-git/actions/workflows/main.yml)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+[![made-with-bash](https://img.shields.io/badge/Made%20with-Bash-1f425f.svg)](https://www.gnu.org/software/bash/)
+[![GitHub forks](https://img.shields.io/github/forks/Shrijit0105/fancy-git.svg)](https://gitHub.com/diogocavilha/fancy-git/)
+[![GitHub stars](https://img.shields.io/github/stars/Shrijit0105/fancy-git.svg)](https://GitHub.com/diogocavilha/fancy-git/stargazers/)
+
+![logo](https://github.com/Shrijit0105/fancy-git/blob/master/images/logo.png)
+
+FancyGit is a tool which works for Linux and MAC OS, that changes the terminal prompt in order to show you a few cool git informations when you're working on a git repo. It'll always keep you informed about the current branch status.
+
+:rocket: [Contributing](https://github.com/Shrijit0105/fancy-git/blob/master/CONTRIBUTING.md) | :monocle_face: [Changelog](https://github.com/Shrijti0105/fancy-git/blob/master/CHANGELOG.md) | :hammer: [Troubleshooting](https://github.com/Shrijit0105/fancy-git/blob/master/TROUBLESHOOTING.md)
+
+# :cupid: Installing
+
+```sh
+curl -sS https://raw.githubusercontent.com/diogocavilha/fancy-git/master/install.sh | sh
+```
 
 <div align="center",>
 
