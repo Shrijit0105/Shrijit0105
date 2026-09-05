@@ -42,40 +42,40 @@ new technologies, and turning ideas into practical projects.
 
 
 ### AI / Machine Learning
-<li><img width="85" height="83" alt="np_PNG34" src="https://studyopedia.com/wp-content/uploads/2022/03/numpy-big-logo-300x300.png"/>NumPy </li>
-<li><img width="85" height="83" alt="pd_PNG34" src="https://hutsons-hacks.info/wp-content/uploads/2020/09/1200px-Pandas_logo.svg_-1-1024x414.png"/>Pandas</li> 
-<li><img width="85" height="83" alt="skl_PNG34" src="https://vectorseek.com/wp-content/uploads/2023/02/Scikit-learn-Logo-Vector.jpg" />Scikit-learn </li>
-<li><img width="85" height="83" alt="xgb_PNG34" src="https://miro.medium.com/max/720/1*yhE3CBwTrlXcAIvNJNTQiA.png" />XG Boost </li>
-<li><img width="85" height="83" alt="rf_PNG34" src="https://static.thenounproject.com/png/961660-200.png" />Random Forest</li>
+<ol><img width="85" height="83" alt="np_PNG34" src="https://studyopedia.com/wp-content/uploads/2022/03/numpy-big-logo-300x300.png"/>NumPy </ol>
+<ol><img width="85" height="83" alt="pd_PNG34" src="https://hutsons-hacks.info/wp-content/uploads/2020/09/1200px-Pandas_logo.svg_-1-1024x414.png"/>Pandas</ol> 
+<ol><img width="85" height="83" alt="skl_PNG34" src="https://vectorseek.com/wp-content/uploads/2023/02/Scikit-learn-Logo-Vector.jpg" />Scikit-learn </ol>
+<ol><img width="85" height="83" alt="xgb_PNG34" src="https://miro.medium.com/max/720/1*yhE3CBwTrlXcAIvNJNTQiA.png" />XG Boost </ol>
+<ol><img width="85" height="83" alt="rf_PNG34" src="https://static.thenounproject.com/png/961660-200.png" />Random Forest</ol>
 
 ### Development
-<li><img width="85" height="80" alt="html_PNG34" src="https://th.bing.com/th/id/OIP.lxMbLFRw0sgOlOwjC62ySwHaKc?r=0&o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3"/>HTML </li> 
-<li><img width="85" height="80" alt="css_PNG34" src="https://toppng.com/uploads/preview/css3-logo-vector-download-11573943110ujyqmvcq4d.png"/>CSS </li> 
-<li><img width="85" height="80" alt="js_PNG34" src="https://www.clipartmax.com/png/middle/470-4707396_javascript-icon-html-css-js-icons.png"/>JavaScript</li>
+<ol><img width="85" height="80" alt="html_PNG34" src="https://th.bing.com/th/id/OIP.lxMbLFRw0sgOlOwjC62ySwHaKc?r=0&o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3"/>HTML </ol> 
+<ol><img width="85" height="80" alt="css_PNG34" src="https://toppng.com/uploads/preview/css3-logo-vector-download-11573943110ujyqmvcq4d.png"/>CSS </ol> 
+<ol><img width="85" height="80" alt="js_PNG34" src="https://www.clipartmax.com/png/middle/470-4707396_javascript-icon-html-css-js-icons.png"/>JavaScript</ol>
 
 ### Databases
-<li><img width="85" height="80" alt="sql_JPG34" src="https://img.icons8.com/fluent/1200/sql.jpg"/>SQL</li>
-<li><img width="85" height="80" alt="mongo_PNG34" src="https://images.seeklogo.com/logo-png/50/1/mongodb-icon-logo-png_seeklogo-503274.png"/>MongoDB</li>
+<ol><img width="85" height="80" alt="sql_JPG34" src="https://img.icons8.com/fluent/1200/sql.jpg"/>SQL</ol>
+<ol><img width="85" height="80" alt="mongo_PNG34" src="https://images.seeklogo.com/logo-png/50/1/mongodb-icon-logo-png_seeklogo-503274.png"/>MongoDB</ol>
 
 
 ### Version Control
 
-<li><img width="85" height="83" alt="git_PNG34" src="https://cdn.freebiesupply.com/logos/large/2x/git-icon-logo-png-transparent.png"/>Git </li>
-<li><img width="85" height="83" alt="github_PNG34" src="https://www.pngall.com/wp-content/uploads/13/Github-Logo-Transparent.png"/>GitHub</li>
+<ol><img width="85" height="83" alt="git_PNG34" src="https://cdn.freebiesupply.com/logos/large/2x/git-icon-logo-png-transparent.png"/>Git </ol>
+<ol><img width="85" height="83" alt="github_PNG34" src="https://www.pngall.com/wp-content/uploads/13/Github-Logo-Transparent.png"/>GitHub</ol>
 
 
 
 ## 🧠 Currently Learning
 
 
-<li><ol>01 Data Structures & Algorithms</ol>
+<ol>01 Data Structures & Algorithms</ol>
     <ol>02 Advanced Python</ol>
     <ol>03 Software Engineering</ol>
     <ol>04 Cloud Computing</ol>
     <ol>05 Docker & Containers</ol>
     <ol>06 Machine Learning</ol>
      <ol>07 Backend Development</ol> 
-</li>
+
 
 ## 🚀 Currently Building
 
