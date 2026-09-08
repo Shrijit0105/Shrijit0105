@@ -9,7 +9,7 @@
 
 <h3>Software Developer • AI/ML Enthusiast • Problem Solver</h3>
 
-</div>
+</div font-style=''>
 
 I'm a BCA student passionate about software development,
 artificial intelligence, machine learning, and building
@@ -61,7 +61,7 @@ new technologies, and turning ideas into practical projects.
 
 ### Version Control
 
-<ol><img width="85" height="83" alt="git_PNG34" src="https://cdn.freebiesupply.com/logos/large/2x/git-icon-logo-png-transparent.png"/>Git </ol>
+<ol><img width="85" height="83" alt="git_PNG34" src="https://cdn.freebiesupply.com/logos/large/2x/git-icon-logo-png-transparent.png" placeholder="git"/> </ol>
 <ol><img width="85" height="83" alt="github_PNG34" src="https://www.pngall.com/wp-content/uploads/13/Github-Logo-Transparent.png"/>GitHub</ol>
 
 
