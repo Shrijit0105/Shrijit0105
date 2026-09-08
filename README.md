@@ -1,11 +1,11 @@
 ## Hi there 
 
 <img alt="Static Badge" src="https://img.shields.io/badge/%20https%3A%2F%2Fimg.shields.io%2Fbadge%2Fgithub-repo-blue%3Flogo%3Dgithub?style=flat-square&logo=Devbox&label=Shrijit0105&color=%23FCC624&link=%3Csvg%20role%3D%22img%22%20viewBox%3D%220%200%2024%2024%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Ctitle%3EDevbox%3C%2Ftitle%3E%3Cpath%20d%3D%22m19.546%207.5726-1.531-1.5703c-.4881.4371-.965.8647-1.442%201.2922l-.959.8596c1.3076%201.3446%202.5887%202.6624%203.8756%203.987l-2.4261%202.4956-1.4508%201.4924c.55.4988%201.0916.9897%201.6397%201.4864l.765.6933%202.209-2.2773c1.2588-1.2976%202.5141-2.5916%203.7736-3.8905v-.001a20797.5906%2020797.5906%200%200%201-4.454-4.5674ZM2.992%209.0716A16808.14%2016808.14%200%200%201%200%2012.141c2.0108%202.0727%203.9927%204.1152%205.9838%206.1666l.5111-.4635c.638-.5786%201.2616-1.144%201.8924-1.715l-1.447-1.4888c-.8134-.8368-1.6208-1.6676-2.431-2.5015%201.0462-1.075%202.0745-2.132%203.1094-3.1959l.7674-.7888c-.4342-.3892-.861-.7718-1.2883-1.1546l-1.114-.9983v.0011c-.9996%201.0251-1.9958%202.0472-2.992%203.0694Zm12.585-6.0372c-1.317%206.199-2.6283%2012.3689-3.9453%2018.5656l-.1962-.0387a2911.4317%202911.4317%200%200%200-3.0284-.5957c.8529-4.0118%201.7034-8.0133%202.5549-12.0196L12.3533%202.4z%22%2F%3E%3C%2Fsvg%3E">
-
+<head>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cascadia+Code:ital,wght@0,200..700;1,200..700&display=swap" rel="stylesheet">
-
+</head>
 
 
 <div align="center",>
@@ -81,6 +81,8 @@ new technologies, and turning ideas into practical projects.
     <ol>05 Docker & Containers</ol>
     <ol>06 Machine Learning</ol>
      <ol>07 Backend Development</ol> 
+
+     
 
 
 ## 🚀 Currently Building
