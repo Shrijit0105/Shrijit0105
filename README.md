@@ -9,7 +9,7 @@
 
 <h3>Software Developer • AI/ML Enthusiast • Problem Solver</h3>
 
-</div font-style='Cascadia'>
+</div font-style='https://fonts.google.com/share?selection.family=Cascadia+Code:ital,wght@0,200..700;1,200..700'>
 
 I'm a BCA student passionate about software development,
 artificial intelligence, machine learning, and building
