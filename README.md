@@ -109,8 +109,9 @@ and comparative model performance.
 
 ![GitHub Stats](https://ghstats.dev/api/card?username=Shrijit0105)
 
-![snake gif](https://github.com/Shrijit0105/Shrijit0105/blob/output/github-contribution-grid-snake-dark.svg)
-
+<p align="center">
+  <img src="https://raw.githubusercontent.com/Shrijit0105/Shrijit0105/output/github-snake-dark.svg" alt="GitHub Contribution Snake Dark">
+</p>
 
 ## 🎯 Goals
 
