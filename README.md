@@ -108,6 +108,7 @@ and comparative model performance.
 ## 📊 GitHub Activity
 
 ![GitHub Stats](https://ghstats.dev/api/card?username=Shrijit0105)
+![Snake Animation](https://github.com/Shrijit0105/blob/output/github-snake.svg)
 
 
 
