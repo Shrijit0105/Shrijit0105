@@ -109,7 +109,7 @@ and comparative model performance.
 
 ![GitHub Stats](https://ghstats.dev/api/card?username=Shrijit0105)
 
-![Snake Animation](https://github.com/Shrijit0105/Shrijit0105/blob/output/github-snake.svg)
+![Snake Animation](https://github.com/Shrijit0105/Shrijit0105/blob/output/github-contribution-grid-snake-dark.svg)
 
 
 ## 🎯 Goals
