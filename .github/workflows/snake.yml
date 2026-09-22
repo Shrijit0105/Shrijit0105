@@ -49,4 +49,3 @@ jobs:
           publish_dir: ./dist
           publish_branch: output
           full_commit_message: "Update snake animation [skip ci]"
-```
