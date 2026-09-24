@@ -457,30 +457,16 @@ jobs:
       # ==========================================
       # COMMIT
       # ==========================================
-
-      - name: Commit project health
-
+      - name: Commit Project Health
         run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git config --global user.name \
-            "github-actions[bot]"
-
-          git config --global user.email \
-            "41898282+github-actions[bot]@users.noreply.github.com"
-
-
-          git add assets/project-health.svg
-
+          git add assets/project-health.gif
 
           if git diff --cached --quiet; then
-
-            echo "No changes detected."
-
+            echo "No changes to commit."
           else
-
-            git commit \
-              -m "chore: update project health"
-
+            git commit -m "Update project health"
             git push
-
           fi
