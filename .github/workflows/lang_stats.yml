@@ -1,0 +1,402 @@
+name: Generate Language Statistics
+
+on:
+  schedule:
+    # Run every day at midnight UTC
+    - cron: "0 0 * * *"
+
+  workflow_dispatch:
+
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  language-stats:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # ==========================================
+      # CHECKOUT REPOSITORY
+      # ==========================================
+
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+
+      # ==========================================
+      # FETCH LANGUAGE DATA
+      # ==========================================
+
+      - name: Collect language statistics
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+        run: |
+
+          USERNAME="${{ github.repository_owner }}"
+
+          mkdir -p assets
+
+          echo "Fetching repositories for $USERNAME..."
+
+          # Get public repositories
+          curl -fsSL \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/users/$USERNAME/repos?per_page=100" \
+            > repositories.json
+
+
+          # Initialize language totals
+          echo "{}" > languages.json
+
+
+          # Process every repository
+          jq -r '.[].name' repositories.json | while read REPO
+          do
+
+            echo "Processing: $REPO"
+
+            RESPONSE=$(curl -fsSL \
+              -H "Authorization: Bearer $GH_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/$USERNAME/$REPO/languages")
+
+            if [ "$RESPONSE" != "{}" ]; then
+
+              jq -s '
+                add
+                | to_entries
+                | group_by(.key)
+                | map({
+                    key: .[0].key,
+                    value: (map(.value) | add)
+                  })
+                | from_entries
+              ' languages.json <(echo "$RESPONSE") > languages.tmp
+
+              mv languages.tmp languages.json
+
+            fi
+
+          done
+
+
+          echo ""
+          echo "================================"
+          echo "LANGUAGE TOTALS"
+          echo "================================"
+
+          cat languages.json
+
+
+      # ==========================================
+      # GENERATE SVG
+      # ==========================================
+
+      - name: Generate language statistics SVG
+
+        run: |
+
+          python3 <<'PY'
+
+          import json
+          import math
+
+          with open("languages.json", "r") as f:
+              languages = json.load(f)
+
+          # Sort languages by bytes
+          languages = sorted(
+              languages.items(),
+              key=lambda x: x[1],
+              reverse=True
+          )
+
+          # Ignore tiny languages below 1%
+          total = sum(value for _, value in languages)
+
+          filtered = []
+
+          for language, value in languages:
+
+              percentage = (value / total) * 100
+
+              if percentage >= 1:
+                  filtered.append(
+                      (language, value, percentage)
+                  )
+
+          # Keep top 8
+          filtered = filtered[:8]
+
+          # Recalculate displayed percentages
+          displayed_total = sum(
+              value for _, value, _ in filtered
+          )
+
+          # Colors
+          colors = [
+              "#00ff88",
+              "#00d9ff",
+              "#a855f7",
+              "#ff4ecd",
+              "#ffb000",
+              "#ff5555",
+              "#ffffff",
+              "#777777"
+          ]
+
+          # SVG dimensions
+          width = 900
+          height = 520
+
+          svg = f'''
+          <svg
+              width="{width}"
+              height="{height}"
+              viewBox="0 0 {width} {height}"
+              xmlns="http://www.w3.org/2000/svg">
+
+            <!-- BACKGROUND -->
+
+            <rect
+                width="900"
+                height="520"
+                rx="18"
+                fill="#050505"
+                stroke="#00ff88"
+                stroke-width="2"/>
+
+
+            <!-- GRID -->
+
+            <g stroke="#00ff88" opacity="0.06">
+
+              <path d="M0 100 H900"/>
+              <path d="M0 200 H900"/>
+              <path d="M0 300 H900"/>
+              <path d="M0 400 H900"/>
+
+              <path d="M100 0 V520"/>
+              <path d="M200 0 V520"/>
+              <path d="M300 0 V520"/>
+              <path d="M400 0 V520"/>
+              <path d="M500 0 V520"/>
+              <path d="M600 0 V520"/>
+              <path d="M700 0 V520"/>
+              <path d="M800 0 V520"/>
+
+            </g>
+
+
+            <!-- TITLE -->
+
+            <text
+                x="40"
+                y="50"
+                fill="#00ff88"
+                font-family="monospace"
+                font-size="24"
+                font-weight="bold">
+
+              LANGUAGE MATRIX
+
+            </text>
+
+
+            <text
+                x="40"
+                y="78"
+                fill="#666666"
+                font-family="monospace"
+                font-size="12">
+
+              AUTOMATED GITHUB CODE ANALYSIS
+
+            </text>
+
+
+            <!-- SCANNER -->
+
+            <rect
+                x="35"
+                y="90"
+                width="830"
+                height="2"
+                fill="#00ff88"
+                opacity="0.6">
+
+              <animate
+                  attributeName="x"
+                  values="35;830;35"
+                  dur="6s"
+                  repeatCount="indefinite"/>
+
+            </rect>
+
+          '''
+
+          # Starting Y position
+          y = 125
+
+          for index, (language, value, _) in enumerate(filtered):
+
+              percentage = (value / displayed_total) * 100
+
+              bar_width = int(
+                  percentage * 6
+              )
+
+              color = colors[
+                  index % len(colors)
+              ]
+
+              svg += f'''
+
+              <!-- LANGUAGE {index + 1} -->
+
+              <text
+                  x="45"
+                  y="{y}"
+                  fill="#ffffff"
+                  font-family="monospace"
+                  font-size="15">
+
+                {language}
+
+              </text>
+
+
+              <text
+                  x="190"
+                  y="{y}"
+                  fill="{color}"
+                  font-family="monospace"
+                  font-size="14">
+
+                {percentage:.1f}%
+
+              </text>
+
+
+              <rect
+                  x="275"
+                  y="{y - 13}"
+                  width="500"
+                  height="15"
+                  rx="4"
+                  fill="#111111"/>
+
+
+              <rect
+                  x="275"
+                  y="{y - 13}"
+                  width="{bar_width}"
+                  height="15"
+                  rx="4"
+                  fill="{color}">
+
+                <animate
+                    attributeName="width"
+                    from="0"
+                    to="{bar_width}"
+                    dur="1.5s"
+                    begin="{index * 0.15}s"
+                    fill="freeze"/>
+
+              </rect>
+
+              '''
+
+              y += 42
+
+
+          # Footer
+
+          svg += '''
+
+            <!-- FOOTER -->
+
+            <line
+                x1="40"
+                y1="470"
+                x2="860"
+                y2="470"
+                stroke="#00ff88"
+                opacity="0.3"/>
+
+
+            <text
+                x="40"
+                y="500"
+                fill="#555555"
+                font-family="monospace"
+                font-size="12">
+
+              SHRIJIT // CODEBASE ANALYSIS
+
+            </text>
+
+
+            <text
+                x="700"
+                y="500"
+                fill="#00ff88"
+                font-family="monospace"
+                font-size="12">
+
+              ● LIVE DATA
+
+            </text>
+
+          </svg>
+          '''
+
+          with open(
+              "assets/language-stats.svg",
+              "w"
+          ) as f:
+
+              f.write(svg)
+
+          print("Language statistics generated successfully.")
+
+          PY
+
+
+      # ==========================================
+      # COMMIT SVG
+      # ==========================================
+
+      - name: Commit language statistics
+
+        run: |
+
+          git config --global user.name \
+            "github-actions[bot]"
+
+          git config --global user.email \
+            "41898282+github-actions[bot]@users.noreply.github.com"
+
+
+          git add assets/language-stats.svg
+
+
+          if git diff --cached --quiet; then
+
+            echo "No language changes detected."
+
+          else
+
+            git commit \
+              -m "chore: update language statistics"
+
+            git push
+
+          fi
