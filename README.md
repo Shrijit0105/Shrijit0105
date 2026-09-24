@@ -32,7 +32,7 @@ Software Developer • AI/ML Enthusiast • Problem Solver<br>I'm a BCA student 
 
 <p align="center">
   <img
-    src="./assets/project-health.gif"
+    src="./assets/project-health.svg"
     width="900"
     alt="Project Health Monitor"
   />
