@@ -118,315 +118,342 @@ jobs:
 
           cat project-health.json
 
-
-      # ==========================================
-      # GENERATE SVG
-      # ==========================================
-
-    
-      - name: Generate Project Health SVG
+      - name: Generate Animated Project Health GIF
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          python3 -m pip install --quiet pillow
+
           python3 <<'PY'
           import os
+          import json
           import subprocess
+          from PIL import Image, ImageDraw, ImageFont
           from datetime import datetime, timezone
 
-          os.makedirs("assets", exist_ok=True)
+          # ==========================================
+          # CONFIG
+          # ==========================================
 
-          # Get repository information
-          projects = [
-              "Shrijit0105"
-               "Restraunt_Pred"
-              "Covid19-Adverse-effects"
-              "Zomato_Sentiment_Analysis"
+          OWNER = "${{ github.repository_owner }}"
+
+          PROJECTS = [
+              "Shrijit0105",
+              "Covid19-Adverse-effects",
+              "Restaurant_Pred",
               "Shopper_Spectrum"
           ]
 
-          owner = "${{ github.repository_owner }}"
+          WIDTH = 980
 
-          repo_data = []
+          HEADER = 115
+          CARD_HEIGHT = 78
+          CARD_GAP = 18
+          FOOTER = 65
+          PADDING = 25
 
-          for repo in projects:
+          HEIGHT = (
+              HEADER
+              + len(PROJECTS) * CARD_HEIGHT
+              + max(0, len(PROJECTS) - 1) * CARD_GAP
+              + FOOTER
+              + PADDING
+          )
+
+          # ==========================================
+          # FONTS
+          # ==========================================
+
+          FONT_PATH = "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf"
+          BOLD_FONT_PATH = "/usr/share/fonts/truetype/dejavu/DejaVuSansMono-Bold.ttf"
+
+          TITLE_FONT = ImageFont.truetype(BOLD_FONT_PATH, 24)
+          REPO_FONT = ImageFont.truetype(BOLD_FONT_PATH, 15)
+          SMALL_FONT = ImageFont.truetype(FONT_PATH, 10)
+          STATUS_FONT = ImageFont.truetype(FONT_PATH, 12)
+
+          # ==========================================
+          # GET REPOSITORY DATA
+          # ==========================================
+
+          repos = []
+
+          for repo in PROJECTS:
+
+              url = f"https://api.github.com/repos/{OWNER}/{repo}"
+
               result = subprocess.run(
                   [
-                      "curl", "-s",
+                      "curl",
+                      "-s",
                       "-H", f"Authorization: Bearer {os.environ['GH_TOKEN']}",
                       "-H", "Accept: application/vnd.github+json",
-                      f"https://api.github.com/repos/{owner}/{repo}"
+                      url
                   ],
                   capture_output=True,
                   text=True
               )
 
               try:
-                  import json
                   data = json.loads(result.stdout)
 
                   if "id" in data:
-                      repo_data.append({
+                      repos.append({
                           "name": repo,
                           "status": "HEALTHY",
-                          "branch": data.get("default_branch", "main"),
-                          "updated": data.get("updated_at", "")
+                          "branch": data.get("default_branch", "main")
                       })
                   else:
-                      repo_data.append({
+                      repos.append({
                           "name": repo,
                           "status": "MISSING",
-                          "branch": "N/A",
-                          "updated": ""
+                          "branch": "N/A"
                       })
 
               except Exception:
-                  repo_data.append({
+                  repos.append({
                       "name": repo,
                       "status": "ERROR",
-                      "branch": "N/A",
-                      "updated": ""
+                      "branch": "N/A"
                   })
 
-          # -------------------------------------------------
-          # Dynamic layout
-          # -------------------------------------------------
+          # ==========================================
+          # CREATE FRAMES
+          # ==========================================
 
-          WIDTH = 980
+          frames = []
 
-          HEADER_HEIGHT = 105
-          CARD_HEIGHT = 89
-          CARD_GAP = 17
-          FOOTER_HEIGHT = 58
-          BOTTOM_PADDING = 20
+          # Scanner positions
+          scanner_positions = list(range(55, WIDTH - 55, 45))
 
-          total_cards_height = (
-              len(repo_data) * CARD_HEIGHT
-              + max(0, len(repo_data) - 1) * CARD_GAP
+          for frame_index, scanner_x in enumerate(scanner_positions):
+
+              img = Image.new(
+                  "RGB",
+                  (WIDTH, HEIGHT),
+                  "#050505"
+              )
+
+              draw = ImageDraw.Draw(img)
+
+              # ======================================
+              # OUTER BORDER
+              # ======================================
+
+              draw.rounded_rectangle(
+                  (2, 2, WIDTH - 3, HEIGHT - 3),
+                  radius=22,
+                  outline="#00ff88",
+                  width=2
+              )
+
+              # ======================================
+              # GRID
+              # ======================================
+
+              for x in range(25, WIDTH, 105):
+                  draw.line(
+                      (x, 0, x, HEIGHT),
+                      fill="#0a241b",
+                      width=1
+                  )
+
+              for y in range(25, HEIGHT, 105):
+                  draw.line(
+                      (0, y, WIDTH, y),
+                      fill="#0a241b",
+                      width=1
+                  )
+
+              # ======================================
+              # HEADER
+              # ======================================
+
+              draw.text(
+                  (42, 28),
+                  "PROJECT HEALTH",
+                  font=TITLE_FONT,
+                  fill="#00ff88"
+              )
+
+              draw.text(
+                  (42, 61),
+                  "AUTOMATED REPOSITORY MONITOR",
+                  font=SMALL_FONT,
+                  fill="#666666"
+              )
+
+              draw.line(
+                  (42, 99, WIDTH - 42, 99),
+                  fill="#00ff88",
+                  width=1
+              )
+
+              # ======================================
+              # REPOSITORY CARDS
+              # ======================================
+
+              y = HEADER
+
+              for repo in repos:
+
+                  # Card
+                  draw.rounded_rectangle(
+                      (
+                          42,
+                          y,
+                          WIDTH - 42,
+                          y + CARD_HEIGHT
+                      ),
+                      radius=10,
+                      fill="#080808",
+                      outline="#242424",
+                      width=1
+                  )
+
+                  # Repository name
+                  draw.text(
+                      (68, y + 15),
+                      repo["name"],
+                      font=REPO_FONT,
+                      fill="#ffffff"
+                  )
+
+                  # Status
+                  if repo["status"] == "HEALTHY":
+                      status_color = "#00ff88"
+                  elif repo["status"] == "MISSING":
+                      status_color = "#ffcc00"
+                  else:
+                      status_color = "#ff4444"
+
+                  # Pulsing status dot
+                  pulse = (frame_index % 6)
+
+                  radius = 5 + pulse
+
+                  draw.ellipse(
+                      (
+                          545 - radius,
+                          y + 22 - radius,
+                          545 + radius,
+                          y + 22 + radius
+                      ),
+                      fill=status_color
+                  )
+
+                  draw.text(
+                      (568, y + 14),
+                      repo["status"],
+                      font=STATUS_FONT,
+                      fill=status_color
+                  )
+
+                  # Branch
+                  draw.text(
+                      (68, y + 43),
+                      f"BRANCH: {repo['branch']}",
+                      font=SMALL_FONT,
+                      fill="#777777"
+                  )
+
+                  y += CARD_HEIGHT + CARD_GAP
+
+              # ======================================
+              # SCANNER LINE
+              # ======================================
+
+              scan_y = HEADER - 5
+
+              draw.line(
+                  (
+                      scanner_x,
+                      100,
+                      scanner_x,
+                      HEIGHT - FOOTER
+                  ),
+                  fill="#00ff88",
+                  width=2
+              )
+
+              # Scanner glow
+              for glow in range(1, 5):
+                  draw.line(
+                      (
+                          scanner_x - glow,
+                          100,
+                          scanner_x - glow,
+                          HEIGHT - FOOTER
+                      ),
+                      fill="#063d27",
+                      width=1
+                  )
+
+              # ======================================
+              # FOOTER
+              # ======================================
+
+              footer_y = HEIGHT - FOOTER
+
+              draw.line(
+                  (42, footer_y, WIDTH - 42, footer_y),
+                  fill="#00ff88",
+                  width=1
+              )
+
+              scan_time = datetime.now(timezone.utc).strftime(
+                  "%d %b %Y • %H:%M UTC"
+              )
+
+              draw.text(
+                  (42, footer_y + 17),
+                  f"LAST SCAN: {scan_time}",
+                  font=SMALL_FONT,
+                  fill="#666666"
+              )
+
+              # Monitoring indicator
+              draw.ellipse(
+                  (
+                      WIDTH - 215,
+                      footer_y + 19,
+                      WIDTH - 207,
+                      footer_y + 27
+                  ),
+                  fill="#00ff88"
+              )
+
+              draw.text(
+                  (WIDTH - 195, footer_y + 17),
+                  "MONITORING",
+                  font=SMALL_FONT,
+                  fill="#00ff88"
+              )
+
+              frames.append(img)
+
+          # ==========================================
+          # SAVE GIF
+          # ==========================================
+
+          os.makedirs("assets", exist_ok=True)
+
+          output = "assets/project-health.gif"
+
+          frames[0].save(
+              output,
+              save_all=True,
+              append_images=frames[1:],
+              duration=90,
+              loop=0,
+              optimize=True
           )
 
-          HEIGHT = (
-              HEADER_HEIGHT
-              + total_cards_height
-              + FOOTER_HEIGHT
-              + BOTTOM_PADDING
-          )
-
-          scan_time = datetime.now(timezone.utc).strftime(
-              "%d %b %Y • %H:%M UTC"
-          )
-
-          # -------------------------------------------------
-          # SVG
-          # -------------------------------------------------
-
-          svg = f'''<svg xmlns="http://www.w3.org/2000/svg"
-          width="{WIDTH}"
-          height="{HEIGHT}"
-          viewBox="0 0 {WIDTH} {HEIGHT}">
-
-          <defs>
-
-            <filter id="glow">
-              <feGaussianBlur stdDeviation="3" result="blur"/>
-              <feMerge>
-                <feMergeNode in="blur"/>
-                <feMergeNode in="SourceGraphic"/>
-              </feMerge>
-            </filter>
-
-            <pattern id="grid"
-                     width="105"
-                     height="105"
-                     patternUnits="userSpaceOnUse">
-
-              <path d="M 105 0 L 0 0 0 105"
-                    fill="none"
-                    stroke="#00ff88"
-                    stroke-opacity="0.08"
-                    stroke-width="1"/>
-
-            </pattern>
-
-          </defs>
-
-
-          <!-- BACKGROUND -->
-
-          <rect
-            width="100%"
-            height="100%"
-            rx="22"
-            fill="#050505"
-            stroke="#00ff88"
-            stroke-width="2"
-          />
-
-          <rect
-            x="1"
-            y="1"
-            width="{WIDTH-2}"
-            height="{HEIGHT-2}"
-            rx="21"
-            fill="url(#grid)"
-          />
-
-
-          <!-- HEADER -->
-
-          <text
-            x="42"
-            y="52"
-            fill="#00ff88"
-            font-family="monospace"
-            font-size="23"
-            font-weight="bold">
-            PROJECT HEALTH
-          </text>
-
-          <text
-            x="42"
-            y="78"
-            fill="#666"
-            font-family="monospace"
-            font-size="11">
-            AUTOMATED REPOSITORY MONITOR
-          </text>
-
-          <line
-            x1="42"
-            y1="99"
-            x2="{WIDTH-42}"
-            y2="99"
-            stroke="#00ff88"
-            stroke-opacity="0.35"
-          />
-          '''
-
-          # -------------------------------------------------
-          # Repository cards
-          # -------------------------------------------------
-
-          y = HEADER_HEIGHT + 15
-
-          for repo in repo_data:
-
-              status = repo["status"]
-              branch = repo["branch"]
-
-              if status == "HEALTHY":
-                  dot = "#00ff88"
-                  status_text = "HEALTHY"
-              elif status == "MISSING":
-                  dot = "#ffcc00"
-                  status_text = "MISSING"
-              else:
-                  dot = "#ff4444"
-                  status_text = "ERROR"
-
-              card_y = y
-
-              svg += f'''
-          <rect
-            x="42"
-            y="{card_y}"
-            width="{WIDTH-84}"
-            height="{CARD_HEIGHT}"
-            rx="10"
-            fill="#080808"
-            stroke="#242424"
-            stroke-width="1"
-          />
-
-          <text
-            x="68"
-            y="{card_y + 28}"
-            fill="#ffffff"
-            font-family="monospace"
-            font-size="16">
-            {repo["name"]}
-          </text>
-
-          <circle
-            cx="550"
-            cy="{card_y + 20}"
-            r="7"
-            fill="{dot}"
-            filter="url(#glow)"
-          />
-
-          <text
-            x="570"
-            y="{card_y + 25}"
-            fill="{dot}"
-            font-family="monospace"
-            font-size="13">
-            {status_text}
-          </text>
-
-          <text
-            x="68"
-            y="{card_y + 55}"
-            fill="#777"
-            font-family="monospace"
-            font-size="10">
-            BRANCH: {branch}
-          </text>
-          '''
-
-              y += CARD_HEIGHT + CARD_GAP
-
-          # -------------------------------------------------
-          # Footer
-          # -------------------------------------------------
-
-          footer_y = HEIGHT - 25
-
-          svg += f'''
-          <line
-            x1="42"
-            y1="{HEIGHT-58}"
-            x2="{WIDTH-42}"
-            y2="{HEIGHT-58}"
-            stroke="#00ff88"
-            stroke-opacity="0.25"
-          />
-
-          <text
-            x="42"
-            y="{footer_y}"
-            fill="#666"
-            font-family="monospace"
-            font-size="10">
-            LAST SCAN: {scan_time}
-          </text>
-
-          <circle
-            cx="{WIDTH-205}"
-            cy="{footer_y-4}"
-            r="4"
-            fill="#00ff88"
-            filter="url(#glow)"
-          />
-
-          <text
-            x="{WIDTH-190}"
-            y="{footer_y}"
-            fill="#00ff88"
-            font-family="monospace"
-            font-size="10">
-            MONITORING
-          </text>
-
-          </svg>
-          '''
-
-          with open("assets/project-health.svg", "w", encoding="utf-8") as f:
-              f.write(svg)
-
-          print(f"Generated SVG: {WIDTH}x{HEIGHT}")
-          print(f"Repositories: {len(repo_data)}")
+          print(f"Generated {output}")
+          print(f"Size: {WIDTH}x{HEIGHT}")
+          print(f"Frames: {len(frames)}")
+          print(f"Repositories: {len(repos)}")
           PY
-
       # ==========================================
       # COMMIT
       # ==========================================
