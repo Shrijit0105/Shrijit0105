@@ -1,0 +1,123 @@
+name: Generate System Status UI
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate-status:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Generate System Status SVG
+        run: |
+          mkdir -p assets
+
+          cat > assets/system-status.svg <<'EOF'
+          <svg width="700" height="260"
+               viewBox="0 0 700 260"
+               xmlns="http://www.w3.org/2000/svg">
+
+            <rect width="700" height="260"
+                  rx="12"
+                  fill="#050505"
+                  stroke="#00ff88"
+                  stroke-width="2"/>
+
+            <text x="30" y="45"
+                  fill="#00ff88"
+                  font-family="monospace"
+                  font-size="22"
+                  font-weight="bold">
+              ◉ SYSTEM STATUS
+            </text>
+
+            <line x1="30" y1="65"
+                  x2="670" y2="65"
+                  stroke="#00ff88"
+                  opacity="0.5"/>
+
+            <text x="30" y="100"
+                  fill="#ffffff"
+                  font-family="monospace"
+                  font-size="16">
+              USER       : SHRIJIT
+            </text>
+
+            <text x="30" y="130"
+                  fill="#ffffff"
+                  font-family="monospace"
+                  font-size="16">
+              STATUS     : ONLINE
+            </text>
+
+            <text x="30" y="160"
+                  fill="#ffffff"
+                  font-family="monospace"
+                  font-size="16">
+              LAST LOGIN : 24 SEP 2026
+            </text>
+
+            <text x="30" y="190"
+                  fill="#ffffff"
+                  font-family="monospace"
+                  font-size="16">
+              SYSTEM     : GITHUB
+            </text>
+
+            <circle cx="45" cy="220"
+                    r="7"
+                    fill="#00ff88">
+              <animate
+                attributeName="opacity"
+                values="1;0.2;1"
+                dur="1.5s"
+                repeatCount="indefinite"/>
+            </circle>
+
+            <text x="65" y="226"
+                  fill="#00ff88"
+                  font-family="monospace"
+                  font-size="15">
+              SYSTEM ACTIVE
+            </text>
+
+            <text x="470" y="226"
+                  fill="#777777"
+                  font-family="monospace"
+                  font-size="12">
+              v1.0.0
+            </text>
+
+          </svg>
+          EOF
+
+      - name: Update timestamp
+        run: |
+          CURRENT_TIME=$(TZ=Asia/Kolkata date '+%d %b %Y • %H:%M IST')
+
+          sed -i \
+            "s/LAST LOGIN : 24 SEP 2026/LAST LOGIN : $CURRENT_TIME/" \
+            assets/system-status.svg
+
+      - name: Commit generated UI
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add assets/system-status.svg
+
+          if git diff --cached --quiet; then
+            echo "No changes."
+          else
+            git commit -m "chore: update system status"
+            git push
+          fi
