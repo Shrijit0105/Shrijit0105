@@ -45,10 +45,11 @@ jobs:
           # --------------------------------------
 
           PROJECTS=(
+            "Customer_churn"
+            "Covid19-Adverse-effects"
             "Restraunt_Pred"
-            "Zomato Sentiment Analysis
-            "Shopper Spectrum"
-            "Covid-19 Adverse Effect"
+            "Shopper_Spectrum"
+            
           )
 
           # --------------------------------------
