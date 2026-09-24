@@ -37,7 +37,7 @@ Software Developer • AI/ML Enthusiast • Problem Solver<br>I'm a BCA student 
     <ol>06 Machine Learning</ol>
      <ol>07 Backend Development</ol> 
 
-## Tech Stack
+## Language used
 <p align="center">
   <img
     src="./assets/language-stats.svg"
