@@ -1,4 +1,4 @@
-name: Generate System Status UI
+name: Developer HUD
 
 on:
   schedule:
@@ -10,114 +10,511 @@ permissions:
   contents: write
 
 jobs:
-  generate-status:
+  generate-hud:
     runs-on: ubuntu-latest
 
     steps:
+      # -----------------------------------------
+      # Checkout repository
+      # -----------------------------------------
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Generate System Status SVG
+      # -----------------------------------------
+      # Fetch GitHub profile information
+      # -----------------------------------------
+      - name: Fetch GitHub statistics
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          USERNAME="${{ github.repository_owner }}"
+
+          RESPONSE=$(curl -s \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/users/$USERNAME")
+
+          REPOSITORIES=$(echo "$RESPONSE" | jq '.public_repos')
+          FOLLOWERS=$(echo "$RESPONSE" | jq '.followers')
+
+          echo "REPOSITORIES=$REPOSITORIES" >> $GITHUB_ENV
+          echo "FOLLOWERS=$FOLLOWERS" >> $GITHUB_ENV
+
+      # -----------------------------------------
+      # Generate Developer HUD
+      # -----------------------------------------
+      - name: Generate HUD
+        run: |
+
           mkdir -p assets
 
-          cat > assets/system-status.svg <<'EOF'
-          <svg width="700" height="260"
-               viewBox="0 0 700 260"
-               xmlns="http://www.w3.org/2000/svg">
+          CURRENT_TIME=$(TZ=Asia/Kolkata date '+%d %b %Y • %H:%M IST')
 
-            <rect width="700" height="260"
-                  rx="12"
-                  fill="#050505"
-                  stroke="#00ff88"
-                  stroke-width="2"/>
+          cat > assets/developer-hud.svg <<EOF
 
-            <text x="30" y="45"
-                  fill="#00ff88"
-                  font-family="monospace"
-                  font-size="22"
-                  font-weight="bold">
-              ◉ SYSTEM STATUS
+          <svg
+            width="900"
+            height="520"
+            viewBox="0 0 900 520"
+            xmlns="http://www.w3.org/2000/svg">
+
+            <!-- ================================= -->
+            <!-- BACKGROUND -->
+            <!-- ================================= -->
+
+            <rect
+              width="900"
+              height="520"
+              rx="18"
+              fill="#050505"
+              stroke="#00ff88"
+              stroke-width="2"/>
+
+
+            <!-- ================================= -->
+            <!-- GRID -->
+            <!-- ================================= -->
+
+            <g
+              stroke="#00ff88"
+              opacity="0.08">
+
+              <path d="M0 80 H900"/>
+              <path d="M0 160 H900"/>
+              <path d="M0 240 H900"/>
+              <path d="M0 320 H900"/>
+              <path d="M0 400 H900"/>
+
+              <path d="M100 0 V520"/>
+              <path d="M200 0 V520"/>
+              <path d="M300 0 V520"/>
+              <path d="M400 0 V520"/>
+              <path d="M500 0 V520"/>
+              <path d="M600 0 V520"/>
+              <path d="M700 0 V520"/>
+              <path d="M800 0 V520"/>
+
+            </g>
+
+
+            <!-- ================================= -->
+            <!-- HEADER -->
+            <!-- ================================= -->
+
+            <text
+              x="35"
+              y="45"
+              fill="#00ff88"
+              font-family="monospace"
+              font-size="24"
+              font-weight="bold">
+
+              SHRIJIT // DEVELOPER TERMINAL
+
             </text>
 
-            <line x1="30" y1="65"
-                  x2="670" y2="65"
-                  stroke="#00ff88"
-                  opacity="0.5"/>
 
-            <text x="30" y="100"
-                  fill="#ffffff"
-                  font-family="monospace"
-                  font-size="16">
-              USER       : SHRIJIT
-            </text>
+            <!-- ONLINE INDICATOR -->
 
-            <text x="30" y="130"
-                  fill="#ffffff"
-                  font-family="monospace"
-                  font-size="16">
-              STATUS     : ONLINE
-            </text>
+            <circle
+              cx="815"
+              cy="37"
+              r="7"
+              fill="#00ff88">
 
-            <text x="30" y="160"
-                  fill="#ffffff"
-                  font-family="monospace"
-                  font-size="16">
-              LAST LOGIN : 24 SEP 2026
-            </text>
-
-            <text x="30" y="190"
-                  fill="#ffffff"
-                  font-family="monospace"
-                  font-size="16">
-              SYSTEM     : GITHUB
-            </text>
-
-            <circle cx="45" cy="220"
-                    r="7"
-                    fill="#00ff88">
               <animate
                 attributeName="opacity"
                 values="1;0.2;1"
                 dur="1.5s"
                 repeatCount="indefinite"/>
+
             </circle>
 
-            <text x="65" y="226"
-                  fill="#00ff88"
-                  font-family="monospace"
-                  font-size="15">
-              SYSTEM ACTIVE
+
+            <text
+              x="830"
+              y="43"
+              fill="#00ff88"
+              font-family="monospace"
+              font-size="14">
+
+              ONLINE
+
             </text>
 
-            <text x="470" y="226"
-                  fill="#777777"
-                  font-family="monospace"
-                  font-size="12">
-              v1.0.0
+
+            <!-- HEADER LINE -->
+
+            <line
+              x1="30"
+              y1="65"
+              x2="870"
+              y2="65"
+              stroke="#00ff88"
+              opacity="0.5"/>
+
+
+            <!-- ================================= -->
+            <!-- SYSTEM PANEL -->
+            <!-- ================================= -->
+
+            <rect
+              x="30"
+              y="90"
+              width="410"
+              height="210"
+              rx="10"
+              fill="#080808"
+              stroke="#00ff88"
+              opacity="0.9"/>
+
+
+            <text
+              x="50"
+              y="120"
+              fill="#00ff88"
+              font-family="monospace"
+              font-size="16"
+              font-weight="bold">
+
+              SYSTEM
+
+            </text>
+
+
+            <text
+              x="50"
+              y="155"
+              fill="#ffffff"
+              font-family="monospace"
+              font-size="15">
+
+              USER       : SHRIJIT
+
+            </text>
+
+
+            <text
+              x="50"
+              y="182"
+              fill="#ffffff"
+              font-family="monospace"
+              font-size="15">
+
+              ROLE       : SOFTWARE DEVELOPER
+
+            </text>
+
+
+            <text
+              x="50"
+              y="209"
+              fill="#ffffff"
+              font-family="monospace"
+              font-size="15">
+
+              MODE       : BUILDING
+
+            </text>
+
+
+            <text
+              x="50"
+              y="236"
+              fill="#ffffff"
+              font-family="monospace"
+              font-size="15">
+
+              STATUS     : ONLINE
+
+            </text>
+
+
+            <text
+              x="50"
+              y="263"
+              fill="#ffffff"
+              font-family="monospace"
+              font-size="15">
+
+              PLATFORM   : GITHUB
+
+            </text>
+
+
+            <!-- ================================= -->
+            <!-- GITHUB STATS -->
+            <!-- ================================= -->
+
+            <rect
+              x="460"
+              y="90"
+              width="410"
+              height="210"
+              rx="10"
+              fill="#080808"
+              stroke="#00ff88"
+              opacity="0.9"/>
+
+
+            <text
+              x="480"
+              y="120"
+              fill="#00ff88"
+              font-family="monospace"
+              font-size="16"
+              font-weight="bold">
+
+              GITHUB NETWORK
+
+            </text>
+
+
+            <text
+              x="480"
+              y="158"
+              fill="#ffffff"
+              font-family="monospace"
+              font-size="15">
+
+              REPOSITORIES
+
+            </text>
+
+
+            <text
+              x="780"
+              y="158"
+              fill="#00ff88"
+              font-family="monospace"
+              font-size="15">
+
+              $REPOSITORIES
+
+            </text>
+
+
+            <text
+              x="480"
+              y="192"
+              fill="#ffffff"
+              font-family="monospace"
+              font-size="15">
+
+              FOLLOWERS
+
+            </text>
+
+
+            <text
+              x="780"
+              y="192"
+              fill="#00ff88"
+              font-family="monospace"
+              font-size="15">
+
+              $FOLLOWERS
+
+            </text>
+
+
+            <text
+              x="480"
+              y="226"
+              fill="#ffffff"
+              font-family="monospace"
+              font-size="15">
+
+              CONNECTION
+
+            </text>
+
+
+            <text
+              x="780"
+              y="226"
+              fill="#00ff88"
+              font-family="monospace"
+              font-size="15">
+
+              ACTIVE
+
+            </text>
+
+
+            <text
+              x="480"
+              y="260"
+              fill="#ffffff"
+              font-family="monospace"
+              font-size="15">
+
+              LAST LOGIN
+
+            </text>
+
+
+            <text
+              x="480"
+              y="282"
+              fill="#00ff88"
+              font-family="monospace"
+              font-size="13">
+
+              $CURRENT_TIME
+
+            </text>
+
+
+            <!-- ================================= -->
+            <!-- ACTIVITY -->
+            <!-- ================================= -->
+
+            <rect
+              x="30"
+              y="325"
+              width="840"
+              height="135"
+              rx="10"
+              fill="#080808"
+              stroke="#00ff88"/>
+
+
+            <text
+              x="50"
+              y="355"
+              fill="#00ff88"
+              font-family="monospace"
+              font-size="16"
+              font-weight="bold">
+
+              TERMINAL ACTIVITY
+
+            </text>
+
+
+            <text
+              x="50"
+              y="385"
+              fill="#ffffff"
+              font-family="monospace"
+              font-size="14">
+
+              &gt; INITIALIZING DEVELOPER PROTOCOL...
+
+            </text>
+
+
+            <text
+              x="50"
+              y="410"
+              fill="#ffffff"
+              font-family="monospace"
+              font-size="14">
+
+              &gt; LOADING PROJECTS...
+
+            </text>
+
+
+            <text
+              x="50"
+              y="435"
+              fill="#00ff88"
+              font-family="monospace"
+              font-size="14">
+
+              &gt; SYSTEM READY_
+
+            </text>
+
+
+            <!-- ================================= -->
+            <!-- BLINKING CURSOR -->
+            <!-- ================================= -->
+
+            <rect
+              x="182"
+              y="422"
+              width="9"
+              height="16"
+              fill="#00ff88">
+
+              <animate
+                attributeName="opacity"
+                values="1;0;1"
+                dur="0.8s"
+                repeatCount="indefinite"/>
+
+            </rect>
+
+
+            <!-- ================================= -->
+            <!-- SCANNER -->
+            <!-- ================================= -->
+
+            <rect
+              x="30"
+              y="90"
+              width="3"
+              height="210"
+              fill="#00ff88"
+              opacity="0.6">
+
+              <animate
+                attributeName="x"
+                values="30;870;30"
+                dur="6s"
+                repeatCount="indefinite"/>
+
+            </rect>
+
+
+            <!-- ================================= -->
+            <!-- FOOTER -->
+            <!-- ================================= -->
+
+            <text
+              x="50"
+              y="495"
+              fill="#555555"
+              font-family="monospace"
+              font-size="12">
+
+              DEVELOPER HUD // AUTOMATED SYSTEM // v1.0.0
+
+            </text>
+
+
+            <text
+              x="730"
+              y="495"
+              fill="#00ff88"
+              font-family="monospace"
+              font-size="12">
+
+              ● ACTIVE
+
             </text>
 
           </svg>
+
           EOF
 
-      - name: Update timestamp
+      # -----------------------------------------
+      # Commit generated SVG
+      # -----------------------------------------
+      - name: Commit HUD
         run: |
-          CURRENT_TIME=$(TZ=Asia/Kolkata date '+%d %b %Y • %H:%M IST')
 
-          sed -i \
-            "s/LAST LOGIN : 24 SEP 2026/LAST LOGIN : $CURRENT_TIME/" \
-            assets/system-status.svg
-
-      - name: Commit generated UI
-        run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add assets/system-status.svg
+          git add assets/developer-hud.svg
 
           if git diff --cached --quiet; then
-            echo "No changes."
+            echo "No changes detected."
           else
-            git commit -m "chore: update system status"
+            git commit -m "chore: update developer HUD"
             git push
           fi
