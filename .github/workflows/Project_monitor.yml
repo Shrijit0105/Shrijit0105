@@ -1,0 +1,388 @@
+name: Project Health Monitor
+
+on:
+  schedule:
+    # Run once every day
+    - cron: "30 0 * * *"
+
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  project-health:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # ==========================================
+      # CHECKOUT
+      # ==========================================
+
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+
+      # ==========================================
+      # CHECK PROJECTS
+      # ==========================================
+
+      - name: Check project repositories
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+        run: |
+
+          USERNAME="${{ github.repository_owner }}"
+
+          mkdir -p assets
+
+          echo "Checking repositories..."
+
+          # --------------------------------------
+          # Projects to monitor
+          # --------------------------------------
+
+          PROJECTS=(
+            "Restraunt_Pred"
+            "Zomato Sentiment Analysis
+            "Shopper Spectrum"
+            "Covid-19 Adverse Effect"
+          )
+
+          # --------------------------------------
+          # Generate project status JSON
+          # --------------------------------------
+
+          echo "{" > project-health.json
+
+          FIRST=true
+
+          for REPO in "${PROJECTS[@]}"
+          do
+
+            echo "Checking $REPO..."
+
+            RESPONSE=$(curl -fsSL \
+              -H "Authorization: Bearer $GH_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/$USERNAME/$REPO")
+
+            if [ $? -eq 0 ]; then
+
+              STATUS="HEALTHY"
+
+              BRANCH=$(echo "$RESPONSE" | jq -r '.default_branch')
+
+              UPDATED=$(echo "$RESPONSE" | jq -r '.updated_at')
+
+            else
+
+              STATUS="OFFLINE"
+
+              BRANCH="N/A"
+
+              UPDATED="N/A"
+
+            fi
+
+
+            if [ "$FIRST" = false ]; then
+              echo "," >> project-health.json
+            fi
+
+            FIRST=false
+
+
+            echo "\"$REPO\": {" >> project-health.json
+
+            echo "\"status\": \"$STATUS\"," >> project-health.json
+
+            echo "\"branch\": \"$BRANCH\"," >> project-health.json
+
+            echo "\"updated\": \"$UPDATED\"" >> project-health.json
+
+            echo "}" >> project-health.json
+
+          done
+
+          echo "}" >> project-health.json
+
+
+          echo ""
+          echo "================================="
+          echo "PROJECT HEALTH"
+          echo "================================="
+
+          cat project-health.json
+
+
+      # ==========================================
+      # GENERATE SVG
+      # ==========================================
+
+      - name: Generate Project Health HUD
+
+        run: |
+
+          python3 <<'PY'
+
+          import json
+          from datetime import datetime
+
+          with open("project-health.json") as f:
+              projects = json.load(f)
+
+          width = 900
+          height = 460
+
+          now = datetime.now().strftime(
+              "%d %b %Y • %H:%M UTC"
+          )
+
+          svg = f'''
+          <svg
+              width="{width}"
+              height="{height}"
+              viewBox="0 0 {width} {height}"
+              xmlns="http://www.w3.org/2000/svg">
+
+            <!-- BACKGROUND -->
+
+            <rect
+                width="900"
+                height="460"
+                rx="18"
+                fill="#050505"
+                stroke="#00ff88"
+                stroke-width="2"/>
+
+
+            <!-- GRID -->
+
+            <g stroke="#00ff88" opacity="0.06">
+
+              <path d="M0 100 H900"/>
+              <path d="M0 200 H900"/>
+              <path d="M0 300 H900"/>
+              <path d="M0 400 H900"/>
+
+              <path d="M100 0 V460"/>
+              <path d="M200 0 V460"/>
+              <path d="M300 0 V460"/>
+              <path d="M400 0 V460"/>
+              <path d="M500 0 V460"/>
+              <path d="M600 0 V460"/>
+              <path d="M700 0 V460"/>
+              <path d="M800 0 V460"/>
+
+            </g>
+
+
+            <!-- TITLE -->
+
+            <text
+                x="40"
+                y="50"
+                fill="#00ff88"
+                font-family="monospace"
+                font-size="24"
+                font-weight="bold">
+
+              PROJECT HEALTH
+
+            </text>
+
+
+            <text
+                x="40"
+                y="75"
+                fill="#666666"
+                font-family="monospace"
+                font-size="12">
+
+              AUTOMATED REPOSITORY MONITOR
+
+            </text>
+
+
+            <line
+                x1="40"
+                y1="95"
+                x2="860"
+                y2="95"
+                stroke="#00ff88"
+                opacity="0.3"/>
+
+          '''
+
+          y = 135
+
+          for index, (repo, data) in enumerate(projects.items()):
+
+              status = data["status"]
+              branch = data["branch"]
+
+              if status == "HEALTHY":
+
+                  status_color = "#00ff88"
+
+              else:
+
+                  status_color = "#ff4444"
+
+
+              svg += f'''
+
+              <!-- PROJECT -->
+
+              <rect
+                  x="40"
+                  y="{y - 25}"
+                  width="820"
+                  height="65"
+                  rx="8"
+                  fill="#090909"
+                  stroke="#222222"/>
+
+
+              <text
+                  x="65"
+                  y="{y}"
+                  fill="#ffffff"
+                  font-family="monospace"
+                  font-size="16">
+
+                {repo}
+
+              </text>
+
+
+              <circle
+                  cx="500"
+                  cy="{y - 6}"
+                  r="7"
+                  fill="{status_color}">
+
+                <animate
+                    attributeName="opacity"
+                    values="1;0.35;1"
+                    dur="2s"
+                    repeatCount="indefinite"/>
+
+              </circle>
+
+
+              <text
+                  x="520"
+                  y="{y}"
+                  fill="{status_color}"
+                  font-family="monospace"
+                  font-size="14">
+
+                {status}
+
+              </text>
+
+
+              <text
+                  x="65"
+                  y="{y + 24}"
+                  fill="#666666"
+                  font-family="monospace"
+                  font-size="11">
+
+                BRANCH: {branch}
+
+              </text>
+
+              '''
+
+              y += 85
+
+
+          svg += f'''
+
+            <!-- FOOTER -->
+
+            <line
+                x1="40"
+                y1="405"
+                x2="860"
+                y2="405"
+                stroke="#00ff88"
+                opacity="0.3"/>
+
+
+            <text
+                x="40"
+                y="435"
+                fill="#555555"
+                font-family="monospace"
+                font-size="12">
+
+              LAST SCAN: {now}
+
+            </text>
+
+
+            <text
+                x="700"
+                y="435"
+                fill="#00ff88"
+                font-family="monospace"
+                font-size="12">
+
+              ● MONITORING
+
+            </text>
+
+
+          </svg>
+          '''
+
+          with open(
+              "assets/project-health.svg",
+              "w"
+          ) as f:
+
+              f.write(svg)
+
+          print(
+              "Project health HUD generated."
+          )
+
+          PY
+
+
+      # ==========================================
+      # COMMIT
+      # ==========================================
+
+      - name: Commit project health
+
+        run: |
+
+          git config --global user.name \
+            "github-actions[bot]"
+
+          git config --global user.email \
+            "41898282+github-actions[bot]@users.noreply.github.com"
+
+
+          git add assets/project-health.svg
+
+
+          if git diff --cached --quiet; then
+
+            echo "No changes detected."
+
+          else
+
+            git commit \
+              -m "chore: update project health"
+
+            git push
+
+          fi
