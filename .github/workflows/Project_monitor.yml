@@ -46,7 +46,6 @@ jobs:
 
           PROJECTS=(
             "Shrijit0105"
-            "Customer_churn"
             "Covid19-Adverse-effects"
             "Restraunt_Pred"
             "Shopper_Spectrum"
