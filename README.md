@@ -1,74 +1,31 @@
-## Hi there 
-[Github_Banner]
-
-<img alt="Static Badge" src="https://img.shields.io/badge/%20https%3A%2F%2Fimg.shields.io%2Fbadge%2Fgithub-repo-blue%3Flogo%3Dgithub?style=flat-square&logo=Devbox&label=Shrijit0105&color=%23FCC624&link=%3Csvg%20role%3D%22img%22%20viewBox%3D%220%200%2024%2024%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Ctitle%3EDevbox%3C%2Ftitle%3E%3Cpath%20d%3D%22m19.546%207.5726-1.531-1.5703c-.4881.4371-.965.8647-1.442%201.2922l-.959.8596c1.3076%201.3446%202.5887%202.6624%203.8756%203.987l-2.4261%202.4956-1.4508%201.4924c.55.4988%201.0916.9897%201.6397%201.4864l.765.6933%202.209-2.2773c1.2588-1.2976%202.5141-2.5916%203.7736-3.8905v-.001a20797.5906%2020797.5906%200%200%201-4.454-4.5674ZM2.992%209.0716A16808.14%2016808.14%200%200%201%200%2012.141c2.0108%202.0727%203.9927%204.1152%205.9838%206.1666l.5111-.4635c.638-.5786%201.2616-1.144%201.8924-1.715l-1.447-1.4888c-.8134-.8368-1.6208-1.6676-2.431-2.5015%201.0462-1.075%202.0745-2.132%203.1094-3.1959l.7674-.7888c-.4342-.3892-.861-.7718-1.2883-1.1546l-1.114-.9983v.0011c-.9996%201.0251-1.9958%202.0472-2.992%203.0694Zm12.585-6.0372c-1.317%206.199-2.6283%2012.3689-3.9453%2018.5656l-.1962-.0387a2911.4317%202911.4317%200%200%200-3.0284-.5957c.8529-4.0118%201.7034-8.0133%202.5549-12.0196L12.3533%202.4z%22%2F%3E%3C%2Fsvg%3E">
-<head>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cascadia+Code:ital,wght@0,200..700;1,200..700&display=swap" rel="stylesheet">
-</head>
+# 💫 About Me:
+Software Developer • AI/ML Enthusiast • Problem Solver<br>I'm a BCA student passionate about software development, artificial intelligence, machine learning, and building technology that solves real-world problems.<br><br>I enjoy understanding how systems work, experimenting with new technologies, and turning ideas into practical projects.<br><br>Software Developer | AI/ML Enthusiast | Problem Solver | Tech Explorer
 
 
-<div align="center",>
+## 🌐 Socials:
+[![Stack Overflow](https://img.shields.io/badge/-Stackoverflow-FE7A16?logo=stack-overflow&logoColor=white)](https://stackoverflow.com/users/https://stackoverflow.com/users/25230924/shrijit-sengupta) [![email](https://img.shields.io/badge/Email-D14836?logo=gmail&logoColor=white)](mailto:detectives0105@gmail.com) 
 
-<h1> Hi, I'm Shrijit </h1>
+# 💻 Tech Stack:
+![C](https://img.shields.io/badge/c-%2300599C.svg?style=for-the-badge&logo=c&logoColor=white) ![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white) ![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white) ![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white) ![Markdown](https://img.shields.io/badge/markdown-%23000000.svg?style=for-the-badge&logo=markdown&logoColor=white) ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54) ![PowerShell](https://img.shields.io/badge/PowerShell-%235391FE.svg?style=for-the-badge&logo=powershell&logoColor=white) ![Bash Script](https://img.shields.io/badge/bash_script-%23121011.svg?style=for-the-badge&logo=gnu-bash&logoColor=white) ![Windows Terminal](https://img.shields.io/badge/Windows%20Terminal-%234D4D4D.svg?style=for-the-badge&logo=windows-terminal&logoColor=white) ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E) ![Netlify](https://img.shields.io/badge/netlify-%23000000.svg?style=for-the-badge&logo=netlify&logoColor=#00C7B7) ![Google Cloud](https://img.shields.io/badge/GoogleCloud-%234285F4.svg?style=for-the-badge&logo=google-cloud&logoColor=white) ![Vercel](https://img.shields.io/badge/vercel-%23000000.svg?style=for-the-badge&logo=vercel&logoColor=white) ![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white) ![Nodemon](https://img.shields.io/badge/NODEMON-%23323330.svg?style=for-the-badge&logo=nodemon&logoColor=%BBDEAD) ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB) ![Apache](https://img.shields.io/badge/apache-%23D42029.svg?style=for-the-badge&logo=apache&logoColor=white) ![MySQL](https://img.shields.io/badge/mysql-4479A1.svg?style=for-the-badge&logo=mysql&logoColor=white) ![Canva](https://img.shields.io/badge/Canva-%2300C4CC.svg?style=for-the-badge&logo=Canva&logoColor=white) ![Figma](https://img.shields.io/badge/figma-%23F24E1E.svg?style=for-the-badge&logo=figma&logoColor=white) ![Matplotlib](https://img.shields.io/badge/Matplotlib-%23ffffff.svg?style=for-the-badge&logo=Matplotlib&logoColor=black) ![mlflow](https://img.shields.io/badge/mlflow-%23d9ead3.svg?style=for-the-badge&logo=numpy&logoColor=blue) ![NumPy](https://img.shields.io/badge/numpy-%23013243.svg?style=for-the-badge&logo=numpy&logoColor=white) ![Pandas](https://img.shields.io/badge/pandas-%23150458.svg?style=for-the-badge&logo=pandas&logoColor=white) ![Plotly](https://img.shields.io/badge/Plotly-%233F4F75.svg?style=for-the-badge&logo=plotly&logoColor=white) ![PyTorch](https://img.shields.io/badge/PyTorch-%23EE4C2C.svg?style=for-the-badge&logo=PyTorch&logoColor=white) ![scikit-learn](https://img.shields.io/badge/scikit--learn-%23F7931E.svg?style=for-the-badge&logo=scikit-learn&logoColor=white) ![Scipy](https://img.shields.io/badge/SciPy-%230C55A5.svg?style=for-the-badge&logo=scipy&logoColor=%white) ![Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white) ![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white) ![GitHub Actions](https://img.shields.io/badge/github%20actions-%232671E5.svg?style=for-the-badge&logo=githubactions&logoColor=white) ![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white) ![SQLite](https://img.shields.io/badge/sqlite-%2307405e.svg?style=for-the-badge&logo=sqlite&logoColor=white)
 
-<h3>Software Developer • AI/ML Enthusiast • Problem Solver</h3>
+# 📊 GitHub Stats:
+![](https://github-readme-stats.shion.dev/api?username=Shrijit0105&theme=gruvbox&hide_border=false&include_all_commits=false&count_private=false)<br/>
+![](https://streak-stats.demolab.com/?user=Shrijit0105&theme=gruvbox&hide_border=false)<br/>
+![](https://github-readme-stats.shion.dev/api/top-langs/?username=Shrijit0105&theme=gruvbox&hide_border=false&include_all_commits=false&count_private=false&layout=compact)
 
-</div font-style='https://fonts.google.com/share?selection.family=Cascadia+Code:ital,wght@0,200..700;1,200..700'>
+## 🏆 GitHub Trophies
+![](https://github-profile-trophy.vercel.app/?username=Shrijit0105&theme=radical&no-frame=false&no-bg=true&margin-w=4)
 
-I'm a BCA student passionate about software development,
-artificial intelligence, machine learning, and building
-technology that solves real-world problems.
+### ✍️ Random Dev Quote
+![](https://quotes-github-readme.vercel.app/api?type=horizontal&theme=radical)
 
-I enjoy understanding how systems work, experimenting with
-new technologies, and turning ideas into practical projects.
+### 🔝 Top Contributed Repo
+![](https://github-contributor-stats.vercel.app/api?username=Shrijit0105&limit=5&theme=dark&combine_all_yearly_contributions=true)
 
-<h3>Software Developer | AI/ML Enthusiast | Problem Solver | Tech Explorer</h3>
-<p align="center">
-    
-<h2>Connect with me</h2>
+---
+[![](https://komarev.com/ghpvc/?username=Shrijit0105&icon=2&color=1)](https://visitcount.itsvg.in)
 
-<a href="https://www.linkedin.com/in/shrijit-sengupta-7815a5323">
-<img width="273" height="83" alt="linkedIn_PNG34" src="https://github.com/user-attachments/assets/7e7379f5-6d4e-471e-b591-ba17f659a30b" />
-</a>
-
-
-<a href="detectives0105@gmail.com">
-<img width="173" height="83" alt="gmail_PNG34" src="https://www.pngall.com/wp-content/uploads/12/Gmail-By-Google-PNG-Pic.png" />
-</a>
-
-</p>
-
-##  Tech Stack
-
-### Languages
-<ol><img width="85" height="83" alt="py_PNG34" src="https://www.pngmart.com/files/23/Python-Logo-PNG-Clipart.png"/>Python</ol> 
-<ol><img width="85" height="83" alt="Java_PNG34" src="https://www.citypng.com/public/uploads/preview/hd-java-logo-transparent-background-701751694771845zainlxmlfo.png" />Java</ol> 
-<ol><img width="85" height="83" alt="C_PNG34" src="https://pngimg.com/uploads/letter_c/letter_c_PNG22.png"/>C programming</ol> 
-
-
-### AI / Machine Learning
-<ol><img width="85" height="83" alt="np_PNG34" src="https://studyopedia.com/wp-content/uploads/2022/03/numpy-big-logo-300x300.png"/>NumPy </ol>
-<ol><img width="85" height="83" alt="pd_PNG34" src="https://hutsons-hacks.info/wp-content/uploads/2020/09/1200px-Pandas_logo.svg_-1-1024x414.png"/>Pandas</ol> 
-<ol><img width="85" height="83" alt="skl_PNG34" src="https://vectorseek.com/wp-content/uploads/2023/02/Scikit-learn-Logo-Vector.jpg" />Scikit-learn </ol>
-<ol><img width="85" height="83" alt="xgb_PNG34" src="https://miro.medium.com/max/720/1*yhE3CBwTrlXcAIvNJNTQiA.png" />XG Boost </ol>
-<ol><img width="85" height="83" alt="rf_PNG34" src="https://static.thenounproject.com/png/961660-200.png" />Random Forest</ol>
-
-### Development
-<ol><img width="85" height="80" alt="html_PNG34" src="https://th.bing.com/th/id/OIP.lxMbLFRw0sgOlOwjC62ySwHaKc?r=0&o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3"/>HTML </ol> 
-<ol><img width="85" height="80" alt="css_PNG34" src="https://toppng.com/uploads/preview/css3-logo-vector-download-11573943110ujyqmvcq4d.png"/>CSS </ol> 
-<ol><img width="85" height="80" alt="js_PNG34" src="https://www.clipartmax.com/png/middle/470-4707396_javascript-icon-html-css-js-icons.png"/>JavaScript</ol>
-
-### Databases
-<ol><img width="85" height="80" alt="sql_JPG34" src="https://img.icons8.com/fluent/1200/sql.jpg"/>SQL</ol>
-<ol><img width="85" height="80" alt="mongo_PNG34" src="https://images.seeklogo.com/logo-png/50/1/mongodb-icon-logo-png_seeklogo-503274.png"/>MongoDB</ol>
-
-
-### Version Control
-
-<ol><img width="85" height="83" alt="git_PNG34" src="https://cdn.freebiesupply.com/logos/large/2x/git-icon-logo-png-transparent.png"/>Git </ol>
-<ol><img width="85" height="83" alt="github_PNG34" src="https://www.pngall.com/wp-content/uploads/13/Github-Logo-Transparent.png"/>GitHub</ol>
+<!-- Proudly created with GPRM ( https://gprm.itsvg.in ) -->
 
 
 
@@ -104,10 +61,6 @@ and comparative model performance.
 
 **Focus:** Classification • Data Analysis • ML
 
-
-## 📊 GitHub Activity
-
-![GitHub Stats](https://ghstats.dev/api/card?username=Shrijit0105)
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/Shrijit0105/Shrijit0105/output/github-snake-dark.svg" alt="GitHub Contribution Snake Dark">
