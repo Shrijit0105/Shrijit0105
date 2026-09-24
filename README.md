@@ -70,3 +70,7 @@ and comparative model performance.
 - Explore cloud and DevOps
 - Contribute to open-source projects
 - Build technology with real-world impact
+
+  <p align="center">
+  <img src="./assets/system-status.svg" width="700">
+</p>
