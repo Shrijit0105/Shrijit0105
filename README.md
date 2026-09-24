@@ -30,8 +30,6 @@ Software Developer • AI/ML Enthusiast • Problem Solver<br>I'm a BCA student 
 
 
 ## 🧠 Currently Learning
-
-
 <ol>01 Data Structures & Algorithms</ol>
     <ol>02 Advanced Python</ol>
     <ol>03 Software Engineering</ol>
@@ -39,8 +37,6 @@ Software Developer • AI/ML Enthusiast • Problem Solver<br>I'm a BCA student 
     <ol>05 Docker & Containers</ol>
     <ol>06 Machine Learning</ol>
      <ol>07 Backend Development</ol> 
-
-     
 
 
 ## 🚀 Currently Building
@@ -51,9 +47,7 @@ Machine-learning based restaurant analysis and
 recommendation platform.
 
 **Focus:** Recommendation • Classification • Data Analysis
-
 ---
-
 ### 🧬 COVID-19 Booster Analysis
 
 Machine-learning analysis of booster-dose outcomes
@@ -61,10 +55,11 @@ and comparative model performance.
 
 **Focus:** Classification • Data Analysis • ML
 
-
+<div class="snke_yml">
 <p align="center">
   <img src="https://raw.githubusercontent.com/Shrijit0105/Shrijit0105/output/github-snake-dark.svg" alt="GitHub Contribution Snake Dark">
 </p>
+</div>
 
 ## 🎯 Goals
 
