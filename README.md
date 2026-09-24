@@ -28,11 +28,11 @@ Software Developer • AI/ML Enthusiast • Problem Solver<br>I'm a BCA student 
 
 <h2 align="center"> PROJECT HEALTH</h2>
 
-<h2 align="center">⚡ PROJECT HEALTH MONITOR</h2>
+<h2 align="center">PROJECT HEALTH MONITOR</h2>
 
 <p align="center">
   <img
-    src="./assets/project-health.svg"
+    src="./assets/project-health.gif"
     width="900"
     alt="Project Health Monitor"
   />
