@@ -26,7 +26,15 @@ Software Developer • AI/ML Enthusiast • Problem Solver<br>I'm a BCA student 
 [![](https://komarev.com/ghpvc/?username=Shrijit0105&icon=8&color=1)](https://visitcount.itsvg.in)
 
 
+<h2 align="center"> PROJECT HEALTH</h2>
 
+<p align="center">
+  <img
+    src="./assets/project-health.svg"
+    width="900"
+    alt="Project Health Monitor"
+  />
+</p>
 
 ## 🧠 Currently Learning
 <ol>01 Data Structures & Algorithms</ol>
