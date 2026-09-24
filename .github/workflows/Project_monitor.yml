@@ -2,7 +2,6 @@ name: Project Health Monitor
 
 on:
   schedule:
-    # Run once every day
     - cron: "30 0 * * *"
 
   workflow_dispatch:
@@ -15,127 +14,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-
-      # ==========================================
-      # CHECKOUT
-      # ==========================================
-
       - name: Checkout repository
         uses: actions/checkout@v5
 
-
-      # ==========================================
-      # CHECK PROJECTS
-      # ==========================================
-
-      - name: Check project repositories
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-        run: |
-
-          USERNAME="${{ github.repository_owner }}"
-
-          mkdir -p assets
-
-          echo "Checking repositories..."
-
-          # --------------------------------------
-          # Projects to monitor
-          # --------------------------------------
-
-          PROJECTS=(
-            "Shrijit0105"
-            "Covid19-Adverse-effects"
-            "Restraunt_Pred"
-            "Shopper_Spectrum"
-            
-          )
-
-          # --------------------------------------
-          # Generate project status JSON
-          # --------------------------------------
-
-          echo "{" > project-health.json
-
-          FIRST=true
-
-          for REPO in "${PROJECTS[@]}"
-          do
-
-            echo "Checking $REPO..."
-
-            RESPONSE=$(curl -fsSL \
-              -H "Authorization: Bearer $GH_TOKEN" \
-              -H "Accept: application/vnd.github+json" \
-              "https://api.github.com/repos/$USERNAME/$REPO")
-
-            if [ $? -eq 0 ]; then
-
-              STATUS="HEALTHY"
-
-              BRANCH=$(echo "$RESPONSE" | jq -r '.default_branch')
-
-              UPDATED=$(echo "$RESPONSE" | jq -r '.updated_at')
-
-            else
-
-              STATUS="OFFLINE"
-
-              BRANCH="N/A"
-
-              UPDATED="N/A"
-
-            fi
-
-
-            if [ "$FIRST" = false ]; then
-              echo "," >> project-health.json
-            fi
-
-            FIRST=false
-
-
-            echo "\"$REPO\": {" >> project-health.json
-
-            echo "\"status\": \"$STATUS\"," >> project-health.json
-
-            echo "\"branch\": \"$BRANCH\"," >> project-health.json
-
-            echo "\"updated\": \"$UPDATED\"" >> project-health.json
-
-            echo "}" >> project-health.json
-
-          done
-
-          echo "}" >> project-health.json
-
-
-          echo ""
-          echo "================================="
-          echo "PROJECT HEALTH"
-          echo "================================="
-
-          cat project-health.json
-
-      - name: Generate Animated Project Health GIF
+      - name: Generate Project Health SVG
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          python3 -m pip install --quiet pillow
-
           python3 <<'PY'
-          import os
           import json
-          import subprocess
-          from PIL import Image, ImageDraw, ImageFont
+          import urllib.request
+          import urllib.error
           from datetime import datetime, timezone
+          from xml.sax.saxutils import escape
 
-          # ==========================================
-          # CONFIG
-          # ==========================================
-
-          OWNER = "${{ github.repository_owner }}"
+          # ============================================================
+          # PROJECTS TO MONITOR
+          # ============================================================
 
           PROJECTS = [
               "Shrijit0105",
@@ -144,329 +39,619 @@ jobs:
               "Shopper_Spectrum"
           ]
 
+          USERNAME = "Shrijit0105"
+
+          # ============================================================
+          # SVG DIMENSIONS
+          # ============================================================
+
           WIDTH = 980
 
-          HEADER = 115
-          CARD_HEIGHT = 78
+          HEADER_HEIGHT = 125
+          CARD_HEIGHT = 82
           CARD_GAP = 18
-          FOOTER = 65
+          FOOTER_HEIGHT = 70
           PADDING = 25
 
-          HEIGHT = (
-              HEADER
+          TOTAL_HEIGHT = (
+              HEADER_HEIGHT
               + len(PROJECTS) * CARD_HEIGHT
               + max(0, len(PROJECTS) - 1) * CARD_GAP
-              + FOOTER
+              + FOOTER_HEIGHT
               + PADDING
           )
 
-          # ==========================================
-          # FONTS
-          # ==========================================
+          # ============================================================
+          # GITHUB API
+          # ============================================================
 
-          FONT_PATH = "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf"
-          BOLD_FONT_PATH = "/usr/share/fonts/truetype/dejavu/DejaVuSansMono-Bold.ttf"
+          TOKEN = __import__("os").environ["GH_TOKEN"]
 
-          TITLE_FONT = ImageFont.truetype(BOLD_FONT_PATH, 24)
-          REPO_FONT = ImageFont.truetype(BOLD_FONT_PATH, 15)
-          SMALL_FONT = ImageFont.truetype(FONT_PATH, 10)
-          STATUS_FONT = ImageFont.truetype(FONT_PATH, 12)
-
-          # ==========================================
-          # GET REPOSITORY DATA
-          # ==========================================
-
-          repos = []
-
-          for repo in PROJECTS:
-
-              url = f"https://api.github.com/repos/{OWNER}/{repo}"
-
-              result = subprocess.run(
-                  [
-                      "curl",
-                      "-s",
-                      "-H", f"Authorization: Bearer {os.environ['GH_TOKEN']}",
-                      "-H", "Accept: application/vnd.github+json",
-                      url
-                  ],
-                  capture_output=True,
-                  text=True
+          def github_request(url):
+              request = urllib.request.Request(
+                  url,
+                  headers={
+                      "Authorization": f"Bearer {TOKEN}",
+                      "Accept": "application/vnd.github+json",
+                      "X-GitHub-Api-Version": "2022-11-28",
+                      "User-Agent": "Project-Health-Monitor"
+                  }
               )
 
               try:
-                  data = json.loads(result.stdout)
+                  with urllib.request.urlopen(request, timeout=15) as response:
+                      return json.loads(response.read().decode("utf-8"))
 
-                  if "id" in data:
-                      repos.append({
-                          "name": repo,
-                          "status": "HEALTHY",
-                          "branch": data.get("default_branch", "main")
-                      })
-                  else:
-                      repos.append({
-                          "name": repo,
-                          "status": "MISSING",
-                          "branch": "N/A"
-                      })
+              except urllib.error.HTTPError as error:
+                  print(f"GitHub API error {error.code}: {url}")
+                  return None
 
-              except Exception:
-                  repos.append({
+              except Exception as error:
+                  print(f"Request error: {error}")
+                  return None
+
+          # ============================================================
+          # CHECK PROJECTS
+          # ============================================================
+
+          project_data = []
+
+          print("Checking repositories...")
+
+          for repo in PROJECTS:
+
+              print(f"Checking {repo}...")
+
+              data = github_request(
+                  f"https://api.github.com/repos/{USERNAME}/{repo}"
+              )
+
+              if data is None:
+                  project_data.append({
                       "name": repo,
-                      "status": "ERROR",
-                      "branch": "N/A"
+                      "status": "UNAVAILABLE",
+                      "branch": "UNKNOWN",
+                      "updated": "N/A",
+                      "color": "#ff4d6d"
                   })
+                  continue
 
-          # ==========================================
-          # CREATE FRAMES
-          # ==========================================
-
-          frames = []
-
-          # Scanner positions
-          scanner_positions = list(range(55, WIDTH - 55, 45))
-
-          for frame_index, scanner_x in enumerate(scanner_positions):
-
-              img = Image.new(
-                  "RGB",
-                  (WIDTH, HEIGHT),
-                  "#050505"
+              default_branch = data.get(
+                  "default_branch",
+                  "main"
               )
 
-              draw = ImageDraw.Draw(img)
-
-              # ======================================
-              # OUTER BORDER
-              # ======================================
-
-              draw.rounded_rectangle(
-                  (2, 2, WIDTH - 3, HEIGHT - 3),
-                  radius=22,
-                  outline="#00ff88",
-                  width=2
+              updated_at = data.get(
+                  "pushed_at",
+                  data.get("updated_at", "")
               )
 
-              # ======================================
-              # GRID
-              # ======================================
+              if updated_at:
+                  try:
+                      dt = datetime.fromisoformat(
+                          updated_at.replace("Z", "+00:00")
+                      )
 
-              for x in range(25, WIDTH, 105):
-                  draw.line(
-                      (x, 0, x, HEIGHT),
-                      fill="#0a241b",
-                      width=1
-                  )
+                      updated = dt.strftime(
+                          "%Y-%m-%d %H:%M UTC"
+                      )
 
-              for y in range(25, HEIGHT, 105):
-                  draw.line(
-                      (0, y, WIDTH, y),
-                      fill="#0a241b",
-                      width=1
-                  )
+                  except Exception:
+                      updated = "Unknown"
 
-              # ======================================
-              # HEADER
-              # ======================================
+              else:
+                  updated = "Unknown"
 
-              draw.text(
-                  (42, 28),
-                  "PROJECT HEALTH",
-                  font=TITLE_FONT,
-                  fill="#00ff88"
-              )
+              project_data.append({
+                  "name": repo,
+                  "status": "ONLINE",
+                  "branch": default_branch,
+                  "updated": updated,
+                  "color": "#00ff88"
+              })
 
-              draw.text(
-                  (42, 61),
-                  "AUTOMATED REPOSITORY MONITOR",
-                  font=SMALL_FONT,
-                  fill="#666666"
-              )
+          # ============================================================
+          # XML ESCAPE
+          # ============================================================
 
-              draw.line(
-                  (42, 99, WIDTH - 42, 99),
-                  fill="#00ff88",
-                  width=1
-              )
+          def esc(value):
+              return escape(str(value))
 
-              # ======================================
-              # REPOSITORY CARDS
-              # ======================================
+          # ============================================================
+          # SVG HELPERS
+          # ============================================================
 
-              y = HEADER
+          svg = []
 
-              for repo in repos:
-
-                  # Card
-                  draw.rounded_rectangle(
-                      (
-                          42,
-                          y,
-                          WIDTH - 42,
-                          y + CARD_HEIGHT
-                      ),
-                      radius=10,
-                      fill="#080808",
-                      outline="#242424",
-                      width=1
-                  )
-
-                  # Repository name
-                  draw.text(
-                      (68, y + 15),
-                      repo["name"],
-                      font=REPO_FONT,
-                      fill="#ffffff"
-                  )
-
-                  # Status
-                  if repo["status"] == "HEALTHY":
-                      status_color = "#00ff88"
-                  elif repo["status"] == "MISSING":
-                      status_color = "#ffcc00"
-                  else:
-                      status_color = "#ff4444"
-
-                  # Pulsing status dot
-                  pulse = (frame_index % 6)
-
-                  radius = 5 + pulse
-
-                  draw.ellipse(
-                      (
-                          545 - radius,
-                          y + 22 - radius,
-                          545 + radius,
-                          y + 22 + radius
-                      ),
-                      fill=status_color
-                  )
-
-                  draw.text(
-                      (568, y + 14),
-                      repo["status"],
-                      font=STATUS_FONT,
-                      fill=status_color
-                  )
-
-                  # Branch
-                  draw.text(
-                      (68, y + 43),
-                      f"BRANCH: {repo['branch']}",
-                      font=SMALL_FONT,
-                      fill="#777777"
-                  )
-
-                  y += CARD_HEIGHT + CARD_GAP
-
-              # ======================================
-              # SCANNER LINE
-              # ======================================
-
-              scan_y = HEADER - 5
-
-              draw.line(
-                  (
-                      scanner_x,
-                      100,
-                      scanner_x,
-                      HEIGHT - FOOTER
-                  ),
-                  fill="#00ff88",
-                  width=2
-              )
-
-              # Scanner glow
-              for glow in range(1, 5):
-                  draw.line(
-                      (
-                          scanner_x - glow,
-                          100,
-                          scanner_x - glow,
-                          HEIGHT - FOOTER
-                      ),
-                      fill="#063d27",
-                      width=1
-                  )
-
-              # ======================================
-              # FOOTER
-              # ======================================
-
-              footer_y = HEIGHT - FOOTER
-
-              draw.line(
-                  (42, footer_y, WIDTH - 42, footer_y),
-                  fill="#00ff88",
-                  width=1
-              )
-
-              scan_time = datetime.now(timezone.utc).strftime(
-                  "%d %b %Y • %H:%M UTC"
-              )
-
-              draw.text(
-                  (42, footer_y + 17),
-                  f"LAST SCAN: {scan_time}",
-                  font=SMALL_FONT,
-                  fill="#666666"
-              )
-
-              # Monitoring indicator
-              draw.ellipse(
-                  (
-                      WIDTH - 215,
-                      footer_y + 19,
-                      WIDTH - 207,
-                      footer_y + 27
-                  ),
-                  fill="#00ff88"
-              )
-
-              draw.text(
-                  (WIDTH - 195, footer_y + 17),
-                  "MONITORING",
-                  font=SMALL_FONT,
-                  fill="#00ff88"
-              )
-
-              frames.append(img)
-
-          # ==========================================
-          # SAVE GIF
-          # ==========================================
-
-          os.makedirs("assets", exist_ok=True)
-
-          output = "assets/project-health.gif"
-
-          frames[0].save(
-              output,
-              save_all=True,
-              append_images=frames[1:],
-              duration=90,
-              loop=0,
-              optimize=True
+          svg.append(
+              f'''<svg xmlns="http://www.w3.org/2000/svg"
+              width="{WIDTH}"
+              height="{TOTAL_HEIGHT}"
+              viewBox="0 0 {WIDTH} {TOTAL_HEIGHT}">'''
           )
 
-          print(f"Generated {output}")
-          print(f"Size: {WIDTH}x{HEIGHT}")
-          print(f"Frames: {len(frames)}")
-          print(f"Repositories: {len(repos)}")
+          # ============================================================
+          # DEFINITIONS
+          # ============================================================
+
+          svg.append(f'''
+          <defs>
+
+            <linearGradient
+              id="bgGradient"
+              x1="0"
+              y1="0"
+              x2="1"
+              y2="1">
+
+              <stop offset="0%" stop-color="#05080c"/>
+              <stop offset="50%" stop-color="#07110e"/>
+              <stop offset="100%" stop-color="#030607"/>
+
+            </linearGradient>
+
+            <linearGradient
+              id="scannerGradient"
+              x1="0"
+              y1="0"
+              x2="1"
+              y2="0">
+
+              <stop
+                offset="0%"
+                stop-color="#00ff88"
+                stop-opacity="0"/>
+
+              <stop
+                offset="50%"
+                stop-color="#00ff88"
+                stop-opacity="0.75"/>
+
+              <stop
+                offset="100%"
+                stop-color="#00ff88"
+                stop-opacity="0"/>
+
+            </linearGradient>
+
+            <filter id="glow">
+              <feGaussianBlur
+                stdDeviation="3"
+                result="blur"/>
+            </filter>
+
+            <clipPath id="hudClip">
+
+              <rect
+                x="2"
+                y="2"
+                width="{WIDTH - 4}"
+                height="{TOTAL_HEIGHT - 4}"
+                rx="22"/>
+
+            </clipPath>
+
+          </defs>
+          ''')
+
+          # ============================================================
+          # BACKGROUND
+          # ============================================================
+
+          svg.append(f'''
+          <rect
+            x="2"
+            y="2"
+            width="{WIDTH - 4}"
+            height="{TOTAL_HEIGHT - 4}"
+            rx="22"
+            fill="url(#bgGradient)"
+            stroke="#00ff88"
+            stroke-opacity="0.35"
+            stroke-width="2"/>
+          ''')
+
+          # ============================================================
+          # GRID
+          # ============================================================
+
+          grid_lines = []
+
+          for x in range(40, WIDTH, 40):
+
+              grid_lines.append(
+                  f'''
+                  <line
+                    x1="{x}"
+                    y1="0"
+                    x2="{x}"
+                    y2="{TOTAL_HEIGHT}"
+                    stroke="#00ff88"
+                    stroke-opacity="0.045"/>
+                  '''
+              )
+
+          for y in range(40, TOTAL_HEIGHT, 40):
+
+              grid_lines.append(
+                  f'''
+                  <line
+                    x1="0"
+                    y1="{y}"
+                    x2="{WIDTH}"
+                    y2="{y}"
+                    stroke="#00ff88"
+                    stroke-opacity="0.045"/>
+                  '''
+              )
+
+          svg.append(
+              '<g clip-path="url(#hudClip)">'
+              + "".join(grid_lines)
+              + '</g>'
+          )
+
+          # ============================================================
+          # HEADER
+          # ============================================================
+
+          svg.append('''
+          <text
+            x="42"
+            y="48"
+            fill="#00ff88"
+            font-family="monospace"
+            font-size="25"
+            font-weight="bold"
+            letter-spacing="2">
+            PROJECT HEALTH MONITOR
+          </text>
+          ''')
+
+          svg.append('''
+          <text
+            x="43"
+            y="76"
+            fill="#8aa89a"
+            font-family="monospace"
+            font-size="13"
+            letter-spacing="1">
+            REAL-TIME REPOSITORY STATUS
+          </text>
+          ''')
+
+          # ============================================================
+          # MONITORING INDICATOR
+          # ============================================================
+
+          svg.append('''
+          <circle
+            cx="900"
+            cy="50"
+            r="6"
+            fill="#00ff88">
+
+            <animate
+              attributeName="r"
+              values="5;9;5"
+              dur="1.8s"
+              repeatCount="indefinite"
+              calcMode="spline"
+              keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
+
+            <animate
+              attributeName="opacity"
+              values="0.45;1;0.45"
+              dur="1.8s"
+              repeatCount="indefinite"/>
+
+          </circle>
+          ''')
+
+          svg.append('''
+          <text
+            x="918"
+            y="55"
+            fill="#00ff88"
+            font-family="monospace"
+            font-size="11"
+            text-anchor="end"
+            letter-spacing="1">
+            MONITORING
+          </text>
+          ''')
+
+          # ============================================================
+          # PROJECT CARDS
+          # ============================================================
+
+          card_start_y = HEADER_HEIGHT
+
+          for index, project in enumerate(project_data):
+
+              y = card_start_y + index * (
+                  CARD_HEIGHT + CARD_GAP
+              )
+
+              name = esc(project["name"])
+              status = esc(project["status"])
+              branch = esc(project["branch"])
+              updated = esc(project["updated"])
+              color = project["color"]
+
+              # Card background
+              svg.append(f'''
+              <rect
+                x="35"
+                y="{y}"
+                width="{WIDTH - 70}"
+                height="{CARD_HEIGHT}"
+                rx="14"
+                fill="#07100d"
+                stroke="#00ff88"
+                stroke-opacity="0.18"
+                stroke-width="1.5"/>
+              ''')
+
+              # Left status indicator
+              svg.append(f'''
+              <circle
+                cx="62"
+                cy="{y + 41}"
+                r="6"
+                fill="{color}">
+
+                <animate
+                  attributeName="r"
+                  values="5;8;5"
+                  dur="2s"
+                  begin="{index * 0.25}s"
+                  repeatCount="indefinite"
+                  calcMode="spline"
+                  keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
+
+                <animate
+                  attributeName="opacity"
+                  values="0.55;1;0.55"
+                  dur="2s"
+                  begin="{index * 0.25}s"
+                  repeatCount="indefinite"/>
+
+              </circle>
+              ''')
+
+              # Project name
+              svg.append(f'''
+              <text
+                x="85"
+                y="{y + 32}"
+                fill="#e8fff3"
+                font-family="monospace"
+                font-size="16"
+                font-weight="bold">
+                {name}
+              </text>
+              ''')
+
+              # Status
+              svg.append(f'''
+              <text
+                x="85"
+                y="{y + 56}"
+                fill="{color}"
+                font-family="monospace"
+                font-size="11"
+                letter-spacing="1">
+                STATUS: {status}
+              </text>
+              ''')
+
+              # Branch
+              svg.append(f'''
+              <text
+                x="500"
+                y="{y + 32}"
+                fill="#9ab4a5"
+                font-family="monospace"
+                font-size="12">
+                BRANCH
+              </text>
+              ''')
+
+              svg.append(f'''
+              <text
+                x="500"
+                y="{y + 55}"
+                fill="#d9eee2"
+                font-family="monospace"
+                font-size="13">
+                {branch}
+              </text>
+              ''')
+
+              # Last update
+              svg.append(f'''
+              <text
+                x="700"
+                y="{y + 32}"
+                fill="#9ab4a5"
+                font-family="monospace"
+                font-size="12">
+                LAST UPDATE
+              </text>
+              ''')
+
+              svg.append(f'''
+              <text
+                x="700"
+                y="{y + 55}"
+                fill="#d9eee2"
+                font-family="monospace"
+                font-size="11">
+                {updated}
+              </text>
+              ''')
+
+          # ============================================================
+          # SCANNER BEAM
+          # ============================================================
+
+          scanner_top = HEADER_HEIGHT - 5
+          scanner_height = (
+              len(PROJECTS) * CARD_HEIGHT
+              + max(0, len(PROJECTS) - 1) * CARD_GAP
+          )
+
+          svg.append(f'''
+          <g clip-path="url(#hudClip)">
+
+            <rect
+              x="35"
+              y="{scanner_top}"
+              width="18"
+              height="{scanner_height}"
+              fill="url(#scannerGradient)"
+              opacity="0.20">
+
+              <animate
+                attributeName="x"
+                values="35;927;35"
+                dur="5s"
+                repeatCount="indefinite"
+                calcMode="spline"
+                keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
+
+            </rect>
+
+            <rect
+              x="44"
+              y="{scanner_top}"
+              width="2"
+              height="{scanner_height}"
+              fill="#00ff88"
+              opacity="0.8">
+
+              <animate
+                attributeName="x"
+                values="44;936;44"
+                dur="5s"
+                repeatCount="indefinite"
+                calcMode="spline"
+                keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
+
+            </rect>
+
+          </g>
+          ''')
+
+          # ============================================================
+          # FOOTER
+          # ============================================================
+
+          footer_y = (
+              HEADER_HEIGHT
+              + len(PROJECTS) * CARD_HEIGHT
+              + max(0, len(PROJECTS) - 1) * CARD_GAP
+              + 32
+          )
+
+          svg.append(f'''
+          <line
+            x1="42"
+            y1="{footer_y}"
+            x2="{WIDTH - 42}"
+            y2="{footer_y}"
+            stroke="#00ff88"
+            stroke-opacity="0.15"/>
+          ''')
+
+          svg.append(f'''
+          <text
+            x="42"
+            y="{footer_y + 30}"
+            fill="#63796d"
+            font-family="monospace"
+            font-size="11">
+            AUTO-SCAN • GITHUB ACTIONS
+          </text>
+          ''')
+
+          svg.append(f'''
+          <text
+            x="{WIDTH - 42}"
+            y="{footer_y + 30}"
+            fill="#63796d"
+            font-family="monospace"
+            font-size="11"
+            text-anchor="end">
+            LAST SCAN: {datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")}
+          </text>
+          ''')
+
+          # ============================================================
+          # OUTER SCAN BORDER PULSE
+          # ============================================================
+
+          svg.append(f'''
+          <rect
+            x="3"
+            y="3"
+            width="{WIDTH - 6}"
+            height="{TOTAL_HEIGHT - 6}"
+            rx="21"
+            fill="none"
+            stroke="#00ff88"
+            stroke-width="1"
+            stroke-opacity="0.25">
+
+            <animate
+              attributeName="stroke-opacity"
+              values="0.15;0.45;0.15"
+              dur="3.5s"
+              repeatCount="indefinite"
+              calcMode="spline"
+              keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
+
+          </rect>
+          ''')
+
+          # ============================================================
+          # CLOSE SVG
+          # ============================================================
+
+          svg.append("</svg>")
+
+          # ============================================================
+          # WRITE FILE
+          # ============================================================
+
+          output = "\n".join(svg)
+
+          with open(
+              "assets/project-health.svg",
+              "w",
+              encoding="utf-8"
+          ) as file:
+
+              file.write(output)
+
+          print(
+              f"Generated project-health.svg "
+              f"({WIDTH}x{TOTAL_HEIGHT})"
+          )
+
           PY
-      # ==========================================
-      # COMMIT
-      # ==========================================
-      - name: Commit Project Health
+
+      - name: Commit Project Health SVG
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add assets/project-health.gif
+          git add assets/project-health.svg
 
           if git diff --cached --quiet; then
-            echo "No changes to commit."
+            echo "No changes detected."
           else
-            git commit -m "Update project health"
+            git commit -m "Update project health monitor"
             git push
           fi
