@@ -28,12 +28,18 @@ Software Developer • AI/ML Enthusiast • Problem Solver<br>I'm a BCA student 
 
 <h2 align="center"> PROJECT HEALTH</h2>
 
+<h2 align="center">⚡ PROJECT HEALTH MONITOR</h2>
+
 <p align="center">
   <img
     src="./assets/project-health.svg"
     width="900"
     alt="Project Health Monitor"
   />
+</p>
+
+<p align="center">
+  <sub>Automated repository health monitoring • Updated by GitHub Actions</sub>
 </p>
 
 ## 🧠 Currently Learning
