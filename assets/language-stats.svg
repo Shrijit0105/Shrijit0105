@@ -1,0 +1,286 @@
+
+<svg
+    width="900"
+    height="520"
+    viewBox="0 0 900 520"
+    xmlns="http://www.w3.org/2000/svg">
+
+  <!-- BACKGROUND -->
+
+  <rect
+      width="900"
+      height="520"
+      rx="18"
+      fill="#050505"
+      stroke="#00ff88"
+      stroke-width="2"/>
+
+
+  <!-- GRID -->
+
+  <g stroke="#00ff88" opacity="0.06">
+
+    <path d="M0 100 H900"/>
+    <path d="M0 200 H900"/>
+    <path d="M0 300 H900"/>
+    <path d="M0 400 H900"/>
+
+    <path d="M100 0 V520"/>
+    <path d="M200 0 V520"/>
+    <path d="M300 0 V520"/>
+    <path d="M400 0 V520"/>
+    <path d="M500 0 V520"/>
+    <path d="M600 0 V520"/>
+    <path d="M700 0 V520"/>
+    <path d="M800 0 V520"/>
+
+  </g>
+
+
+  <!-- TITLE -->
+
+  <text
+      x="40"
+      y="50"
+      fill="#00ff88"
+      font-family="monospace"
+      font-size="24"
+      font-weight="bold">
+
+    LANGUAGE MATRIX
+
+  </text>
+
+
+  <text
+      x="40"
+      y="78"
+      fill="#666666"
+      font-family="monospace"
+      font-size="12">
+
+    AUTOMATED GITHUB CODE ANALYSIS
+
+  </text>
+
+
+  <!-- SCANNER -->
+
+  <rect
+      x="35"
+      y="90"
+      width="830"
+      height="2"
+      fill="#00ff88"
+      opacity="0.6">
+
+    <animate
+        attributeName="x"
+        values="35;830;35"
+        dur="6s"
+        repeatCount="indefinite"/>
+
+  </rect>
+
+
+
+    <!-- LANGUAGE 1 -->
+
+    <text
+        x="45"
+        y="125"
+        fill="#ffffff"
+        font-family="monospace"
+        font-size="15">
+
+      Jupyter Notebook
+
+    </text>
+
+
+    <text
+        x="190"
+        y="125"
+        fill="#00ff88"
+        font-family="monospace"
+        font-size="14">
+
+      90.3%
+
+    </text>
+
+
+    <rect
+        x="275"
+        y="112"
+        width="500"
+        height="15"
+        rx="4"
+        fill="#111111"/>
+
+
+    <rect
+        x="275"
+        y="112"
+        width="542"
+        height="15"
+        rx="4"
+        fill="#00ff88">
+
+      <animate
+          attributeName="width"
+          from="0"
+          to="542"
+          dur="1.5s"
+          begin="0.0s"
+          fill="freeze"/>
+
+    </rect>
+
+    
+
+    <!-- LANGUAGE 2 -->
+
+    <text
+        x="45"
+        y="167"
+        fill="#ffffff"
+        font-family="monospace"
+        font-size="15">
+
+      Shell
+
+    </text>
+
+
+    <text
+        x="190"
+        y="167"
+        fill="#00d9ff"
+        font-family="monospace"
+        font-size="14">
+
+      7.5%
+
+    </text>
+
+
+    <rect
+        x="275"
+        y="154"
+        width="500"
+        height="15"
+        rx="4"
+        fill="#111111"/>
+
+
+    <rect
+        x="275"
+        y="154"
+        width="45"
+        height="15"
+        rx="4"
+        fill="#00d9ff">
+
+      <animate
+          attributeName="width"
+          from="0"
+          to="45"
+          dur="1.5s"
+          begin="0.15s"
+          fill="freeze"/>
+
+    </rect>
+
+    
+
+    <!-- LANGUAGE 3 -->
+
+    <text
+        x="45"
+        y="209"
+        fill="#ffffff"
+        font-family="monospace"
+        font-size="15">
+
+      CSS
+
+    </text>
+
+
+    <text
+        x="190"
+        y="209"
+        fill="#a855f7"
+        font-family="monospace"
+        font-size="14">
+
+      2.1%
+
+    </text>
+
+
+    <rect
+        x="275"
+        y="196"
+        width="500"
+        height="15"
+        rx="4"
+        fill="#111111"/>
+
+
+    <rect
+        x="275"
+        y="196"
+        width="12"
+        height="15"
+        rx="4"
+        fill="#a855f7">
+
+      <animate
+          attributeName="width"
+          from="0"
+          to="12"
+          dur="1.5s"
+          begin="0.3s"
+          fill="freeze"/>
+
+    </rect>
+
+    
+
+  <!-- FOOTER -->
+
+  <line
+      x1="40"
+      y1="470"
+      x2="860"
+      y2="470"
+      stroke="#00ff88"
+      opacity="0.3"/>
+
+
+  <text
+      x="40"
+      y="500"
+      fill="#555555"
+      font-family="monospace"
+      font-size="12">
+
+    SHRIJIT // CODEBASE ANALYSIS
+
+  </text>
+
+
+  <text
+      x="700"
+      y="500"
+      fill="#00ff88"
+      font-family="monospace"
+      font-size="12">
+
+    ● LIVE DATA
+
+  </text>
+
+</svg>
