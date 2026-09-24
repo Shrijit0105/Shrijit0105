@@ -37,8 +37,14 @@ Software Developer • AI/ML Enthusiast • Problem Solver<br>I'm a BCA student 
     <ol>06 Machine Learning</ol>
      <ol>07 Backend Development</ol> 
 
-
-
+## Tech Stack
+<p align="center">
+  <img
+    src="./assets/language-stats.svg"
+    width="900"
+    alt="Automatic Language Statistics"
+  />
+</p>
 
 <div class="snke_yml">
 <p align="center">
