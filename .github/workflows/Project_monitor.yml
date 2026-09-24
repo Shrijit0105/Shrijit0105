@@ -123,239 +123,309 @@ jobs:
       # GENERATE SVG
       # ==========================================
 
-      - name: Generate Project Health HUD
-
+    
+      - name: Generate Project Health SVG
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-
           python3 <<'PY'
+          import os
+          import subprocess
+          from datetime import datetime, timezone
 
-          import json
-          from datetime import datetime
+          os.makedirs("assets", exist_ok=True)
 
-          with open("project-health.json") as f:
-              projects = json.load(f)
+          # Get repository information
+          projects = [
+              "Shrijit0105"
+               "Restraunt_Pred"
+              "Covid19-Adverse-effects"
+              "Zomato_Sentiment_Analysis"
+              "Shopper_Spectrum"
+          ]
 
-          width = 900
-          height = 460
+          owner = "${{ github.repository_owner }}"
 
-          now = datetime.now().strftime(
+          repo_data = []
+
+          for repo in projects:
+              result = subprocess.run(
+                  [
+                      "curl", "-s",
+                      "-H", f"Authorization: Bearer {os.environ['GH_TOKEN']}",
+                      "-H", "Accept: application/vnd.github+json",
+                      f"https://api.github.com/repos/{owner}/{repo}"
+                  ],
+                  capture_output=True,
+                  text=True
+              )
+
+              try:
+                  import json
+                  data = json.loads(result.stdout)
+
+                  if "id" in data:
+                      repo_data.append({
+                          "name": repo,
+                          "status": "HEALTHY",
+                          "branch": data.get("default_branch", "main"),
+                          "updated": data.get("updated_at", "")
+                      })
+                  else:
+                      repo_data.append({
+                          "name": repo,
+                          "status": "MISSING",
+                          "branch": "N/A",
+                          "updated": ""
+                      })
+
+              except Exception:
+                  repo_data.append({
+                      "name": repo,
+                      "status": "ERROR",
+                      "branch": "N/A",
+                      "updated": ""
+                  })
+
+          # -------------------------------------------------
+          # Dynamic layout
+          # -------------------------------------------------
+
+          WIDTH = 980
+
+          HEADER_HEIGHT = 105
+          CARD_HEIGHT = 89
+          CARD_GAP = 17
+          FOOTER_HEIGHT = 58
+          BOTTOM_PADDING = 20
+
+          total_cards_height = (
+              len(repo_data) * CARD_HEIGHT
+              + max(0, len(repo_data) - 1) * CARD_GAP
+          )
+
+          HEIGHT = (
+              HEADER_HEIGHT
+              + total_cards_height
+              + FOOTER_HEIGHT
+              + BOTTOM_PADDING
+          )
+
+          scan_time = datetime.now(timezone.utc).strftime(
               "%d %b %Y • %H:%M UTC"
           )
 
-          svg = f'''
-          <svg
-              width="{width}"
-              height="{height}"
-              viewBox="0 0 {width} {height}"
-              xmlns="http://www.w3.org/2000/svg">
+          # -------------------------------------------------
+          # SVG
+          # -------------------------------------------------
 
-            <!-- BACKGROUND -->
+          svg = f'''<svg xmlns="http://www.w3.org/2000/svg"
+          width="{WIDTH}"
+          height="{HEIGHT}"
+          viewBox="0 0 {WIDTH} {HEIGHT}">
 
-            <rect
-                width="900"
-                height="460"
-                rx="18"
-                fill="#050505"
-                stroke="#00ff88"
-                stroke-width="2"/>
+          <defs>
 
+            <filter id="glow">
+              <feGaussianBlur stdDeviation="3" result="blur"/>
+              <feMerge>
+                <feMergeNode in="blur"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
 
-            <!-- GRID -->
+            <pattern id="grid"
+                     width="105"
+                     height="105"
+                     patternUnits="userSpaceOnUse">
 
-            <g stroke="#00ff88" opacity="0.06">
+              <path d="M 105 0 L 0 0 0 105"
+                    fill="none"
+                    stroke="#00ff88"
+                    stroke-opacity="0.08"
+                    stroke-width="1"/>
 
-              <path d="M0 100 H900"/>
-              <path d="M0 200 H900"/>
-              <path d="M0 300 H900"/>
-              <path d="M0 400 H900"/>
+            </pattern>
 
-              <path d="M100 0 V460"/>
-              <path d="M200 0 V460"/>
-              <path d="M300 0 V460"/>
-              <path d="M400 0 V460"/>
-              <path d="M500 0 V460"/>
-              <path d="M600 0 V460"/>
-              <path d="M700 0 V460"/>
-              <path d="M800 0 V460"/>
-
-            </g>
+          </defs>
 
 
-            <!-- TITLE -->
+          <!-- BACKGROUND -->
 
-            <text
-                x="40"
-                y="50"
-                fill="#00ff88"
-                font-family="monospace"
-                font-size="24"
-                font-weight="bold">
+          <rect
+            width="100%"
+            height="100%"
+            rx="22"
+            fill="#050505"
+            stroke="#00ff88"
+            stroke-width="2"
+          />
 
-              PROJECT HEALTH
-
-            </text>
-
-
-            <text
-                x="40"
-                y="75"
-                fill="#666666"
-                font-family="monospace"
-                font-size="12">
-
-              AUTOMATED REPOSITORY MONITOR
-
-            </text>
+          <rect
+            x="1"
+            y="1"
+            width="{WIDTH-2}"
+            height="{HEIGHT-2}"
+            rx="21"
+            fill="url(#grid)"
+          />
 
 
-            <line
-                x1="40"
-                y1="95"
-                x2="860"
-                y2="95"
-                stroke="#00ff88"
-                opacity="0.3"/>
+          <!-- HEADER -->
 
+          <text
+            x="42"
+            y="52"
+            fill="#00ff88"
+            font-family="monospace"
+            font-size="23"
+            font-weight="bold">
+            PROJECT HEALTH
+          </text>
+
+          <text
+            x="42"
+            y="78"
+            fill="#666"
+            font-family="monospace"
+            font-size="11">
+            AUTOMATED REPOSITORY MONITOR
+          </text>
+
+          <line
+            x1="42"
+            y1="99"
+            x2="{WIDTH-42}"
+            y2="99"
+            stroke="#00ff88"
+            stroke-opacity="0.35"
+          />
           '''
 
-          y = 135
+          # -------------------------------------------------
+          # Repository cards
+          # -------------------------------------------------
 
-          for index, (repo, data) in enumerate(projects.items()):
+          y = HEADER_HEIGHT + 15
 
-              status = data["status"]
-              branch = data["branch"]
+          for repo in repo_data:
+
+              status = repo["status"]
+              branch = repo["branch"]
 
               if status == "HEALTHY":
-
-                  status_color = "#00ff88"
-
+                  dot = "#00ff88"
+                  status_text = "HEALTHY"
+              elif status == "MISSING":
+                  dot = "#ffcc00"
+                  status_text = "MISSING"
               else:
+                  dot = "#ff4444"
+                  status_text = "ERROR"
 
-                  status_color = "#ff4444"
-
+              card_y = y
 
               svg += f'''
+          <rect
+            x="42"
+            y="{card_y}"
+            width="{WIDTH-84}"
+            height="{CARD_HEIGHT}"
+            rx="10"
+            fill="#080808"
+            stroke="#242424"
+            stroke-width="1"
+          />
 
-              <!-- PROJECT -->
+          <text
+            x="68"
+            y="{card_y + 28}"
+            fill="#ffffff"
+            font-family="monospace"
+            font-size="16">
+            {repo["name"]}
+          </text>
 
-              <rect
-                  x="40"
-                  y="{y - 25}"
-                  width="820"
-                  height="65"
-                  rx="8"
-                  fill="#090909"
-                  stroke="#222222"/>
+          <circle
+            cx="550"
+            cy="{card_y + 20}"
+            r="7"
+            fill="{dot}"
+            filter="url(#glow)"
+          />
 
+          <text
+            x="570"
+            y="{card_y + 25}"
+            fill="{dot}"
+            font-family="monospace"
+            font-size="13">
+            {status_text}
+          </text>
 
-              <text
-                  x="65"
-                  y="{y}"
-                  fill="#ffffff"
-                  font-family="monospace"
-                  font-size="16">
+          <text
+            x="68"
+            y="{card_y + 55}"
+            fill="#777"
+            font-family="monospace"
+            font-size="10">
+            BRANCH: {branch}
+          </text>
+          '''
 
-                {repo}
+              y += CARD_HEIGHT + CARD_GAP
 
-              </text>
+          # -------------------------------------------------
+          # Footer
+          # -------------------------------------------------
 
-
-              <circle
-                  cx="500"
-                  cy="{y - 6}"
-                  r="7"
-                  fill="{status_color}">
-
-                <animate
-                    attributeName="opacity"
-                    values="1;0.35;1"
-                    dur="2s"
-                    repeatCount="indefinite"/>
-
-              </circle>
-
-
-              <text
-                  x="520"
-                  y="{y}"
-                  fill="{status_color}"
-                  font-family="monospace"
-                  font-size="14">
-
-                {status}
-
-              </text>
-
-
-              <text
-                  x="65"
-                  y="{y + 24}"
-                  fill="#666666"
-                  font-family="monospace"
-                  font-size="11">
-
-                BRANCH: {branch}
-
-              </text>
-
-              '''
-
-              y += 85
-
+          footer_y = HEIGHT - 25
 
           svg += f'''
+          <line
+            x1="42"
+            y1="{HEIGHT-58}"
+            x2="{WIDTH-42}"
+            y2="{HEIGHT-58}"
+            stroke="#00ff88"
+            stroke-opacity="0.25"
+          />
 
-            <!-- FOOTER -->
+          <text
+            x="42"
+            y="{footer_y}"
+            fill="#666"
+            font-family="monospace"
+            font-size="10">
+            LAST SCAN: {scan_time}
+          </text>
 
-            <line
-                x1="40"
-                y1="405"
-                x2="860"
-                y2="405"
-                stroke="#00ff88"
-                opacity="0.3"/>
+          <circle
+            cx="{WIDTH-205}"
+            cy="{footer_y-4}"
+            r="4"
+            fill="#00ff88"
+            filter="url(#glow)"
+          />
 
-
-            <text
-                x="40"
-                y="435"
-                fill="#555555"
-                font-family="monospace"
-                font-size="12">
-
-              LAST SCAN: {now}
-
-            </text>
-
-
-            <text
-                x="700"
-                y="435"
-                fill="#00ff88"
-                font-family="monospace"
-                font-size="12">
-
-              ● MONITORING
-
-            </text>
-
+          <text
+            x="{WIDTH-190}"
+            y="{footer_y}"
+            fill="#00ff88"
+            font-family="monospace"
+            font-size="10">
+            MONITORING
+          </text>
 
           </svg>
           '''
 
-          with open(
-              "assets/project-health.svg",
-              "w"
-          ) as f:
-
+          with open("assets/project-health.svg", "w", encoding="utf-8") as f:
               f.write(svg)
 
-          print(
-              "Project health HUD generated."
-          )
-
+          print(f"Generated SVG: {WIDTH}x{HEIGHT}")
+          print(f"Repositories: {len(repo_data)}")
           PY
-
 
       # ==========================================
       # COMMIT
