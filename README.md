@@ -66,22 +66,15 @@ Software Developer • AI/ML Enthusiast • Problem Solver<br>I'm a BCA student 
 </p>
 </div>
 
-##  Currently Building
+<h2 align="center">🛠️ CURRENTLY WORKING ON</h2>
 
-###  Restaurant Recommendation System
-
-Machine-learning based restaurant analysis and
-recommendation platform.
-
-**Focus:** Recommendation • Classification • Data Analysis
----
-###  COVID-19 Booster Analysis
-
-Machine-learning analysis of booster-dose outcomes
-and comparative model performance.
-
-**Focus:** Classification • Data Analysis • ML
-
+<p align="center">
+  <img
+    src="./assets/currently-working-on.svg"
+    width="900"
+    alt="Automatic Currently Working On HUD"
+  />
+</p>
 <h2 align="center"> DEVELOPER ACHIEVEMENTS</h2>
 
 <p align="center">
