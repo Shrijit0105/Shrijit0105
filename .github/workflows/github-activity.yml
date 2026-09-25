@@ -1,0 +1,922 @@
+name: GitHub Activity Command Center
+
+on:
+  schedule:
+    - cron: "15 0 * * *"
+
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  activity-command-center:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Generate Activity HUD
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 <<'PY'
+          import json
+          import urllib.request
+          import urllib.error
+          import os
+          from datetime import datetime, timezone
+          from xml.sax.saxutils import escape
+
+          # ============================================================
+          # CONFIGURATION
+          # ============================================================
+
+          USERNAME = "Shrijit0105"
+
+          WIDTH = 980
+
+          HEADER_HEIGHT = 125
+          STATS_HEIGHT = 125
+          ACTIVITY_HEIGHT = 250
+          FOOTER_HEIGHT = 95
+          PADDING = 25
+
+          HEIGHT = (
+              HEADER_HEIGHT
+              + STATS_HEIGHT
+              + ACTIVITY_HEIGHT
+              + FOOTER_HEIGHT
+              + PADDING
+          )
+
+          TOKEN = os.environ["GH_TOKEN"]
+
+          # ============================================================
+          # GITHUB API
+          # ============================================================
+
+          def github_request(url):
+
+              request = urllib.request.Request(
+                  url,
+                  headers={
+                      "Authorization": f"Bearer {TOKEN}",
+                      "Accept": "application/vnd.github+json",
+                      "X-GitHub-Api-Version": "2022-11-28",
+                      "User-Agent": "GitHub-Activity-Command-Center"
+                  }
+              )
+
+              try:
+
+                  with urllib.request.urlopen(
+                      request,
+                      timeout=20
+                  ) as response:
+
+                      return json.loads(
+                          response.read().decode("utf-8")
+                      )
+
+              except urllib.error.HTTPError as error:
+
+                  print(
+                      f"GitHub API error {error.code}: {url}"
+                  )
+
+                  return None
+
+              except Exception as error:
+
+                  print(
+                      f"Request error: {error}"
+                  )
+
+                  return None
+
+          # ============================================================
+          # USER INFORMATION
+          # ============================================================
+
+          user = github_request(
+              f"https://api.github.com/users/{USERNAME}"
+          )
+
+          if user is None:
+
+              raise RuntimeError(
+                  "Unable to retrieve GitHub user information."
+              )
+
+          public_repos = user.get(
+              "public_repos",
+              0
+          )
+
+          followers = user.get(
+              "followers",
+              0
+          )
+
+          # ============================================================
+          # REPOSITORIES
+          # ============================================================
+
+          repos = github_request(
+              f"https://api.github.com/users/{USERNAME}/repos"
+              "?per_page=100&sort=pushed"
+          )
+
+          if repos is None:
+              repos = []
+
+          # ============================================================
+          # RECENT ACTIVITY
+          # ============================================================
+
+          events = github_request(
+              f"https://api.github.com/users/{USERNAME}/events"
+              "?per_page=100"
+          )
+
+          if events is None:
+              events = []
+
+          # ============================================================
+          # COUNT RECENT COMMITS
+          # ============================================================
+
+          commit_count = 0
+          pull_requests = 0
+          issues = 0
+
+          for event in events:
+
+              event_type = event.get(
+                  "type",
+                  ""
+              )
+
+              if event_type == "PushEvent":
+
+                  payload = event.get(
+                      "payload",
+                      {}
+                  )
+
+                  commit_count += len(
+                      payload.get(
+                          "commits",
+                          []
+                      )
+                  )
+
+              elif event_type == "PullRequestEvent":
+
+                  pull_requests += 1
+
+              elif event_type == "IssuesEvent":
+
+                  issues += 1
+
+          # ============================================================
+          # ACTIVE REPOSITORIES
+          # ============================================================
+
+          active_repos = set()
+
+          for event in events:
+
+              repo = event.get(
+                  "repo",
+                  {}
+              )
+
+              repo_name = repo.get(
+                  "name"
+              )
+
+              if repo_name:
+
+                  active_repos.add(
+                      repo_name
+                  )
+
+          active_repo_count = len(
+              active_repos
+          )
+
+          # ============================================================
+          # CONTRIBUTION ACTIVITY
+          #
+          # GitHub's public events API only exposes recent activity,
+          # so this visual represents activity observed in the recent
+          # public event window.
+          # ============================================================
+
+          weekday_activity = {
+              "MON": 0,
+              "TUE": 0,
+              "WED": 0,
+              "THU": 0,
+              "FRI": 0,
+              "SAT": 0,
+              "SUN": 0
+          }
+
+          for event in events:
+
+              created = event.get(
+                  "created_at"
+              )
+
+              if not created:
+                  continue
+
+              try:
+
+                  dt = datetime.fromisoformat(
+                      created.replace(
+                          "Z",
+                          "+00:00"
+                      )
+                  )
+
+                  day = dt.strftime(
+                      "%a"
+                  ).upper()[:3]
+
+                  if day in weekday_activity:
+
+                      weekday_activity[day] += 1
+
+              except Exception:
+                  pass
+
+          # ============================================================
+          # SIMPLE ACTIVITY STREAK ESTIMATE
+          # ============================================================
+
+          activity_dates = set()
+
+          for event in events:
+
+              created = event.get(
+                  "created_at"
+              )
+
+              if not created:
+                  continue
+
+              try:
+
+                  dt = datetime.fromisoformat(
+                      created.replace(
+                          "Z",
+                          "+00:00"
+                      )
+                  )
+
+                  activity_dates.add(
+                      dt.date()
+                  )
+
+              except Exception:
+                  pass
+
+          today = datetime.now(
+              timezone.utc
+          ).date()
+
+          streak = 0
+
+          current_day = today
+
+          while current_day in activity_dates:
+
+              streak += 1
+
+              current_day = (
+                  current_day
+                  - __import__("datetime").timedelta(
+                      days=1
+                  )
+              )
+
+          # ============================================================
+          # ACTIVITY BAR SCALE
+          # ============================================================
+
+          max_activity = max(
+              weekday_activity.values()
+          )
+
+          if max_activity == 0:
+              max_activity = 1
+
+          # ============================================================
+          # SVG
+          # ============================================================
+
+          svg = []
+
+          svg.append(
+              f'''<svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="{WIDTH}"
+              height="{HEIGHT}"
+              viewBox="0 0 {WIDTH} {HEIGHT}">'''
+          )
+
+          # ============================================================
+          # DEFINITIONS
+          # ============================================================
+
+          svg.append(f'''
+          <defs>
+
+            <linearGradient
+              id="bg"
+              x1="0"
+              y1="0"
+              x2="1"
+              y2="1">
+
+              <stop
+                offset="0%"
+                stop-color="#05090d"/>
+
+              <stop
+                offset="55%"
+                stop-color="#07130e"/>
+
+              <stop
+                offset="100%"
+                stop-color="#030607"/>
+
+            </linearGradient>
+
+            <linearGradient
+              id="scanner"
+              x1="0"
+              y1="0"
+              x2="1"
+              y2="0">
+
+              <stop
+                offset="0%"
+                stop-color="#00ff88"
+                stop-opacity="0"/>
+
+              <stop
+                offset="50%"
+                stop-color="#00ff88"
+                stop-opacity="0.8"/>
+
+              <stop
+                offset="100%"
+                stop-color="#00ff88"
+                stop-opacity="0"/>
+
+            </linearGradient>
+
+            <clipPath id="clip">
+
+              <rect
+                x="2"
+                y="2"
+                width="{WIDTH - 4}"
+                height="{HEIGHT - 4}"
+                rx="22"/>
+
+            </clipPath>
+
+          </defs>
+          ''')
+
+          # ============================================================
+          # BACKGROUND
+          # ============================================================
+
+          svg.append(f'''
+          <rect
+            x="2"
+            y="2"
+            width="{WIDTH - 4}"
+            height="{HEIGHT - 4}"
+            rx="22"
+            fill="url(#bg)"
+            stroke="#00ff88"
+            stroke-opacity="0.35"
+            stroke-width="2"/>
+          ''')
+
+          # ============================================================
+          # GRID
+          # ============================================================
+
+          grid = []
+
+          for x in range(
+              40,
+              WIDTH,
+              40
+          ):
+
+              grid.append(
+                  f'''
+                  <line
+                    x1="{x}"
+                    y1="0"
+                    x2="{x}"
+                    y2="{HEIGHT}"
+                    stroke="#00ff88"
+                    stroke-opacity="0.035"/>
+                  '''
+              )
+
+          for y in range(
+              40,
+              HEIGHT,
+              40
+          ):
+
+              grid.append(
+                  f'''
+                  <line
+                    x1="0"
+                    y1="{y}"
+                    x2="{WIDTH}"
+                    y2="{y}"
+                    stroke="#00ff88"
+                    stroke-opacity="0.035"/>
+                  '''
+              )
+
+          svg.append(
+              '<g clip-path="url(#clip)">'
+              + "".join(grid)
+              + '</g>'
+          )
+
+          # ============================================================
+          # HEADER
+          # ============================================================
+
+          svg.append('''
+          <text
+            x="42"
+            y="48"
+            fill="#00ff88"
+            font-family="monospace"
+            font-size="24"
+            font-weight="bold"
+            letter-spacing="2">
+            GITHUB ACTIVITY COMMAND CENTER
+          </text>
+          ''')
+
+          svg.append('''
+          <text
+            x="43"
+            y="76"
+            fill="#8aa89a"
+            font-family="monospace"
+            font-size="12"
+            letter-spacing="1">
+            DEVELOPER ACTIVITY TELEMETRY
+          </text>
+          ''')
+
+          # System status dot
+
+          svg.append('''
+          <circle
+            cx="875"
+            cy="49"
+            r="6"
+            fill="#00ff88">
+
+            <animate
+              attributeName="r"
+              values="5;9;5"
+              dur="1.8s"
+              repeatCount="indefinite"
+              calcMode="spline"
+              keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
+
+            <animate
+              attributeName="opacity"
+              values="0.45;1;0.45"
+              dur="1.8s"
+              repeatCount="indefinite"/>
+
+          </circle>
+          ''')
+
+          svg.append('''
+          <text
+            x="895"
+            y="54"
+            fill="#00ff88"
+            font-family="monospace"
+            font-size="10"
+            text-anchor="start"
+            letter-spacing="1">
+            ONLINE
+          </text>
+          ''')
+
+          # ============================================================
+          # STAT CARDS
+          # ============================================================
+
+          stats = [
+              (
+                  "COMMITS",
+                  commit_count
+              ),
+              (
+                  "ACTIVE REPOS",
+                  active_repo_count
+              ),
+              (
+                  "PUBLIC REPOS",
+                  public_repos
+              ),
+              (
+                  "PULL REQUESTS",
+                  pull_requests
+              ),
+              (
+                  "ISSUES",
+                  issues
+              ),
+              (
+                  "STREAK",
+                  streak
+              )
+          ]
+
+          card_width = 145
+          card_gap = 15
+          stats_y = HEADER_HEIGHT
+
+          for index, (
+              label,
+              value
+          ) in enumerate(stats):
+
+              x = 35 + index * (
+                  card_width + card_gap
+              )
+
+              svg.append(f'''
+              <rect
+                x="{x}"
+                y="{stats_y}"
+                width="{card_width}"
+                height="105"
+                rx="13"
+                fill="#07100d"
+                stroke="#00ff88"
+                stroke-opacity="0.18"/>
+              ''')
+
+              svg.append(f'''
+              <text
+                x="{x + card_width / 2}"
+                y="{stats_y + 37}"
+                fill="#738d7d"
+                font-family="monospace"
+                font-size="10"
+                text-anchor="middle"
+                letter-spacing="1">
+                {label}
+              </text>
+              ''')
+
+              svg.append(f'''
+              <text
+                x="{x + card_width / 2}"
+                y="{stats_y + 76}"
+                fill="#e8fff3"
+                font-family="monospace"
+                font-size="25"
+                font-weight="bold"
+                text-anchor="middle">
+                {value}
+              </text>
+              ''')
+
+          # ============================================================
+          # ACTIVITY SECTION
+          # ============================================================
+
+          activity_y = (
+              HEADER_HEIGHT
+              + STATS_HEIGHT
+          )
+
+          svg.append(f'''
+          <text
+            x="42"
+            y="{activity_y + 38}"
+            fill="#00ff88"
+            font-family="monospace"
+            font-size="14"
+            font-weight="bold"
+            letter-spacing="1">
+            CONTRIBUTION ACTIVITY
+          </text>
+          ''')
+
+          svg.append(f'''
+          <text
+            x="{WIDTH - 42}"
+            y="{activity_y + 38}"
+            fill="#53695b"
+            font-family="monospace"
+            font-size="10"
+            text-anchor="end">
+            RECENT EVENT TELEMETRY
+          </text>
+          ''')
+
+          # ============================================================
+          # ACTIVITY BARS
+          # ============================================================
+
+          days = [
+              "MON",
+              "TUE",
+              "WED",
+              "THU",
+              "FRI",
+              "SAT",
+              "SUN"
+          ]
+
+          bar_start_y = (
+              activity_y
+              + 60
+          )
+
+          bar_height = 18
+          bar_gap = 9
+          max_bar_width = 690
+
+          for index, day in enumerate(days):
+
+              y = (
+                  bar_start_y
+                  + index * (
+                      bar_height
+                      + bar_gap
+                  )
+              )
+
+              value = weekday_activity[day]
+
+              bar_width = int(
+                  (
+                      value
+                      / max_activity
+                  ) * max_bar_width
+              )
+
+              if value > 0 and bar_width < 8:
+                  bar_width = 8
+
+              svg.append(f'''
+              <text
+                x="42"
+                y="{y + 13}"
+                fill="#728a7a"
+                font-family="monospace"
+                font-size="10">
+                {day}
+              </text>
+              ''')
+
+              svg.append(f'''
+              <rect
+                x="82"
+                y="{y}"
+                width="{max_bar_width}"
+                height="{bar_height}"
+                rx="5"
+                fill="#07100d"
+                stroke="#00ff88"
+                stroke-opacity="0.08"/>
+              ''')
+
+              svg.append(f'''
+              <rect
+                x="82"
+                y="{y}"
+                width="{bar_width}"
+                height="{bar_height}"
+                rx="5"
+                fill="#00ff88"
+                opacity="0.55">
+
+                <animate
+                  attributeName="opacity"
+                  values="0.35;0.65;0.35"
+                  dur="3s"
+                  begin="{index * 0.18}s"
+                  repeatCount="indefinite"/>
+
+              </rect>
+              ''')
+
+              svg.append(f'''
+              <text
+                x="790"
+                y="{y + 13}"
+                fill="#b9d7c4"
+                font-family="monospace"
+                font-size="10">
+                {value}
+              </text>
+              ''')
+
+          # ============================================================
+          # SCANNER
+          # ============================================================
+
+          scanner_top = (
+              activity_y
+              + 48
+          )
+
+          scanner_bottom = (
+              activity_y
+              + ACTIVITY_HEIGHT
+              - 20
+          )
+
+          scanner_height = (
+              scanner_bottom
+              - scanner_top
+          )
+
+          svg.append(f'''
+          <g clip-path="url(#clip)">
+
+            <rect
+              x="80"
+              y="{scanner_top}"
+              width="20"
+              height="{scanner_height}"
+              fill="url(#scanner)"
+              opacity="0.18">
+
+              <animate
+                attributeName="x"
+                values="70;790;70"
+                dur="5s"
+                repeatCount="indefinite"
+                calcMode="spline"
+                keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
+
+            </rect>
+
+            <rect
+              x="88"
+              y="{scanner_top}"
+              width="2"
+              height="{scanner_height}"
+              fill="#00ff88"
+              opacity="0.8">
+
+              <animate
+                attributeName="x"
+                values="88;798;88"
+                dur="5s"
+                repeatCount="indefinite"
+                calcMode="spline"
+                keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
+
+            </rect>
+
+          </g>
+          ''')
+
+          # ============================================================
+          # FOOTER
+          # ============================================================
+
+          footer_y = (
+              activity_y
+              + ACTIVITY_HEIGHT
+          )
+
+          svg.append(f'''
+          <line
+            x1="42"
+            y1="{footer_y}"
+            x2="{WIDTH - 42}"
+            y2="{footer_y}"
+            stroke="#00ff88"
+            stroke-opacity="0.15"/>
+          ''')
+
+          svg.append(f'''
+          <text
+            x="42"
+            y="{footer_y + 32}"
+            fill="#63796d"
+            font-family="monospace"
+            font-size="11">
+            ACTIVITY TELEMETRY // GITHUB API
+          </text>
+          ''')
+
+          svg.append(f'''
+          <text
+            x="{WIDTH - 42}"
+            y="{footer_y + 32}"
+            fill="#63796d"
+            font-family="monospace"
+            font-size="11"
+            text-anchor="end">
+            AUTO-SCAN // 24H
+          </text>
+          ''')
+
+          # ============================================================
+          # BORDER PULSE
+          # ============================================================
+
+          svg.append(f'''
+          <rect
+            x="3"
+            y="3"
+            width="{WIDTH - 6}"
+            height="{HEIGHT - 6}"
+            rx="21"
+            fill="none"
+            stroke="#00ff88"
+            stroke-width="1"
+            stroke-opacity="0.2">
+
+            <animate
+              attributeName="stroke-opacity"
+              values="0.15;0.42;0.15"
+              dur="3.5s"
+              repeatCount="indefinite"
+              calcMode="spline"
+              keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
+
+          </rect>
+          ''')
+
+          # ============================================================
+          # CLOSE SVG
+          # ============================================================
+
+          svg.append("</svg>")
+
+          # ============================================================
+          # WRITE FILE
+          # ============================================================
+
+          os.makedirs(
+              "assets",
+              exist_ok=True
+          )
+
+          with open(
+              "assets/github-activity.svg",
+              "w",
+              encoding="utf-8"
+          ) as file:
+
+              file.write(
+                  "\n".join(svg)
+              )
+
+          print(
+              f"Generated github-activity.svg "
+              f"({WIDTH}x{HEIGHT})"
+          )
+
+          PY
+
+      - name: Commit Activity HUD
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add assets/github-activity.svg
+
+          if git diff --cached --quiet; then
+            echo "No changes detected."
+          else
+            git commit -m "Update GitHub activity HUD"
+            git push
+          fi
