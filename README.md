@@ -1,5 +1,13 @@
 # <p align="center">💫 About Me: </p>
-Software Developer • AI/ML Enthusiast • Problem Solver<br>I'm a BCA student passionate about software development, artificial intelligence, machine learning, and building technology that solves real-world problems.<br><br>I enjoy understanding how systems work, experimenting with new technologies, and turning ideas into practical projects.<br><br>Software Developer | AI/ML Enthusiast | Problem Solver | Tech Explorer
+<h2 align="center">👋 INTRODUCTION</h2>
+
+<p align="center">
+  <img
+    src="./assets/introduction.svg"
+    width="900"
+    alt="Developer Introduction HUD"
+  />
+</p>
 
 
 ## <p align="center">🌐 Socials:</p>
