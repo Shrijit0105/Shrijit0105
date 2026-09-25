@@ -49,6 +49,15 @@
 <p align="center">
   <sub>Automated repository health monitoring • Updated by GitHub Actions</sub>
 </p>
+<h2 align="center">💻 MOST USED LANGUAGES</h2>
+
+<p align="center">
+  <img
+    src="./assets/most-used-languages.svg"
+    width="900"
+    alt="Most Used Languages"
+  />
+</p>
 
 ## 🧠 Currently Learning
 <ol>01 Data Structures & Algorithms</ol>
