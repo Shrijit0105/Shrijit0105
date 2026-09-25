@@ -9,6 +9,14 @@
   />
 </p>
 
+ <p align="center">
+  <img
+    src="./assets/developer-hud.svg"
+    width="900"
+    alt="Developer HUD"
+  />
+</p>
+
 
 ## <p align="center">🌐 Socials:</p>
 
@@ -112,13 +120,6 @@
 - Contribute to open-source projects
 - Build technology with real-world impact
 
- <p align="center">
-  <img
-    src="./assets/developer-hud.svg"
-    width="900"
-    alt="Developer HUD"
-  />
-</p>
 <h2 align="center"> ACTIVITY COMMAND CENTER</h2>
 
 <p align="center">
