@@ -66,22 +66,33 @@ Software Developer • AI/ML Enthusiast • Problem Solver<br>I'm a BCA student 
 </p>
 </div>
 
-## 🚀 Currently Building
+##  Currently Building
 
-### 🤖 Restaurant Recommendation System
+###  Restaurant Recommendation System
 
 Machine-learning based restaurant analysis and
 recommendation platform.
 
 **Focus:** Recommendation • Classification • Data Analysis
 ---
-### 🧬 COVID-19 Booster Analysis
+###  COVID-19 Booster Analysis
 
 Machine-learning analysis of booster-dose outcomes
 and comparative model performance.
 
 **Focus:** Classification • Data Analysis • ML
-## 🎯 Goals
+
+<h2 align="center"> DEVELOPER ACHIEVEMENTS</h2>
+
+<p align="center">
+  <img
+    src="./assets/achievements.svg"
+    width="900"
+    alt="Developer Achievement System"
+  />
+</p>
+
+##  Goals
 
 - Build production-quality software
 - Strengthen problem-solving and DSA
@@ -98,7 +109,7 @@ and comparative model performance.
     alt="Developer HUD"
   />
 </p>
-<h2 align="center">⚡ ACTIVITY COMMAND CENTER</h2>
+<h2 align="center"> ACTIVITY COMMAND CENTER</h2>
 
 <p align="center">
   <img
