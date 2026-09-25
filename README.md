@@ -71,7 +71,7 @@ Software Developer • AI/ML Enthusiast • Problem Solver<br>I'm a BCA student 
 <p align="center">
   <img
     src="./assets/currently-working-on.svg"
-    width="900"
+    width="1000"
     alt="Automatic Currently Working On HUD"
   />
 </p>
