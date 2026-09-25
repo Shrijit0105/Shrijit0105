@@ -1,15 +1,10 @@
-name: Currently Working On HUD
+name: Auto Currently Working On HUD
 
 on:
   schedule:
-    - cron: "0 1 * * *"
+    - cron: "0 * * * *"
 
   workflow_dispatch:
-
-  push:
-    paths:
-      - "currently-working-on.json"
-      - ".github/workflows/currently-working-on.yml"
 
 permissions:
   contents: write
@@ -19,128 +14,455 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
+      # --------------------------------------------------
+      # CHECKOUT
+      # --------------------------------------------------
+
       - name: Checkout repository
         uses: actions/checkout@v5
 
-      - name: Generate Currently Working On HUD
+      # --------------------------------------------------
+      # ANALYZE GITHUB ACTIVITY
+      # --------------------------------------------------
+
+      - name: Generate automatic working HUD
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: python
         run: |
+
           import json
+          import urllib.request
+          import urllib.parse
           import html
           from datetime import datetime, timezone
-          from pathlib import Path
 
-          config_path = Path("currently-working-on.json")
-          output_path = Path("assets/currently-working-on.svg")
+          USERNAME = "Shrijit0105"
 
-          # ------------------------------------------------------------
-          # LOAD CONFIG
-          # ------------------------------------------------------------
+          API = "https://api.github.com"
 
-          with config_path.open("r", encoding="utf-8") as f:
-              data = json.load(f)
+          HEADERS = {
+              "Accept": "application/vnd.github+json",
+              "Authorization": f"Bearer {__import__('os').environ['GH_TOKEN']}",
+              "X-GitHub-Api-Version": "2022-11-28",
+              "User-Agent": "GitHub-Activity-HUD"
+          }
 
-          project = str(data.get("project", "Unknown Project"))
-          category = str(data.get("category", "Development"))
-          status = str(data.get("status", "In Progress"))
-          next_task = str(data.get("next", "Next objective not specified"))
 
-          try:
-              progress = int(data.get("progress", 0))
-          except (TypeError, ValueError):
-              progress = 0
+          # --------------------------------------------------
+          # GITHUB API HELPER
+          # --------------------------------------------------
 
-          progress = max(0, min(100, progress))
+          def github_get(url):
 
-          stack = data.get("stack", [])
+              request = urllib.request.Request(
+                  url,
+                  headers=HEADERS
+              )
 
-          if not isinstance(stack, list):
-              stack = []
+              with urllib.request.urlopen(request) as response:
+                  return json.loads(response.read().decode())
 
-          stack = [str(item) for item in stack[:6]]
 
-          # ------------------------------------------------------------
-          # ESCAPE XML CONTENT
-          # ------------------------------------------------------------
+          # --------------------------------------------------
+          # GET PUBLIC REPOSITORIES
+          # --------------------------------------------------
 
-          project = html.escape(project)
-          category = html.escape(category)
-          status = html.escape(status)
-          next_task = html.escape(next_task)
-          stack = [html.escape(item) for item in stack]
+          repos_url = (
+              f"{API}/users/{USERNAME}/repos"
+              "?per_page=100"
+              "&sort=pushed"
+              "&direction=desc"
+          )
 
-          # ------------------------------------------------------------
-          # TIMESTAMP
-          # ------------------------------------------------------------
+          repos = github_get(repos_url)
 
-          updated = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
 
-          # ------------------------------------------------------------
-          # STACK CHIPS
-          # ------------------------------------------------------------
+          # --------------------------------------------------
+          # REMOVE PROFILE REPOSITORY
+          # --------------------------------------------------
 
-          chip_x = 55
-          chip_y = 365
+          repos = [
+              repo for repo in repos
+              if not repo["fork"]
+              and repo["name"] != USERNAME
+          ]
 
-          chips = []
 
-          for item in stack:
-              width = max(90, len(item) * 9 + 34)
+          # --------------------------------------------------
+          # FIND MOST RECENTLY ACTIVE REPOSITORY
+          # --------------------------------------------------
 
-              chips.append(f"""
-                <g>
-                  <rect
-                    x="{chip_x}"
-                    y="{chip_y}"
-                    width="{width}"
-                    height="32"
-                    rx="6"
-                    fill="#07130f"
-                    stroke="#00ff88"
-                    stroke-opacity="0.45"
-                  />
+          if repos:
 
+              active_repo = repos[0]
+
+              repo_name = active_repo["name"]
+              repo_full_name = active_repo["full_name"]
+
+              pushed_at = active_repo.get("pushed_at")
+
+          else:
+
+              repo_name = "No active project"
+              repo_full_name = ""
+              pushed_at = None
+
+
+          # --------------------------------------------------
+          # GET RECENT COMMITS
+          # --------------------------------------------------
+
+          commits = []
+
+          if repo_full_name:
+
+              commits_url = (
+                  f"{API}/repos/{repo_full_name}/commits"
+                  "?per_page=10"
+              )
+
+              try:
+                  commits = github_get(commits_url)
+              except Exception:
+                  commits = []
+
+
+          # --------------------------------------------------
+          # LATEST COMMIT
+          # --------------------------------------------------
+
+          latest_commit_message = "No recent commit"
+
+          latest_commit_time = None
+
+          latest_sha = ""
+
+          if commits:
+
+              latest = commits[0]
+
+              latest_sha = latest.get("sha", "")
+
+              commit_data = latest.get("commit", {})
+
+              latest_commit_message = (
+                  commit_data
+                  .get("message", "No recent commit")
+                  .split("\n")[0]
+              )
+
+              latest_commit_time = (
+                  commit_data
+                  .get("author", {})
+                  .get("date")
+              )
+
+
+          # --------------------------------------------------
+          # GET CHANGED FILES
+          # --------------------------------------------------
+
+          changed_files = []
+
+          if repo_full_name and latest_sha:
+
+              commit_url = (
+                  f"{API}/repos/"
+                  f"{repo_full_name}/commits/"
+                  f"{latest_sha}"
+              )
+
+              try:
+
+                  commit_details = github_get(commit_url)
+
+                  changed_files = [
+                      file["filename"]
+                      for file in commit_details.get("files", [])[:6]
+                  ]
+
+              except Exception:
+
+                  changed_files = []
+
+
+          # --------------------------------------------------
+          # INFER CURRENT TASK
+          # --------------------------------------------------
+
+          combined_text = (
+              latest_commit_message.lower()
+              + " "
+              + " ".join(changed_files).lower()
+          )
+
+
+          task = "Software Development"
+
+
+          if any(
+              word in combined_text
+              for word in [
+                  "feature",
+                  "engineer",
+                  "feature_engineering",
+                  "preprocess",
+                  "encoding",
+                  "transform",
+                  "clean"
+              ]
+          ):
+              task = "Feature Engineering"
+
+
+          elif any(
+              word in combined_text
+              for word in [
+                  "model",
+                  "train",
+                  "predict",
+                  "regression",
+                  "classification",
+                  "randomforest",
+                  "xgboost",
+                  "sklearn"
+              ]
+          ):
+              task = "Machine Learning"
+
+
+          elif any(
+              word in combined_text
+              for word in [
+                  "api",
+                  "fastapi",
+                  "flask",
+                  "endpoint",
+                  "backend"
+              ]
+          ):
+              task = "Backend / API Development"
+
+
+          elif any(
+              word in combined_text
+              for word in [
+                  "react",
+                  "component",
+                  "frontend",
+                  "css",
+                  "html",
+                  "javascript",
+                  "typescript"
+              ]
+          ):
+              task = "Frontend Development"
+
+
+          elif any(
+              word in combined_text
+              for word in [
+                  "docker",
+                  "kubernetes",
+                  "container",
+                  "helm"
+              ]
+          ):
+              task = "Cloud / DevOps"
+
+
+          elif any(
+              word in combined_text
+              for word in [
+                  "test",
+                  "pytest",
+                  "unittest"
+              ]
+          ):
+              task = "Testing"
+
+
+          elif any(
+              word in combined_text
+              for word in [
+                  "readme",
+                  "workflow",
+                  ".github",
+                  "github",
+                  "action"
+              ]
+          ):
+              task = "Developer Infrastructure"
+
+
+          # --------------------------------------------------
+          # ACTIVITY STATUS
+          # --------------------------------------------------
+
+          now = datetime.now(timezone.utc)
+
+          activity_status = "NO RECENT ACTIVITY"
+
+          if pushed_at:
+
+              pushed_dt = datetime.fromisoformat(
+                  pushed_at.replace("Z", "+00:00")
+              )
+
+              hours_since = (
+                  now - pushed_dt
+              ).total_seconds() / 3600
+
+
+              if hours_since <= 24:
+
+                  activity_status = "ACTIVE"
+
+
+              elif hours_since <= 72:
+
+                  activity_status = "RECENTLY ACTIVE"
+
+
+              elif hours_since <= 168:
+
+                  activity_status = "PAUSED"
+
+
+              else:
+
+                  activity_status = "DORMANT"
+
+
+          # --------------------------------------------------
+          # ACTIVITY SCORE
+          # --------------------------------------------------
+
+          if activity_status == "ACTIVE":
+              activity_score = 100
+
+          elif activity_status == "RECENTLY ACTIVE":
+              activity_score = 70
+
+          elif activity_status == "PAUSED":
+              activity_score = 35
+
+          else:
+              activity_score = 10
+
+
+          # --------------------------------------------------
+          # FORMAT TIME
+          # --------------------------------------------------
+
+          if latest_commit_time:
+
+              commit_dt = datetime.fromisoformat(
+                  latest_commit_time.replace("Z", "+00:00")
+              )
+
+              commit_display = commit_dt.strftime(
+                  "%Y-%m-%d %H:%M UTC"
+              )
+
+          else:
+
+              commit_display = "N/A"
+
+
+          # --------------------------------------------------
+          # ESCAPE XML
+          # --------------------------------------------------
+
+          repo_name = html.escape(repo_name)
+          task = html.escape(task)
+          activity_status = html.escape(activity_status)
+          latest_commit_message = html.escape(
+              latest_commit_message[:70]
+          )
+
+          changed_files = [
+              html.escape(file)
+              for file in changed_files
+          ]
+
+
+          # --------------------------------------------------
+          # FILE LIST
+          # --------------------------------------------------
+
+          file_lines = []
+
+          y = 365
+
+          for file in changed_files:
+
+              file_lines.append(
+                  f'''
                   <text
-                    x="{chip_x + width / 2}"
-                    y="{chip_y + 21}"
-                    text-anchor="middle"
-                    class="chip"
-                  >{item}</text>
-                </g>
-              """)
+                    x="55"
+                    y="{y}"
+                    fill="#9affc7"
+                    font-family="monospace"
+                    font-size="11"
+                  >
+                    {file[:95]}
+                  </text>
+                  '''
+              )
 
-              chip_x += width + 12
+              y += 22
 
-              if chip_x > 850:
-                  chip_x = 55
-                  chip_y += 45
 
-          chips_svg = "".join(chips)
+          if not file_lines:
 
-          # ------------------------------------------------------------
-          # PROGRESS
-          # ------------------------------------------------------------
+              file_lines.append(
+                  f'''
+                  <text
+                    x="55"
+                    y="{y}"
+                    fill="#35694f"
+                    font-family="monospace"
+                    font-size="11"
+                  >
+                    No changed-file telemetry available
+                  </text>
+                  '''
+              )
 
-          bar_x = 55
-          bar_y = chip_y + 75
-          bar_width = 870
-          progress_width = int(bar_width * progress / 100)
 
-          # ------------------------------------------------------------
-          # DYNAMIC HEIGHT
-          # ------------------------------------------------------------
+          files_svg = "".join(file_lines)
 
-          height = bar_y + 205
 
-          # ------------------------------------------------------------
+          # --------------------------------------------------
+          # PROGRESS WIDTH
+          # --------------------------------------------------
+
+          progress_width = int(
+              870 * activity_score / 100
+          )
+
+
+          # --------------------------------------------------
+          # TIMESTAMP
+          # --------------------------------------------------
+
+          updated = now.strftime(
+              "%Y-%m-%d %H:%M UTC"
+          )
+
+
+          # --------------------------------------------------
           # SVG
-          # ------------------------------------------------------------
+          # --------------------------------------------------
 
           svg = f'''<svg
             xmlns="http://www.w3.org/2000/svg"
             width="980"
-            height="{height}"
-            viewBox="0 0 980 {height}"
+            height="720"
+            viewBox="0 0 980 720"
           >
 
             <defs>
@@ -148,96 +470,85 @@ jobs:
               <linearGradient
                 id="hudGradient"
                 x1="0"
-                x2="1"
                 y1="0"
+                x2="1"
                 y2="0"
               >
-                <stop offset="0%" stop-color="#00ff88"/>
-                <stop offset="100%" stop-color="#00ffaa"/>
+
+                <stop
+                  offset="0%"
+                  stop-color="#00ff88"
+                />
+
+                <stop
+                  offset="100%"
+                  stop-color="#00ffaa"
+                />
+
               </linearGradient>
 
+
               <filter id="glow">
-                <feGaussianBlur stdDeviation="4" result="blur"/>
+
+                <feGaussianBlur
+                  stdDeviation="4"
+                  result="blur"
+                />
+
                 <feMerge>
+
                   <feMergeNode in="blur"/>
-                  <feMergeNode in="SourceGraphic"/>
+
+                  <feMergeNode
+                    in="SourceGraphic"
+                  />
+
                 </feMerge>
+
               </filter>
 
-              <clipPath id="progressClip">
-                <rect
-                  x="{bar_x}"
-                  y="{bar_y}"
-                  width="{bar_width}"
-                  height="16"
-                  rx="8"
-                />
-              </clipPath>
-
             </defs>
+
 
             <!-- BACKGROUND -->
 
             <rect
-              width="100%"
-              height="100%"
+              width="980"
+              height="720"
               rx="14"
               fill="#050807"
             />
 
-            <!-- OUTER BORDER -->
+
+            <!-- BORDER -->
 
             <rect
               x="1"
               y="1"
               width="978"
-              height="{height - 2}"
+              height="718"
               rx="14"
               fill="none"
               stroke="#00ff88"
               stroke-width="1"
               stroke-opacity="0.35"
             >
+
               <animate
                 attributeName="stroke-opacity"
                 values="0.25;0.55;0.25"
                 dur="3s"
                 repeatCount="indefinite"
               />
+
             </rect>
 
-            <!-- TOP SCAN LINE -->
-
-            <rect
-              x="40"
-              y="70"
-              width="900"
-              height="1"
-              fill="#00ff88"
-              opacity="0.15"
-            />
-
-            <rect
-              x="40"
-              y="70"
-              width="120"
-              height="2"
-              fill="#00ff88"
-              filter="url(#glow)"
-            >
-              <animate
-                attributeName="x"
-                values="40;820;40"
-                dur="4s"
-                repeatCount="indefinite"
-              />
-            </rect>
 
             <!-- HEADER -->
 
             <text
               x="55"
-              y="42"
+              y="43"
               fill="#00ff88"
               font-family="monospace"
               font-size="18"
@@ -247,60 +558,55 @@ jobs:
               CURRENTLY WORKING ON
             </text>
 
+
             <text
               x="925"
-              y="42"
+              y="43"
               text-anchor="end"
-              fill="#6affb3"
+              fill="#4d9975"
               font-family="monospace"
-              font-size="11"
+              font-size="10"
               letter-spacing="1"
             >
-              DEVELOPMENT TELEMETRY
+              AUTO TELEMETRY
             </text>
 
-            <!-- STATUS -->
 
-            <circle
-              cx="890"
-              cy="103"
-              r="6"
-              fill="#00ff88"
-              filter="url(#glow)"
-            >
-              <animate
-                attributeName="r"
-                values="5;8;5"
-                dur="1.6s"
-                repeatCount="indefinite"
-              />
-
-              <animate
-                attributeName="opacity"
-                values="1;0.45;1"
-                dur="1.6s"
-                repeatCount="indefinite"
-              />
-            </circle>
-
-            <text
-              x="870"
-              y="108"
-              text-anchor="end"
-              fill="#00ff88"
-              font-family="monospace"
-              font-size="12"
-              font-weight="700"
-              letter-spacing="1"
-            >
-              BUILDING
-            </text>
-
-            <!-- MAIN PROJECT PANEL -->
+            <!-- SCANNER -->
 
             <rect
               x="40"
-              y="88"
+              y="70"
+              width="900"
+              height="1"
+              fill="#00ff88"
+              opacity="0.12"
+            />
+
+            <rect
+              x="40"
+              y="69"
+              width="120"
+              height="2"
+              fill="#00ff88"
+              filter="url(#glow)"
+            >
+
+              <animate
+                attributeName="x"
+                values="40;820;40"
+                dur="4s"
+                repeatCount="indefinite"
+              />
+
+            </rect>
+
+
+            <!-- MAIN PANEL -->
+
+            <rect
+              x="40"
+              y="90"
               width="900"
               height="235"
               rx="10"
@@ -309,287 +615,317 @@ jobs:
               stroke-opacity="0.25"
             />
 
-            <!-- PROJECT LABEL -->
+
+            <!-- ACTIVE INDICATOR -->
+
+            <circle
+              cx="890"
+              cy="118"
+              r="6"
+              fill="#00ff88"
+              filter="url(#glow)"
+            >
+
+              <animate
+                attributeName="r"
+                values="5;8;5"
+                dur="1.5s"
+                repeatCount="indefinite"
+              />
+
+              <animate
+                attributeName="opacity"
+                values="1;0.45;1"
+                dur="1.5s"
+                repeatCount="indefinite"
+              />
+
+            </circle>
+
+
+            <text
+              x="870"
+              y="123"
+              text-anchor="end"
+              fill="#00ff88"
+              font-family="monospace"
+              font-size="11"
+              font-weight="700"
+            >
+              {activity_status}
+            </text>
+
+
+            <!-- PROJECT -->
 
             <text
               x="60"
-              y="125"
+              y="130"
               fill="#4d9975"
               font-family="monospace"
               font-size="10"
               letter-spacing="2"
             >
-              PROJECT
+              ACTIVE PROJECT
             </text>
+
 
             <text
               x="60"
-              y="155"
+              y="163"
               fill="#f1fff7"
               font-family="monospace"
               font-size="25"
               font-weight="700"
             >
-              {project}
+              {repo_name}
             </text>
 
-            <!-- CATEGORY -->
+
+            <!-- TASK -->
 
             <text
               x="60"
-              y="190"
+              y="205"
               fill="#4d9975"
               font-family="monospace"
               font-size="10"
               letter-spacing="2"
             >
-              CATEGORY
+              CURRENT DEVELOPMENT AREA
             </text>
+
 
             <text
               x="60"
-              y="214"
+              y="232"
               fill="#00ff88"
               font-family="monospace"
-              font-size="14"
+              font-size="16"
               font-weight="700"
             >
-              {category}
+              {task}
             </text>
 
-            <!-- STATUS -->
+
+            <!-- LAST COMMIT -->
 
             <text
-              x="470"
-              y="125"
+              x="60"
+              y="275"
               fill="#4d9975"
               font-family="monospace"
               font-size="10"
               letter-spacing="2"
             >
-              CURRENT STATUS
+              LAST COMMIT
             </text>
 
-            <text
-              x="470"
-              y="155"
-              fill="#f1fff7"
-              font-family="monospace"
-              font-size="18"
-              font-weight="700"
-            >
-              {status}
-            </text>
-
-            <!-- CURSOR -->
-
-            <rect
-              x="470"
-              y="169"
-              width="8"
-              height="18"
-              fill="#00ff88"
-            >
-              <animate
-                attributeName="opacity"
-                values="1;0;1"
-                dur="0.9s"
-                repeatCount="indefinite"
-              />
-            </rect>
-
-            <!-- ACTIVE SIGNAL -->
 
             <text
               x="60"
-              y="270"
-              fill="#4d9975"
+              y="298"
+              fill="#c8ffe0"
               font-family="monospace"
-              font-size="10"
-              letter-spacing="2"
+              font-size="11"
             >
-              SYSTEM SIGNAL
+              {latest_commit_message}
             </text>
 
-            <text
-              x="60"
-              y="294"
-              fill="#9affc7"
-              font-family="monospace"
-              font-size="12"
-            >
-              ACTIVE DEVELOPMENT SESSION
-            </text>
 
-            <!-- TECH STACK -->
+            <!-- ACTIVITY -->
 
             <text
               x="55"
-              y="{chip_y - 20}"
+              y="355"
               fill="#4d9975"
               font-family="monospace"
               font-size="10"
               letter-spacing="2"
             >
-              ACTIVE STACK
+              RECENTLY CHANGED FILES
             </text>
 
-            {chips_svg}
 
-            <!-- PROGRESS -->
+            {files_svg}
+
+
+            <!-- ACTIVITY BAR -->
 
             <text
-              x="{bar_x}"
-              y="{bar_y - 25}"
+              x="55"
+              y="505"
               fill="#4d9975"
               font-family="monospace"
               font-size="10"
               letter-spacing="2"
             >
-              PROJECT PROGRESS
+              ACTIVITY LEVEL
             </text>
 
+
             <text
-              x="{bar_x + bar_width}"
-              y="{bar_y - 25}"
+              x="925"
+              y="505"
               text-anchor="end"
               fill="#00ff88"
               font-family="monospace"
-              font-size="13"
+              font-size="12"
               font-weight="700"
             >
-              {progress}%
+              {activity_score}%
             </text>
 
-            <!-- PROGRESS BACKGROUND -->
 
             <rect
-              x="{bar_x}"
-              y="{bar_y}"
-              width="{bar_width}"
-              height="16"
+              x="55"
+              y="520"
+              width="870"
+              height="15"
               rx="8"
               fill="#0b1b14"
               stroke="#00ff88"
               stroke-opacity="0.25"
             />
 
-            <!-- PROGRESS FILL -->
 
             <rect
-              x="{bar_x}"
-              y="{bar_y}"
+              x="55"
+              y="520"
               width="0"
-              height="16"
+              height="15"
               rx="8"
               fill="url(#hudGradient)"
-              clip-path="url(#progressClip)"
               filter="url(#glow)"
             >
+
               <animate
                 attributeName="width"
                 from="0"
                 to="{progress_width}"
-                dur="1.8s"
+                dur="1.5s"
                 fill="freeze"
               />
+
             </rect>
 
-            <!-- PROGRESS SCANNER -->
 
-            <rect
-              x="{bar_x}"
-              y="{bar_y}"
-              width="70"
-              height="16"
-              rx="8"
-              fill="#ffffff"
-              opacity="0.18"
-              clip-path="url(#progressClip)"
-            >
-              <animate
-                attributeName="x"
-                values="{bar_x};{bar_x + max(progress_width - 70, 0)};{bar_x}"
-                dur="2.8s"
-                repeatCount="indefinite"
-              />
-            </rect>
-
-            <!-- NEXT OBJECTIVE -->
-
-            <rect
-              x="40"
-              y="{bar_y + 65}"
-              width="900"
-              height="78"
-              rx="10"
-              fill="#07100c"
-              stroke="#00ff88"
-              stroke-opacity="0.20"
-            />
+            <!-- LAST ACTIVITY -->
 
             <text
-              x="60"
-              y="{bar_y + 92}"
+              x="55"
+              y="575"
               fill="#4d9975"
               font-family="monospace"
               font-size="10"
               letter-spacing="2"
             >
-              NEXT OBJECTIVE
+              LAST COMMIT TIME
             </text>
 
-            <text
-              x="60"
-              y="{bar_y + 120}"
-              fill="#d7ffea"
-              font-family="monospace"
-              font-size="14"
-              font-weight="700"
-            >
-              {next_task}
-            </text>
-
-            <!-- FOOTER -->
 
             <text
               x="55"
-              y="{height - 28}"
-              fill="#35694f"
+              y="598"
+              fill="#c8ffe0"
               font-family="monospace"
-              font-size="10"
-              letter-spacing="1"
+              font-size="12"
             >
-              TELEMETRY ONLINE
+              {commit_display}
             </text>
+
+
+            <!-- SYSTEM -->
 
             <text
               x="925"
-              y="{height - 28}"
+              y="598"
               text-anchor="end"
               fill="#35694f"
               font-family="monospace"
               font-size="10"
             >
-              LAST UPDATED: {updated}
+              AUTO-DETECTED
+            </text>
+
+
+            <!-- FOOTER -->
+
+            <text
+              x="55"
+              y="680"
+              fill="#35694f"
+              font-family="monospace"
+              font-size="10"
+              letter-spacing="1"
+            >
+              GITHUB ACTIVITY TELEMETRY ONLINE
+            </text>
+
+
+            <text
+              x="925"
+              y="680"
+              text-anchor="end"
+              fill="#35694f"
+              font-family="monospace"
+              font-size="10"
+            >
+              UPDATED {updated}
             </text>
 
           </svg>
           '''
 
-          output_path.parent.mkdir(parents=True, exist_ok=True)
-          output_path.write_text(svg, encoding="utf-8")
 
-          print(f"Generated {output_path}")
-          print(f"Project: {project}")
-          print(f"Status: {status}")
-          print(f"Progress: {progress}%")
-          print(f"Stack: {', '.join(stack)}")
+          # --------------------------------------------------
+          # WRITE SVG
+          # --------------------------------------------------
+
+          from pathlib import Path
+
+          output = Path(
+              "assets/currently-working-on.svg"
+          )
+
+          output.parent.mkdir(
+              parents=True,
+              exist_ok=True
+          )
+
+          output.write_text(
+              svg,
+              encoding="utf-8"
+          )
+
+          print(
+              f"Generated {output}"
+          )
+
+          print(
+              f"Project: {repo_name}"
+          )
+
+          print(
+              f"Task: {task}"
+          )
+
+          print(
+              f"Status: {activity_status}"
+          )
+
+
+      # --------------------------------------------------
+      # COMMIT GENERATED SVG
+      # --------------------------------------------------
 
       - name: Commit HUD
         run: |
+
           git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git config user.email \
+            "41898282+github-actions[bot]@users.noreply.github.com"
 
           git add assets/currently-working-on.svg
 
@@ -598,5 +934,7 @@ jobs:
             exit 0
           fi
 
-          git commit -m "Update currently working on HUD"
+          git commit \
+            -m "Update automatic working HUD"
+
           git push
