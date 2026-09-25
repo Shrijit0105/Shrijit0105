@@ -561,7 +561,7 @@
 
 
 
-name: Spider Developer Introduction HUD
+name: Developer Introduction HUD
 
 on:
   workflow_dispatch:
