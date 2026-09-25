@@ -1,0 +1,602 @@
+name: Currently Working On HUD
+
+on:
+  schedule:
+    - cron: "0 1 * * *"
+
+  workflow_dispatch:
+
+  push:
+    paths:
+      - "currently-working-on.json"
+      - ".github/workflows/currently-working-on.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Generate Currently Working On HUD
+        shell: python
+        run: |
+          import json
+          import html
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          config_path = Path("currently-working-on.json")
+          output_path = Path("assets/currently-working-on.svg")
+
+          # ------------------------------------------------------------
+          # LOAD CONFIG
+          # ------------------------------------------------------------
+
+          with config_path.open("r", encoding="utf-8") as f:
+              data = json.load(f)
+
+          project = str(data.get("project", "Unknown Project"))
+          category = str(data.get("category", "Development"))
+          status = str(data.get("status", "In Progress"))
+          next_task = str(data.get("next", "Next objective not specified"))
+
+          try:
+              progress = int(data.get("progress", 0))
+          except (TypeError, ValueError):
+              progress = 0
+
+          progress = max(0, min(100, progress))
+
+          stack = data.get("stack", [])
+
+          if not isinstance(stack, list):
+              stack = []
+
+          stack = [str(item) for item in stack[:6]]
+
+          # ------------------------------------------------------------
+          # ESCAPE XML CONTENT
+          # ------------------------------------------------------------
+
+          project = html.escape(project)
+          category = html.escape(category)
+          status = html.escape(status)
+          next_task = html.escape(next_task)
+          stack = [html.escape(item) for item in stack]
+
+          # ------------------------------------------------------------
+          # TIMESTAMP
+          # ------------------------------------------------------------
+
+          updated = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+
+          # ------------------------------------------------------------
+          # STACK CHIPS
+          # ------------------------------------------------------------
+
+          chip_x = 55
+          chip_y = 365
+
+          chips = []
+
+          for item in stack:
+              width = max(90, len(item) * 9 + 34)
+
+              chips.append(f"""
+                <g>
+                  <rect
+                    x="{chip_x}"
+                    y="{chip_y}"
+                    width="{width}"
+                    height="32"
+                    rx="6"
+                    fill="#07130f"
+                    stroke="#00ff88"
+                    stroke-opacity="0.45"
+                  />
+
+                  <text
+                    x="{chip_x + width / 2}"
+                    y="{chip_y + 21}"
+                    text-anchor="middle"
+                    class="chip"
+                  >{item}</text>
+                </g>
+              """)
+
+              chip_x += width + 12
+
+              if chip_x > 850:
+                  chip_x = 55
+                  chip_y += 45
+
+          chips_svg = "".join(chips)
+
+          # ------------------------------------------------------------
+          # PROGRESS
+          # ------------------------------------------------------------
+
+          bar_x = 55
+          bar_y = chip_y + 75
+          bar_width = 870
+          progress_width = int(bar_width * progress / 100)
+
+          # ------------------------------------------------------------
+          # DYNAMIC HEIGHT
+          # ------------------------------------------------------------
+
+          height = bar_y + 205
+
+          # ------------------------------------------------------------
+          # SVG
+          # ------------------------------------------------------------
+
+          svg = f'''<svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="980"
+            height="{height}"
+            viewBox="0 0 980 {height}"
+          >
+
+            <defs>
+
+              <linearGradient
+                id="hudGradient"
+                x1="0"
+                x2="1"
+                y1="0"
+                y2="0"
+              >
+                <stop offset="0%" stop-color="#00ff88"/>
+                <stop offset="100%" stop-color="#00ffaa"/>
+              </linearGradient>
+
+              <filter id="glow">
+                <feGaussianBlur stdDeviation="4" result="blur"/>
+                <feMerge>
+                  <feMergeNode in="blur"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+
+              <clipPath id="progressClip">
+                <rect
+                  x="{bar_x}"
+                  y="{bar_y}"
+                  width="{bar_width}"
+                  height="16"
+                  rx="8"
+                />
+              </clipPath>
+
+            </defs>
+
+            <!-- BACKGROUND -->
+
+            <rect
+              width="100%"
+              height="100%"
+              rx="14"
+              fill="#050807"
+            />
+
+            <!-- OUTER BORDER -->
+
+            <rect
+              x="1"
+              y="1"
+              width="978"
+              height="{height - 2}"
+              rx="14"
+              fill="none"
+              stroke="#00ff88"
+              stroke-width="1"
+              stroke-opacity="0.35"
+            >
+              <animate
+                attributeName="stroke-opacity"
+                values="0.25;0.55;0.25"
+                dur="3s"
+                repeatCount="indefinite"
+              />
+            </rect>
+
+            <!-- TOP SCAN LINE -->
+
+            <rect
+              x="40"
+              y="70"
+              width="900"
+              height="1"
+              fill="#00ff88"
+              opacity="0.15"
+            />
+
+            <rect
+              x="40"
+              y="70"
+              width="120"
+              height="2"
+              fill="#00ff88"
+              filter="url(#glow)"
+            >
+              <animate
+                attributeName="x"
+                values="40;820;40"
+                dur="4s"
+                repeatCount="indefinite"
+              />
+            </rect>
+
+            <!-- HEADER -->
+
+            <text
+              x="55"
+              y="42"
+              fill="#00ff88"
+              font-family="monospace"
+              font-size="18"
+              font-weight="700"
+              letter-spacing="2"
+            >
+              CURRENTLY WORKING ON
+            </text>
+
+            <text
+              x="925"
+              y="42"
+              text-anchor="end"
+              fill="#6affb3"
+              font-family="monospace"
+              font-size="11"
+              letter-spacing="1"
+            >
+              DEVELOPMENT TELEMETRY
+            </text>
+
+            <!-- STATUS -->
+
+            <circle
+              cx="890"
+              cy="103"
+              r="6"
+              fill="#00ff88"
+              filter="url(#glow)"
+            >
+              <animate
+                attributeName="r"
+                values="5;8;5"
+                dur="1.6s"
+                repeatCount="indefinite"
+              />
+
+              <animate
+                attributeName="opacity"
+                values="1;0.45;1"
+                dur="1.6s"
+                repeatCount="indefinite"
+              />
+            </circle>
+
+            <text
+              x="870"
+              y="108"
+              text-anchor="end"
+              fill="#00ff88"
+              font-family="monospace"
+              font-size="12"
+              font-weight="700"
+              letter-spacing="1"
+            >
+              BUILDING
+            </text>
+
+            <!-- MAIN PROJECT PANEL -->
+
+            <rect
+              x="40"
+              y="88"
+              width="900"
+              height="235"
+              rx="10"
+              fill="#07100c"
+              stroke="#00ff88"
+              stroke-opacity="0.25"
+            />
+
+            <!-- PROJECT LABEL -->
+
+            <text
+              x="60"
+              y="125"
+              fill="#4d9975"
+              font-family="monospace"
+              font-size="10"
+              letter-spacing="2"
+            >
+              PROJECT
+            </text>
+
+            <text
+              x="60"
+              y="155"
+              fill="#f1fff7"
+              font-family="monospace"
+              font-size="25"
+              font-weight="700"
+            >
+              {project}
+            </text>
+
+            <!-- CATEGORY -->
+
+            <text
+              x="60"
+              y="190"
+              fill="#4d9975"
+              font-family="monospace"
+              font-size="10"
+              letter-spacing="2"
+            >
+              CATEGORY
+            </text>
+
+            <text
+              x="60"
+              y="214"
+              fill="#00ff88"
+              font-family="monospace"
+              font-size="14"
+              font-weight="700"
+            >
+              {category}
+            </text>
+
+            <!-- STATUS -->
+
+            <text
+              x="470"
+              y="125"
+              fill="#4d9975"
+              font-family="monospace"
+              font-size="10"
+              letter-spacing="2"
+            >
+              CURRENT STATUS
+            </text>
+
+            <text
+              x="470"
+              y="155"
+              fill="#f1fff7"
+              font-family="monospace"
+              font-size="18"
+              font-weight="700"
+            >
+              {status}
+            </text>
+
+            <!-- CURSOR -->
+
+            <rect
+              x="470"
+              y="169"
+              width="8"
+              height="18"
+              fill="#00ff88"
+            >
+              <animate
+                attributeName="opacity"
+                values="1;0;1"
+                dur="0.9s"
+                repeatCount="indefinite"
+              />
+            </rect>
+
+            <!-- ACTIVE SIGNAL -->
+
+            <text
+              x="60"
+              y="270"
+              fill="#4d9975"
+              font-family="monospace"
+              font-size="10"
+              letter-spacing="2"
+            >
+              SYSTEM SIGNAL
+            </text>
+
+            <text
+              x="60"
+              y="294"
+              fill="#9affc7"
+              font-family="monospace"
+              font-size="12"
+            >
+              ACTIVE DEVELOPMENT SESSION
+            </text>
+
+            <!-- TECH STACK -->
+
+            <text
+              x="55"
+              y="{chip_y - 20}"
+              fill="#4d9975"
+              font-family="monospace"
+              font-size="10"
+              letter-spacing="2"
+            >
+              ACTIVE STACK
+            </text>
+
+            {chips_svg}
+
+            <!-- PROGRESS -->
+
+            <text
+              x="{bar_x}"
+              y="{bar_y - 25}"
+              fill="#4d9975"
+              font-family="monospace"
+              font-size="10"
+              letter-spacing="2"
+            >
+              PROJECT PROGRESS
+            </text>
+
+            <text
+              x="{bar_x + bar_width}"
+              y="{bar_y - 25}"
+              text-anchor="end"
+              fill="#00ff88"
+              font-family="monospace"
+              font-size="13"
+              font-weight="700"
+            >
+              {progress}%
+            </text>
+
+            <!-- PROGRESS BACKGROUND -->
+
+            <rect
+              x="{bar_x}"
+              y="{bar_y}"
+              width="{bar_width}"
+              height="16"
+              rx="8"
+              fill="#0b1b14"
+              stroke="#00ff88"
+              stroke-opacity="0.25"
+            />
+
+            <!-- PROGRESS FILL -->
+
+            <rect
+              x="{bar_x}"
+              y="{bar_y}"
+              width="0"
+              height="16"
+              rx="8"
+              fill="url(#hudGradient)"
+              clip-path="url(#progressClip)"
+              filter="url(#glow)"
+            >
+              <animate
+                attributeName="width"
+                from="0"
+                to="{progress_width}"
+                dur="1.8s"
+                fill="freeze"
+              />
+            </rect>
+
+            <!-- PROGRESS SCANNER -->
+
+            <rect
+              x="{bar_x}"
+              y="{bar_y}"
+              width="70"
+              height="16"
+              rx="8"
+              fill="#ffffff"
+              opacity="0.18"
+              clip-path="url(#progressClip)"
+            >
+              <animate
+                attributeName="x"
+                values="{bar_x};{bar_x + max(progress_width - 70, 0)};{bar_x}"
+                dur="2.8s"
+                repeatCount="indefinite"
+              />
+            </rect>
+
+            <!-- NEXT OBJECTIVE -->
+
+            <rect
+              x="40"
+              y="{bar_y + 65}"
+              width="900"
+              height="78"
+              rx="10"
+              fill="#07100c"
+              stroke="#00ff88"
+              stroke-opacity="0.20"
+            />
+
+            <text
+              x="60"
+              y="{bar_y + 92}"
+              fill="#4d9975"
+              font-family="monospace"
+              font-size="10"
+              letter-spacing="2"
+            >
+              NEXT OBJECTIVE
+            </text>
+
+            <text
+              x="60"
+              y="{bar_y + 120}"
+              fill="#d7ffea"
+              font-family="monospace"
+              font-size="14"
+              font-weight="700"
+            >
+              {next_task}
+            </text>
+
+            <!-- FOOTER -->
+
+            <text
+              x="55"
+              y="{height - 28}"
+              fill="#35694f"
+              font-family="monospace"
+              font-size="10"
+              letter-spacing="1"
+            >
+              TELEMETRY ONLINE
+            </text>
+
+            <text
+              x="925"
+              y="{height - 28}"
+              text-anchor="end"
+              fill="#35694f"
+              font-family="monospace"
+              font-size="10"
+            >
+              LAST UPDATED: {updated}
+            </text>
+
+          </svg>
+          '''
+
+          output_path.parent.mkdir(parents=True, exist_ok=True)
+          output_path.write_text(svg, encoding="utf-8")
+
+          print(f"Generated {output_path}")
+          print(f"Project: {project}")
+          print(f"Status: {status}")
+          print(f"Progress: {progress}%")
+          print(f"Stack: {', '.join(stack)}")
+
+      - name: Commit HUD
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add assets/currently-working-on.svg
+
+          if git diff --cached --quiet; then
+            echo "No HUD changes detected."
+            exit 0
+          fi
+
+          git commit -m "Update currently working on HUD"
+          git push
