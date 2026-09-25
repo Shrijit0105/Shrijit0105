@@ -98,3 +98,12 @@ and comparative model performance.
     alt="Developer HUD"
   />
 </p>
+<h2 align="center">⚡ ACTIVITY COMMAND CENTER</h2>
+
+<p align="center">
+  <img
+    src="./assets/github-activity.svg"
+    width="900"
+    alt="GitHub Activity Command Center"
+  />
+</p>
