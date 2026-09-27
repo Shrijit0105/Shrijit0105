@@ -120,7 +120,7 @@ jobs:
                   ) * 100
 
                   # Ignore tiny statistical noise
-                  if percentage >= 1:
+                 
 
                       languages.append(
                           (
