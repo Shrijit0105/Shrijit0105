@@ -120,15 +120,13 @@ jobs:
                   ) * 100
 
                   # Ignore tiny statistical noise
-                 
-
-                      languages.append(
-                          (
-                              language,
-                              amount,
-                              percentage
+                  languages.append(
+                   (
+                       language,
+                       amount,
+                       percentage
                           )
-                      )
+                    )
 
 
           languages.sort(
