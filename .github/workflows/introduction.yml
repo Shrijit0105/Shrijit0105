@@ -5,7 +5,7 @@ on:
 
   push:
     paths:
-      - "introduction.yml"
+      - ".github/workflows/introduction.yml"
 
 permissions:
   contents: write
@@ -19,544 +19,371 @@ jobs:
         uses: actions/checkout@v5
 
       - name: Generate Introduction HUD
-        shell: python
         run: |
+          python3 <<'PY'
+          import os
 
-          import html
-          from pathlib import Path
-
-          # ==========================================================
-          # INTRODUCTION CONFIG
-          # ==========================================================
+          os.makedirs("assets", exist_ok=True)
 
           NAME = "SHRIJIT"
-
           ROLE = "SOFTWARE DEVELOPER • AI/ML ENTHUSIAST"
+          DESCRIPTION = "Building software, exploring AI/ML, and learning by creating."
 
-          TAGLINE = (
-              "Building things, breaking things, "
-              "learning how they work."
-          )
-
-          LOCATION = "INDIA"
-
-          STATUS = "OPEN TO BUILD"
-
-          STACK = [
-              "Python",
-              "C++",
-              "JavaScript",
-              "AI/ML",
-              "DSA",
-              "Full Stack"
-          ]
-
-          # ==========================================================
-          # ESCAPE XML
-          # ==========================================================
-
-          NAME = html.escape(NAME)
-          ROLE = html.escape(ROLE)
-          TAGLINE = html.escape(TAGLINE)
-          LOCATION = html.escape(LOCATION)
-          STATUS = html.escape(STATUS)
-
-          STACK = [
-              html.escape(item)
-              for item in STACK
-          ]
-
-          # ==========================================================
-          # STACK CHIPS
-          # ==========================================================
-
-          chips = []
-
-          x = 55
-          y = 330
-
-          for item in STACK:
-
-              width = max(
-                  90,
-                  len(item) * 9 + 34
-              )
-
-              chips.append(
-                  f"""
-                  <rect
-                    x="{x}"
-                    y="{y}"
-                    width="{width}"
-                    height="32"
-                    rx="6"
-                    fill="#07130f"
-                    stroke="#00ff88"
-                    stroke-opacity="0.40"
-                  />
-
-                  <text
-                    x="{x + width / 2}"
-                    y="{y + 21}"
-                    text-anchor="middle"
-                    fill="#9affc7"
-                    font-family="monospace"
-                    font-size="10"
-                    font-weight="700"
-                  >
-                    {item}
-                  </text>
-                  """
-              )
-
-              x += width + 12
-
-              if x > 820:
-
-                  x = 55
-                  y += 45
-
-          chips_svg = "".join(chips)
-
-          # ==========================================================
-          # SVG
-          # ==========================================================
-
-          svg = f"""
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="980"
-            height="500"
-            viewBox="0 0 980 500"
-          >
+          svg = f'''<?xml version="1.0" encoding="UTF-8"?>
+          <svg xmlns="http://www.w3.org/2000/svg"
+               width="1100"
+               height="420"
+               viewBox="0 0 1100 420">
 
             <defs>
 
-              <linearGradient
-                id="hudGradient"
-                x1="0"
-                y1="0"
-                x2="1"
-                y2="0"
-              >
+              <!-- Web pattern -->
+              <pattern id="web"
+                       width="120"
+                       height="120"
+                       patternUnits="userSpaceOnUse">
 
-                <stop
-                  offset="0%"
-                  stop-color="#00ff88"
-                />
+                <path
+                  d="M60 0
+                     C60 30 30 60 0 60
+                     M60 0
+                     C60 30 90 60 120 60
+                     M0 60
+                     C30 60 60 90 60 120
+                     M120 60
+                     C90 60 60 90 60 120"
+                  fill="none"
+                  stroke="#16364a"
+                  stroke-width="1"/>
 
-                <stop
-                  offset="100%"
-                  stop-color="#00ffaa"
-                />
+                <circle cx="60"
+                        cy="60"
+                        r="30"
+                        fill="none"
+                        stroke="#16364a"
+                        stroke-width="1"/>
+
+                <circle cx="60"
+                        cy="60"
+                        r="50"
+                        fill="none"
+                        stroke="#102838"
+                        stroke-width="1"/>
+              </pattern>
+
+              <!-- Glow -->
+              <filter id="glow">
+                <feGaussianBlur stdDeviation="4"
+                                result="blur"/>
+                <feMerge>
+                  <feMergeNode in="blur"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+
+              <linearGradient id="accent"
+                              x1="0"
+                              y1="0"
+                              x2="1"
+                              y2="0">
+
+                <stop offset="0%"
+                      stop-color="#ef4444"/>
+
+                <stop offset="50%"
+                      stop-color="#60a5fa"/>
+
+                <stop offset="100%"
+                      stop-color="#ef4444"/>
 
               </linearGradient>
-
-              <filter id="glow">
-
-                <feGaussianBlur
-                  stdDeviation="4"
-                  result="blur"
-                />
-
-                <feMerge>
-
-                  <feMergeNode in="blur"/>
-
-                  <feMergeNode
-                    in="SourceGraphic"
-                  />
-
-                </feMerge>
-
-              </filter>
 
             </defs>
 
 
-            <!-- ================================================= -->
-            <!-- BACKGROUND -->
-            <!-- ================================================= -->
+            <!-- Background -->
 
-            <rect
-              width="980"
-              height="500"
-              rx="14"
-              fill="#050807"
-            />
+            <rect width="1100"
+                  height="420"
+                  fill="#05080d"/>
+
+            <rect width="1100"
+                  height="420"
+                  fill="url(#web)"
+                  opacity="0.20"/>
 
 
-            <!-- ================================================= -->
-            <!-- BORDER -->
-            <!-- ================================================= -->
+            <!-- Main frame -->
 
-            <rect
-              x="1"
-              y="1"
-              width="978"
-              height="498"
-              rx="14"
-              fill="none"
-              stroke="#00ff88"
-              stroke-width="1"
-              stroke-opacity="0.35"
-            >
+            <rect x="18"
+                  y="18"
+                  width="1064"
+                  height="384"
+                  rx="18"
+                  fill="none"
+                  stroke="#143a52"
+                  stroke-width="2"/>
+
+            <rect x="25"
+                  y="25"
+                  width="1050"
+                  height="370"
+                  rx="14"
+                  fill="none"
+                  stroke="#ef4444"
+                  stroke-width="1.5"
+                  stroke-opacity="0.45">
 
               <animate
                 attributeName="stroke-opacity"
-                values="0.25;0.55;0.25"
+                values="0.25;0.7;0.25"
                 dur="3s"
-                repeatCount="indefinite"
-              />
+                repeatCount="indefinite"/>
 
             </rect>
 
 
-            <!-- ================================================= -->
-            <!-- TOP LABEL -->
-            <!-- ================================================= -->
+            <!-- Top label -->
 
-            <text
-              x="55"
-              y="42"
-              fill="#00ff88"
-              font-family="monospace"
-              font-size="11"
-              font-weight="700"
-              letter-spacing="2"
-            >
-              DEVELOPER IDENTITY SYSTEM
+            <text x="55"
+                  y="62"
+                  fill="#ef4444"
+                  font-family="monospace"
+                  font-size="12"
+                  font-weight="bold"
+                  letter-spacing="3">
+
+              SYSTEM // INTRODUCTION
+            </text>
+
+            <text x="1045"
+                  y="62"
+                  text-anchor="end"
+                  fill="#60a5fa"
+                  font-family="monospace"
+                  font-size="11"
+                  letter-spacing="2">
+
+              ONLINE
             </text>
 
 
-            <text
-              x="925"
-              y="42"
-              text-anchor="end"
-              fill="#35694f"
-              font-family="monospace"
-              font-size="10"
-            >
-              PROFILE://INTRO
+            <!-- Central spider-inspired reticle -->
+
+            <g transform="translate(190 215)">
+
+              <circle r="105"
+                      fill="none"
+                      stroke="#143a52"
+                      stroke-width="2"/>
+
+              <circle r="82"
+                      fill="none"
+                      stroke="#ef4444"
+                      stroke-opacity="0.55"
+                      stroke-width="1.5">
+
+                <animateTransform
+                  attributeName="transform"
+                  type="rotate"
+                  from="0"
+                  to="360"
+                  dur="18s"
+                  repeatCount="indefinite"/>
+
+              </circle>
+
+
+              <!-- Spider-inspired geometric symbol -->
+
+              <path
+                d="
+                  M0 -58
+                  L-15 -34
+                  L-14 -5
+                  L-30 20
+                  L-13 16
+                  L0 42
+                  L13 16
+                  L30 20
+                  L14 -5
+                  L15 -34
+                  Z"
+                fill="none"
+                stroke="#ef4444"
+                stroke-width="3"
+                filter="url(#glow)"/>
+
+
+              <!-- Scan line -->
+
+              <line x1="-85"
+                    y1="0"
+                    x2="85"
+                    y2="0"
+                    stroke="#60a5fa"
+                    stroke-width="1"
+                    opacity="0.8">
+
+                <animate
+                  attributeName="y1"
+                  values="-80;80;-80"
+                  dur="4s"
+                  repeatCount="indefinite"/>
+
+                <animate
+                  attributeName="y2"
+                  values="-80;80;-80"
+                  dur="4s"
+                  repeatCount="indefinite"/>
+
+              </line>
+
+            </g>
+
+
+            <!-- Introduction -->
+
+            <text x="350"
+                  y="155"
+                  fill="#60a5fa"
+                  font-family="monospace"
+                  font-size="11"
+                  letter-spacing="3">
+
+              DEVELOPER PROFILE
             </text>
 
-
-            <!-- ================================================= -->
-            <!-- SCANNER -->
-            <!-- ================================================= -->
-
-            <rect
-              x="40"
-              y="67"
-              width="900"
-              height="1"
-              fill="#00ff88"
-              opacity="0.12"
-            />
+            <line x1="350"
+                  y1="172"
+                  x2="1020"
+                  y2="172"
+                  stroke="url(#accent)"
+                  stroke-width="2"/>
 
 
-            <rect
-              x="40"
-              y="66"
-              width="120"
-              height="2"
-              fill="#00ff88"
-              filter="url(#glow)"
-            >
+            <text x="350"
+                  y="230"
+                  fill="#f8fafc"
+                  font-family="monospace"
+                  font-size="42"
+                  font-weight="bold"
+                  letter-spacing="6">
 
-              <animate
-                attributeName="x"
-                values="40;820;40"
-                dur="4s"
-                repeatCount="indefinite"
-              />
-
-            </rect>
-
-
-            <!-- ================================================= -->
-            <!-- MAIN IDENTITY -->
-            <!-- ================================================= -->
-
-            <text
-              x="55"
-              y="135"
-              fill="#f1fff7"
-              font-family="monospace"
-              font-size="44"
-              font-weight="700"
-              letter-spacing="3"
-            >
               {NAME}
             </text>
 
 
-            <rect
-              x="55"
-              y="155"
-              width="420"
-              height="2"
-              fill="url(#hudGradient)"
-              filter="url(#glow)"
-            >
+            <text x="350"
+                  y="265"
+                  fill="#ef4444"
+                  font-family="monospace"
+                  font-size="14"
+                  font-weight="bold"
+                  letter-spacing="2">
 
-              <animate
-                attributeName="width"
-                values="180;420;180"
-                dur="3s"
-                repeatCount="indefinite"
-              />
-
-            </rect>
-
-
-            <!-- ================================================= -->
-            <!-- ROLE -->
-            <!-- ================================================= -->
-
-            <text
-              x="55"
-              y="195"
-              fill="#00ff88"
-              font-family="monospace"
-              font-size="15"
-              font-weight="700"
-              letter-spacing="1"
-            >
               {ROLE}
             </text>
 
 
-            <!-- ================================================= -->
-            <!-- TAGLINE -->
-            <!-- ================================================= -->
+            <text x="350"
+                  y="315"
+                  fill="#cbd5e1"
+                  font-family="monospace"
+                  font-size="13"
+                  letter-spacing="0.8">
 
-            <text
-              x="55"
-              y="238"
-              fill="#c8ffe0"
-              font-family="monospace"
-              font-size="13"
-            >
-              {TAGLINE}
+              {DESCRIPTION}
             </text>
 
 
-            <!-- ================================================= -->
-            <!-- STATUS PANEL -->
-            <!-- ================================================= -->
+            <!-- Small status -->
 
-            <rect
-              x="650"
-              y="105"
-              width="270"
-              height="135"
-              rx="10"
-              fill="#07100c"
-              stroke="#00ff88"
-              stroke-opacity="0.25"
-            />
-
-
-            <circle
-              cx="685"
-              cy="140"
-              r="6"
-              fill="#00ff88"
-              filter="url(#glow)"
-            >
-
-              <animate
-                attributeName="r"
-                values="5;8;5"
-                dur="1.5s"
-                repeatCount="indefinite"
-              />
+            <circle cx="355"
+                    cy="355"
+                    r="4"
+                    fill="#22c55e">
 
               <animate
                 attributeName="opacity"
-                values="1;0.45;1"
-                dur="1.5s"
-                repeatCount="indefinite"
-              />
+                values="1;0.3;1"
+                dur="1.6s"
+                repeatCount="indefinite"/>
 
             </circle>
 
+            <text x="370"
+                  y="359"
+                  fill="#22c55e"
+                  font-family="monospace"
+                  font-size="10"
+                  letter-spacing="2">
 
-            <text
-              x="705"
-              y="145"
-              fill="#00ff88"
-              font-family="monospace"
-              font-size="11"
-              font-weight="700"
-            >
-              {STATUS}
+              BUILD MODE ACTIVE
             </text>
 
 
-            <text
-              x="675"
-              y="180"
-              fill="#4d9975"
-              font-family="monospace"
-              font-size="9"
-              letter-spacing="1"
-            >
-              LOCATION
-            </text>
+            <!-- Corner markers -->
+
+            <path d="M18 75 V18 H75"
+                  fill="none"
+                  stroke="#ef4444"
+                  stroke-width="3"/>
+
+            <path d="M1025 18 H1082 V75"
+                  fill="none"
+                  stroke="#60a5fa"
+                  stroke-width="3"/>
+
+            <path d="M18 345 V402 H75"
+                  fill="none"
+                  stroke="#60a5fa"
+                  stroke-width="3"/>
+
+            <path d="M1025 402 H1082 V345"
+                  fill="none"
+                  stroke="#ef4444"
+                  stroke-width="3"/>
 
 
-            <text
-              x="675"
-              y="202"
-              fill="#d7ffea"
-              font-family="monospace"
-              font-size="12"
-              font-weight="700"
-            >
-              {LOCATION}
-            </text>
+            <!-- Subtle scanner -->
 
-
-            <text
-              x="675"
-              y="225"
-              fill="#35694f"
-              font-family="monospace"
-              font-size="9"
-            >
-              SYSTEM ONLINE
-            </text>
-
-
-            <!-- ================================================= -->
-            <!-- STACK -->
-            <!-- ================================================= -->
-
-            <text
-              x="55"
-              y="295"
-              fill="#4d9975"
-              font-family="monospace"
-              font-size="10"
-              letter-spacing="2"
-            >
-              PRIMARY STACK
-            </text>
-
-
-            {chips_svg}
-
-
-            <!-- ================================================= -->
-            <!-- FOOTER -->
-            <!-- ================================================= -->
-
-            <line
-              x1="55"
-              y1="425"
-              x2="925"
-              y2="425"
-              stroke="#00ff88"
-              stroke-opacity="0.15"
-            />
-
-
-            <text
-              x="55"
-              y="455"
-              fill="#35694f"
-              font-family="monospace"
-              font-size="10"
-              letter-spacing="1"
-            >
-              INITIALIZING DEVELOPER PROFILE...
-            </text>
-
-
-            <text
-              x="925"
-              y="455"
-              text-anchor="end"
-              fill="#00ff88"
-              font-family="monospace"
-              font-size="10"
-            >
-              [ ONLINE ]
-            </text>
-
-
-            <!-- ================================================= -->
-            <!-- CURSOR -->
-            <!-- ================================================= -->
-
-            <rect
-              x="55"
-              y="468"
-              width="7"
-              height="14"
-              fill="#00ff88"
-            >
+            <rect x="28"
+                  y="28"
+                  width="1044"
+                  height="364"
+                  fill="none"
+                  stroke="#60a5fa"
+                  stroke-width="1"
+                  opacity="0">
 
               <animate
                 attributeName="opacity"
-                values="1;0;1"
-                dur="0.8s"
-                repeatCount="indefinite"
-              />
+                values="0;0.4;0"
+                dur="4s"
+                repeatCount="indefinite"/>
 
             </rect>
 
           </svg>
-          """
+          '''
 
-          # ==========================================================
-          # WRITE
-          # ==========================================================
+          with open("assets/introduction.svg", "w", encoding="utf-8") as f:
+              f.write(svg)
 
-          output = Path(
-              "assets/introduction.svg"
-          )
+          print("Introduction HUD generated.")
 
-          output.parent.mkdir(
-              parents=True,
-              exist_ok=True
-          )
-
-          output.write_text(
-              svg,
-              encoding="utf-8"
-          )
-
-          print(
-              f"Generated {output}"
-          )
-
-
-      # ============================================================
-      # COMMIT
-      # ============================================================
-
-      - name: Commit Introduction HUD
+      - name: Commit HUD
         run: |
-
-          git config user.name \
-            "github-actions[bot]"
-
-          git config user.email \
-            "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           git add assets/introduction.svg
 
           if git diff --cached --quiet; then
-            echo "No changes detected."
+            echo "No changes."
             exit 0
           fi
 
-          git commit \
-            -m "Update developer introduction HUD"
-
+          git commit -m "Update Spider Developer Introduction HUD"
           git push
-
-
