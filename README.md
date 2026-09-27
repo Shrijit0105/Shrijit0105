@@ -41,6 +41,16 @@
 ---
 [![](https://komarev.com/ghpvc/?username=Shrijit0105&icon=8&color=1)](https://visitcount.itsvg.in)
 
+<h2 align="center">COMMIT EDA</h2>
+
+<p align="center">
+  <img
+    src="./assets/commit-eda.svg"
+    width="900"
+    alt="Commit Exploratory Data Analysis"
+  />
+</p>
+
 
 <h2 align="center"> PROJECT HEALTH</h2>
 
