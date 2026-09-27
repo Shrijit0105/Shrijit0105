@@ -1,0 +1,711 @@
+name: Commit EDA HUD
+
+on:
+  workflow_dispatch:
+
+  schedule:
+    - cron: "30 0 * * *"
+
+  push:
+    paths:
+      - ".github/workflows/commit-eda.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Generate Commit EDA
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 <<'PY'
+          import os
+          import json
+          import urllib.request
+          from datetime import datetime, timezone, timedelta
+          from collections import Counter
+
+          USERNAME = "Shrijit0105"
+
+          API = "https://api.github.com"
+
+          headers = {
+              "Authorization": f"Bearer {os.environ['GH_TOKEN']}",
+              "Accept": "application/vnd.github+json",
+              "X-GitHub-Api-Version": "2022-11-28",
+              "User-Agent": "commit-eda-hud"
+          }
+
+
+          def api(url):
+              req = urllib.request.Request(url, headers=headers)
+
+              with urllib.request.urlopen(req) as response:
+                  return json.loads(response.read().decode())
+
+
+          # ---------------------------------------------------------
+          # TIME WINDOW
+          # ---------------------------------------------------------
+
+          now = datetime.now(timezone.utc)
+
+          # Analyze the previous 30 days
+          start_time = now - timedelta(days=30)
+
+
+          # ---------------------------------------------------------
+          # GET PUBLIC REPOSITORIES
+          # ---------------------------------------------------------
+
+          repos = api(
+              f"{API}/users/{USERNAME}/repos"
+              "?per_page=100"
+              "&sort=pushed"
+              "&direction=desc"
+          )
+
+
+          repos = [
+              repo for repo in repos
+              if not repo.get("fork", False)
+              and not repo.get("archived", False)
+          ]
+
+
+          # ---------------------------------------------------------
+          # DATA CONTAINERS
+          # ---------------------------------------------------------
+
+          commits_by_day = Counter()
+          commits_by_project = Counter()
+
+          total_commits = 0
+
+
+          # ---------------------------------------------------------
+          # ANALYZE COMMITS
+          # ---------------------------------------------------------
+
+          for repo in repos:
+
+              repo_name = repo["name"]
+
+              try:
+
+                  commits = api(
+                      f"{API}/repos/{USERNAME}/{repo_name}/commits"
+                      "?per_page=100"
+                  )
+
+                  for commit in commits:
+
+                      commit_data = commit.get("commit", {})
+                      author_data = commit_data.get("author")
+
+                      if not author_data:
+                          continue
+
+                      date_string = author_data.get("date")
+
+                      if not date_string:
+                          continue
+
+                      commit_date = datetime.fromisoformat(
+                          date_string.replace("Z", "+00:00")
+                      )
+
+                      if commit_date < start_time:
+                          continue
+
+                      if commit_date > now:
+                          continue
+
+
+                      # Day of week
+                      weekday = commit_date.strftime("%A")
+
+                      commits_by_day[weekday] += 1
+
+                      commits_by_project[repo_name] += 1
+
+                      total_commits += 1
+
+              except Exception as e:
+                  print(f"Skipping {repo_name}: {e}")
+
+
+          # ---------------------------------------------------------
+          # ORDER DAYS
+          # ---------------------------------------------------------
+
+          weekdays = [
+              "Monday",
+              "Tuesday",
+              "Wednesday",
+              "Thursday",
+              "Friday",
+              "Saturday",
+              "Sunday"
+          ]
+
+          day_values = [
+              commits_by_day[day]
+              for day in weekdays
+          ]
+
+
+          # ---------------------------------------------------------
+          # PROJECT DATA
+          # ---------------------------------------------------------
+
+          top_projects = sorted(
+              commits_by_project.items(),
+              key=lambda x: x[1],
+              reverse=True
+          )[:6]
+
+
+          max_day = max(day_values) if day_values else 1
+
+          max_project = (
+              top_projects[0][0]
+              if top_projects
+              else "NO DATA"
+          )
+
+          max_project_commits = (
+              top_projects[0][1]
+              if top_projects
+              else 0
+          )
+
+
+          # ---------------------------------------------------------
+          # SVG
+          # ---------------------------------------------------------
+
+          WIDTH = 1100
+
+          HEIGHT = 650
+
+          os.makedirs("assets", exist_ok=True)
+
+
+          # ---------------------------------------------------------
+          # DAY BARS
+          # ---------------------------------------------------------
+
+          day_svg = ""
+
+          chart_x = 90
+          chart_y = 300
+          chart_width = 620
+          chart_height = 180
+
+          bar_width = 65
+          gap = 20
+
+
+          for i, day in enumerate(weekdays):
+
+              value = commits_by_day[day]
+
+              bar_height = (
+                  (value / max_day) * chart_height
+                  if max_day > 0
+                  else 0
+              )
+
+              x = chart_x + i * (bar_width + gap)
+
+              y = chart_y + chart_height - bar_height
+
+              short_day = day[:3].upper()
+
+
+              day_svg += f"""
+              <rect
+                x="{x}"
+                y="{y}"
+                width="{bar_width}"
+                height="{bar_height}"
+                rx="4"
+                fill="#ef4444"
+                opacity="0.85">
+
+                <animate
+                  attributeName="opacity"
+                  values="0.55;1;0.55"
+                  dur="2.5s"
+                  begin="{i * 0.15}s"
+                  repeatCount="indefinite"/>
+
+              </rect>
+
+              <text
+                x="{x + bar_width / 2}"
+                y="{chart_y + chart_height + 25}"
+                text-anchor="middle"
+                fill="#94a3b8"
+                font-family="monospace"
+                font-size="11">
+
+                {short_day}
+              </text>
+
+              <text
+                x="{x + bar_width / 2}"
+                y="{y - 10}"
+                text-anchor="middle"
+                fill="#f8fafc"
+                font-family="monospace"
+                font-size="11">
+
+                {value}
+              </text>
+              """
+
+
+          # ---------------------------------------------------------
+          # PROJECT BARS
+          # ---------------------------------------------------------
+
+          project_svg = ""
+
+          project_start_y = 365
+
+          max_project_value = (
+              top_projects[0][1]
+              if top_projects
+              else 1
+          )
+
+
+          for i, (project, count) in enumerate(top_projects):
+
+              y = project_start_y + i * 38
+
+              bar_length = (
+                  (count / max_project_value) * 245
+                  if max_project_value
+                  else 0
+              )
+
+              # Keep long repo names visually sane
+              display_name = project[:22]
+
+              project_svg += f"""
+              <text
+                x="785"
+                y="{y}"
+                fill="#cbd5e1"
+                font-family="monospace"
+                font-size="11">
+
+                {display_name}
+              </text>
+
+              <rect
+                x="785"
+                y="{y + 8}"
+                width="245"
+                height="6"
+                rx="3"
+                fill="#142d3d"/>
+
+              <rect
+                x="785"
+                y="{y + 8}"
+                width="{bar_length}"
+                height="6"
+                rx="3"
+                fill="#60a5fa">
+
+                <animate
+                  attributeName="opacity"
+                  values="0.55;1;0.55"
+                  dur="2.8s"
+                  repeatCount="indefinite"/>
+
+              </rect>
+
+              <text
+                x="1040"
+                y="{y + 14}"
+                text-anchor="end"
+                fill="#60a5fa"
+                font-family="monospace"
+                font-size="10">
+
+                {count}
+              </text>
+              """
+
+
+          # ---------------------------------------------------------
+          # SVG
+          # ---------------------------------------------------------
+
+          svg = f"""<?xml version="1.0" encoding="UTF-8"?>
+
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="{WIDTH}"
+            height="{HEIGHT}"
+            viewBox="0 0 {WIDTH} {HEIGHT}">
+
+            <defs>
+
+              <pattern
+                id="grid"
+                width="40"
+                height="40"
+                patternUnits="userSpaceOnUse">
+
+                <path
+                  d="M40 0H0V40"
+                  fill="none"
+                  stroke="#0d2635"
+                  stroke-width="1"/>
+
+              </pattern>
+
+              <filter id="glow">
+
+                <feGaussianBlur
+                  stdDeviation="3"
+                  result="blur"/>
+
+                <feMerge>
+                  <feMergeNode in="blur"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+
+              </filter>
+
+            </defs>
+
+
+            <!-- Background -->
+
+            <rect
+              width="100%"
+              height="100%"
+              fill="#05080d"/>
+
+            <rect
+              width="100%"
+              height="100%"
+              fill="url(#grid)"
+              opacity="0.4"/>
+
+
+            <!-- Main frame -->
+
+            <rect
+              x="18"
+              y="18"
+              width="1064"
+              height="614"
+              rx="16"
+              fill="none"
+              stroke="#143a52"
+              stroke-width="2"/>
+
+
+            <!-- Header -->
+
+            <text
+              x="55"
+              y="60"
+              fill="#ef4444"
+              font-family="monospace"
+              font-size="13"
+              font-weight="bold"
+              letter-spacing="3">
+
+              COMMIT EDA // TELEMETRY
+            </text>
+
+
+            <text
+              x="1045"
+              y="60"
+              text-anchor="end"
+              fill="#60a5fa"
+              font-family="monospace"
+              font-size="11"
+              letter-spacing="2">
+
+              WINDOW: 30 DAYS
+            </text>
+
+
+            <!-- Summary -->
+
+            <text
+              x="55"
+              y="110"
+              fill="#64748b"
+              font-family="monospace"
+              font-size="10"
+              letter-spacing="2">
+
+              TOTAL COMMITS
+            </text>
+
+            <text
+              x="55"
+              y="145"
+              fill="#f8fafc"
+              font-family="monospace"
+              font-size="28"
+              font-weight="bold">
+
+              {total_commits}
+            </text>
+
+
+            <text
+              x="260"
+              y="110"
+              fill="#64748b"
+              font-family="monospace"
+              font-size="10"
+              letter-spacing="2">
+
+              MOST ACTIVE PROJECT
+            </text>
+
+            <text
+              x="260"
+              y="145"
+              fill="#60a5fa"
+              font-family="monospace"
+              font-size="17"
+              font-weight="bold">
+
+              {max_project[:24]}
+            </text>
+
+
+            <text
+              x="700"
+              y="110"
+              fill="#64748b"
+              font-family="monospace"
+              font-size="10"
+              letter-spacing="2">
+
+              PROJECT COMMITS
+            </text>
+
+            <text
+              x="700"
+              y="145"
+              fill="#ef4444"
+              font-family="monospace"
+              font-size="28"
+              font-weight="bold">
+
+              {max_project_commits}
+            </text>
+
+
+            <!-- Day chart -->
+
+            <text
+              x="55"
+              y="205"
+              fill="#60a5fa"
+              font-family="monospace"
+              font-size="11"
+              letter-spacing="2">
+
+              COMMITS BY DAY
+            </text>
+
+            <line
+              x1="55"
+              y1="218"
+              x2="710"
+              y2="218"
+              stroke="#143a52"/>
+
+
+            <!-- Chart baseline -->
+
+            <line
+              x1="75"
+              y1="480"
+              x2="725"
+              y2="480"
+              stroke="#1b3445"/>
+
+            {day_svg}
+
+
+            <!-- Project section -->
+
+            <text
+              x="785"
+              y="205"
+              fill="#60a5fa"
+              font-family="monospace"
+              font-size="11"
+              letter-spacing="2">
+
+              COMMITS BY PROJECT
+            </text>
+
+            <line
+              x1="785"
+              y1="218"
+              x2="1045"
+              y2="218"
+              stroke="#143a52"/>
+
+            {project_svg}
+
+
+            <!-- Footer -->
+
+            <line
+              x1="55"
+              y1="555"
+              x2="1045"
+              y2="555"
+              stroke="#143a52"/>
+
+
+            <circle
+              cx="70"
+              cy="580"
+              r="4"
+              fill="#22c55e">
+
+              <animate
+                attributeName="opacity"
+                values="1;0.3;1"
+                dur="1.6s"
+                repeatCount="indefinite"/>
+
+            </circle>
+
+
+            <text
+              x="85"
+              y="584"
+              fill="#22c55e"
+              font-family="monospace"
+              font-size="10"
+              letter-spacing="2">
+
+              DATA STREAM ACTIVE
+            </text>
+
+
+            <text
+              x="1045"
+              y="584"
+              text-anchor="end"
+              fill="#475569"
+              font-family="monospace"
+              font-size="10">
+
+              AUTO-GENERATED // GITHUB API
+            </text>
+
+
+            <!-- Scanner -->
+
+            <line
+              x1="30"
+              y1="0"
+              x2="1070"
+              y2="0"
+              stroke="#60a5fa"
+              stroke-width="1"
+              opacity="0.5">
+
+              <animate
+                attributeName="y1"
+                values="20;630;20"
+                dur="7s"
+                repeatCount="indefinite"/>
+
+              <animate
+                attributeName="y2"
+                values="20;630;20"
+                dur="7s"
+                repeatCount="indefinite"/>
+
+            </line>
+
+          </svg>
+          """
+
+
+          with open(
+              "assets/commit-eda.svg",
+              "w",
+              encoding="utf-8"
+          ) as f:
+
+              f.write(svg)
+
+
+          print("Commit EDA HUD generated.")
+          print(f"Total commits: {total_commits}")
+          print(f"Most active project: {max_project}")
+          print(f"Most active project commits: {max_project_commits}")
+
+
+          # ---------------------------------------------------------
+          # SAVE RAW DATA
+          # ---------------------------------------------------------
+
+          with open(
+              "assets/commit-eda-data.json",
+              "w",
+              encoding="utf-8"
+          ) as f:
+
+              json.dump(
+                  {
+                      "window_days": 30,
+                      "total_commits": total_commits,
+                      "commits_by_day": dict(commits_by_day),
+                      "commits_by_project": dict(commits_by_project),
+                      "generated_at": now.isoformat()
+                  },
+                  f,
+                  indent=2
+              )
+
+          PY
+
+
+      - name: Commit EDA assets
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add assets/commit-eda.svg
+          git add assets/commit-eda-data.json
+
+          if git diff --cached --quiet; then
+            echo "No changes detected."
+            exit 0
+          fi
+
+          git commit -m "Update commit EDA HUD"
+          git push
