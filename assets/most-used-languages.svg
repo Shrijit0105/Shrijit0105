@@ -1,52 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
 
 <svg
   xmlns="http://www.w3.org/2000/svg"
-  width="980"
-  height="360"
-  viewBox="0 0 980 360"
->
+  width="1100"
+  height="328"
+  viewBox="0 0 1100 328">
+
 
   <defs>
 
-    <linearGradient
-      id="hudGradient"
-      x1="0"
-      y1="0"
-      x2="1"
-      y2="0"
-    >
+    <!-- Background grid -->
 
-      <stop
-        offset="0%"
-        stop-color="#00ff88"
-      />
+    <pattern
+      id="grid"
+      width="40"
+      height="40"
+      patternUnits="userSpaceOnUse">
 
-      <stop
-        offset="100%"
-        stop-color="#00ffaa"
-      />
+      <path
+        d="M40 0H0V40"
+        fill="none"
+        stroke="#0b202d"
+        stroke-width="1"/>
 
-    </linearGradient>
+    </pattern>
 
+
+    <!-- Soft glow -->
 
     <filter id="glow">
 
       <feGaussianBlur
-        stdDeviation="4"
-        result="blur"
-      />
+        stdDeviation="3"
+        result="blur"/>
 
       <feMerge>
 
         <feMergeNode in="blur"/>
 
-        <feMergeNode
-          in="SourceGraphic"
-        />
+        <feMergeNode in="SourceGraphic"/>
 
       </feMerge>
 
     </filter>
+
+
+    <!-- Gradient -->
+
+    <linearGradient
+      id="headerLine"
+      x1="0"
+      y1="0"
+      x2="1"
+      y2="0">
+
+      <stop
+        offset="0%"
+        stop-color="#ef4444"/>
+
+      <stop
+        offset="50%"
+        stop-color="#60a5fa"/>
+
+      <stop
+        offset="100%"
+        stop-color="#ef4444"/>
+
+    </linearGradient>
 
   </defs>
 
@@ -58,34 +78,28 @@
   <rect
     width="100%"
     height="100%"
-    rx="14"
-    fill="#050807"
-  />
+    fill="#05080d"/>
+
+  <rect
+    width="100%"
+    height="100%"
+    fill="url(#grid)"
+    opacity="0.45"/>
 
 
   <!-- ================================================= -->
-  <!-- BORDER -->
+  <!-- FRAME -->
   <!-- ================================================= -->
 
   <rect
-    x="1"
-    y="1"
-    width="978"
-    height="358"
-    rx="14"
+    x="18"
+    y="18"
+    width="1064"
+    height="292"
+    rx="18"
     fill="none"
-    stroke="#00ff88"
-    stroke-opacity="0.35"
-  >
-
-    <animate
-      attributeName="stroke-opacity"
-      values="0.25;0.55;0.25"
-      dur="3s"
-      repeatCount="indefinite"
-    />
-
-  </rect>
+    stroke="#143a52"
+    stroke-width="2"/>
 
 
   <!-- ================================================= -->
@@ -94,178 +108,272 @@
 
   <text
     x="55"
-    y="43"
-    fill="#00ff88"
+    y="62"
+    fill="#ef4444"
     font-family="monospace"
-    font-size="18"
-    font-weight="700"
-    letter-spacing="2"
-  >
-    MOST USED LANGUAGES
+    font-size="13"
+    font-weight="bold"
+    letter-spacing="3">
+
+    LANGUAGE MATRIX
+
   </text>
 
 
   <text
-    x="925"
-    y="43"
+    x="1045"
+    y="62"
     text-anchor="end"
-    fill="#35694f"
+    fill="#60a5fa"
     font-family="monospace"
-    font-size="10"
-    letter-spacing="1"
-  >
-    AUTO DETECTED
+    font-size="11"
+    letter-spacing="2">
+
+    LIVE REPOSITORY ANALYSIS
+
   </text>
 
 
-  <!-- ================================================= -->
-  <!-- SCANNER -->
-  <!-- ================================================= -->
-
-  <rect
-    x="40"
-    y="70"
-    width="900"
-    height="1"
-    fill="#00ff88"
-    opacity="0.12"
-  />
-
-
-  <rect
-    x="40"
-    y="69"
-    width="120"
-    height="2"
-    fill="#00ff88"
-    filter="url(#glow)"
-  >
-
-    <animate
-      attributeName="x"
-      values="40;820;40"
-      dur="4s"
-      repeatCount="indefinite"
-    />
-
-  </rect>
+  <line
+    x1="55"
+    y1="82"
+    x2="1045"
+    y2="82"
+    stroke="url(#headerLine)"
+    stroke-width="2"/>
 
 
   <!-- ================================================= -->
-  <!-- DESCRIPTION -->
+  <!-- SUMMARY -->
   <!-- ================================================= -->
 
   <text
     x="55"
-    y="102"
-    fill="#4d9975"
+    y="115"
+    fill="#64748b"
     font-family="monospace"
     font-size="10"
-    letter-spacing="1"
-  >
-    AGGREGATED ACROSS PUBLIC NON-FORK REPOSITORIES
+    letter-spacing="2">
+
+    LANGUAGES DETECTED
+
+  </text>
+
+
+  <text
+    x="55"
+    y="145"
+    fill="#f8fafc"
+    font-family="monospace"
+    font-size="25"
+    font-weight="bold">
+
+    1
+
+  </text>
+
+
+  <text
+    x="250"
+    y="115"
+    fill="#64748b"
+    font-family="monospace"
+    font-size="10"
+    letter-spacing="2">
+
+    REPOSITORIES SCANNED
+
+  </text>
+
+
+  <text
+    x="250"
+    y="145"
+    fill="#60a5fa"
+    font-family="monospace"
+    font-size="25"
+    font-weight="bold">
+
+    12
+
+  </text>
+
+
+  <text
+    x="500"
+    y="115"
+    fill="#64748b"
+    font-family="monospace"
+    font-size="10"
+    letter-spacing="2">
+
+    DATA POINTS
+
+  </text>
+
+
+  <text
+    x="500"
+    y="145"
+    fill="#ef4444"
+    font-family="monospace"
+    font-size="25"
+    font-weight="bold">
+
+    4,028,047
+
   </text>
 
 
   <!-- ================================================= -->
-  <!-- LANGUAGE ROWS -->
+  <!-- LANGUAGE DATA -->
   <!-- ================================================= -->
 
   
-        <!-- LANGUAGE 1 -->
 
-        <text
-          x="60"
-          y="145"
-          fill="#d7ffea"
-          font-family="monospace"
-          font-size="13"
-          font-weight="700"
-        >
-          Jupyter Notebook
-        </text>
+    <!-- LANGUAGE ROW 0 -->
 
+    <g>
 
-        <text
-          x="900"
-          y="145"
-          text-anchor="end"
-          fill="#00ff88"
-          font-family="monospace"
-          font-size="12"
-          font-weight="700"
-        >
-          98.4%
-        </text>
+      <!-- percentage ring -->
+
+      <circle
+        cx="65"
+        cy="190"
+        r="22"
+        fill="none"
+        stroke="#102b3d"
+        stroke-width="4"/>
 
 
-        <rect
-          x="60"
-          y="160"
-          width="560"
-          height="12"
-          rx="6"
-          fill="#0b1b14"
-          stroke="#00ff88"
-          stroke-opacity="0.20"
-        />
+      <circle
+        cx="65"
+        cy="190"
+        r="22"
+        fill="none"
+        stroke="#DA5B0B"
+        stroke-width="4"
+        stroke-linecap="round"
+        stroke-dasharray="138"
+        stroke-dashoffset="138"
+        transform="rotate(-90 65 190)">
+
+        <animate
+          attributeName="stroke-dashoffset"
+          from="138"
+          to="2.1533984087077727"
+          dur="1.2s"
+          begin="0.0s"
+          fill="freeze"/>
+
+      </circle>
 
 
-        <rect
-          x="60"
-          y="160"
-          width="0"
-          height="12"
-          rx="6"
-          fill="url(#hudGradient)"
-          filter="url(#glow)"
-        >
+      <!-- language name -->
 
-          <animate
-            attributeName="width"
-            from="0"
-            to="551"
-            dur="1.3s"
-            begin="0.0s"
-            fill="freeze"
-          />
+      <text
+        x="105"
+        y="195"
+        fill="#f8fafc"
+        font-family="monospace"
+        font-size="15"
+        font-weight="bold"
+        letter-spacing="1">
 
-        </rect>
+        Jupyter Notebook
+
+      </text>
 
 
-        <!-- BAR SCANNER -->
+      <!-- data track -->
 
-        <rect
-          x="60"
-          y="160"
-          width="55"
-          height="12"
-          rx="6"
-          fill="#ffffff"
-          opacity="0.16"
-        >
-
-          <animate
-            attributeName="x"
-            values="60;556;60"
-            dur="2.6s"
-            begin="0.0s"
-            repeatCount="indefinite"
-          />
-
-        </rect>
+      <line
+        x1="280"
+        y1="190"
+        x2="710"
+        y2="190"
+        stroke="#102b3d"
+        stroke-width="3"/>
 
 
-        <text
-          x="640"
-          y="170"
-          fill="#35694f"
-          font-family="monospace"
-          font-size="9"
-        >
-          3,965,192 BYTES
-        </text>
-        
+      <!-- growing data bar -->
+
+      <rect
+        x="280"
+        y="187"
+        width="0"
+        height="6"
+        rx="3"
+        fill="#DA5B0B">
+
+        <animate
+          attributeName="width"
+          from="0"
+          to="423.29013539315696"
+          dur="1.4s"
+          begin="0.0s"
+          fill="freeze"/>
+
+      </rect>
+
+
+      <!-- moving data particle -->
+
+      <circle
+        cx="280"
+        cy="190"
+        r="3"
+        fill="#DA5B0B">
+
+        <animate
+          attributeName="cx"
+          from="280"
+          to="703.290135393157"
+          dur="1.4s"
+          begin="0.0s"
+          fill="freeze"/>
+
+        <animate
+          attributeName="r"
+          values="2;5;2"
+          dur="1.4s"
+          begin="0.0s"
+          fill="freeze"/>
+
+      </circle>
+
+
+      <!-- percentage -->
+
+      <text
+        x="760"
+        y="195"
+        fill="#DA5B0B"
+        font-family="monospace"
+        font-size="15"
+        font-weight="bold">
+
+        98.4%
+
+      </text>
+
+
+      <!-- byte count -->
+
+      <text
+        x="1035"
+        y="195"
+        text-anchor="end"
+        fill="#64748b"
+        font-family="monospace"
+        font-size="10">
+
+        3,965,192 BYTES
+
+      </text>
+
+    </g>
+    
 
 
   <!-- ================================================= -->
@@ -274,35 +382,105 @@
 
   <line
     x1="55"
-    y1="305"
-    x2="925"
-    y2="305"
-    stroke="#00ff88"
-    stroke-opacity="0.15"
-  />
+    y1="263"
+    x2="1045"
+    y2="263"
+    stroke="#143a52"/>
+
+
+  <circle
+    cx="70"
+    cy="288"
+    r="4"
+    fill="#22c55e">
+
+    <animate
+      attributeName="r"
+      values="3;6;3"
+      dur="2s"
+      repeatCount="indefinite"/>
+
+    <animate
+      attributeName="opacity"
+      values="1;0.35;1"
+      dur="2s"
+      repeatCount="indefinite"/>
+
+  </circle>
 
 
   <text
-    x="55"
-    y="332"
-    fill="#35694f"
+    x="85"
+    y="292"
+    fill="#22c55e"
     font-family="monospace"
-    font-size="9"
-    letter-spacing="1"
-  >
-    LANGUAGE TELEMETRY ONLINE
+    font-size="10"
+    letter-spacing="2">
+
+    REPOSITORY TELEMETRY ACTIVE
+
   </text>
 
 
   <text
-    x="925"
-    y="332"
+    x="1045"
+    y="292"
     text-anchor="end"
-    fill="#35694f"
+    fill="#475569"
     font-family="monospace"
-    font-size="9"
-  >
-    TOP 1 LANGUAGES
+    font-size="10">
+
+    GITHUB LINGUIST DATA
+
   </text>
+
+
+  <!-- ================================================= -->
+  <!-- DECORATIVE ORBIT -->
+  <!-- ================================================= -->
+
+  <g
+    transform="translate(1000 125)">
+
+    <circle
+      r="28"
+      fill="none"
+      stroke="#143a52"
+      stroke-width="1"/>
+
+    <circle
+      r="18"
+      fill="none"
+      stroke="#60a5fa"
+      stroke-width="1"
+      stroke-dasharray="4 5">
+
+      <animateTransform
+        attributeName="transform"
+        type="rotate"
+        from="0"
+        to="360"
+        dur="8s"
+        repeatCount="indefinite"/>
+
+    </circle>
+
+    <circle
+      cx="18"
+      cy="0"
+      r="3"
+      fill="#ef4444">
+
+      <animateTransform
+        attributeName="transform"
+        type="rotate"
+        from="0"
+        to="360"
+        dur="4s"
+        repeatCount="indefinite"/>
+
+    </circle>
+
+  </g>
 
 </svg>
