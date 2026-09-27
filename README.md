@@ -100,7 +100,7 @@
     alt="Automatic Currently Working On HUD"
   />
 </p>
-<h2 align="center"> DEVELOPER ACHIEVEMENTS</h2>
+<h2 align="center"> DEVELOPER ACHIEVEMENTS </h2>
 
 <p align="center">
   <img
