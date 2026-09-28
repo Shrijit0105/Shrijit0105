@@ -705,7 +705,7 @@
     <rect
       x="82"
       y="310"
-      width="59"
+      width="39"
       height="18"
       rx="5"
       fill="#00ff88"
@@ -727,7 +727,7 @@
       fill="#b9d7c4"
       font-family="monospace"
       font-size="10">
-      3
+      2
     </text>
     
 
@@ -1005,7 +1005,7 @@
     <rect
       x="82"
       y="472"
-      width="157"
+      width="177"
       height="18"
       rx="5"
       fill="#00ff88"
@@ -1027,7 +1027,7 @@
       fill="#b9d7c4"
       font-family="monospace"
       font-size="10">
-      8
+      9
     </text>
     
 
