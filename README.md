@@ -140,12 +140,12 @@
   />
 </p>
 
-<h2 align="center">🕒 LIVE SYSTEM CLOCK</h2>
+<h2 align="center">🕒 SYSTEM CLOCK</h2>
 
 <p align="center">
   <a href="https://shrijit0105.github.io/Shrijit0105/">
     <img
-      src="https://github.com/Shrijit0105/Shrijit0105/blob/main/assets/clock-preview.png"
+      src="./assets/clock.svg"
       width="900"
       alt="Live Regional System Clock"
     />
