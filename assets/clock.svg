@@ -184,7 +184,7 @@ viewBox="0 0 900 360">
       stroke="#e8edf5"
       stroke-width="6"
       stroke-linecap="round"
-      transform="rotate(98.0 270 205)"
+      transform="rotate(288.0 270 205)"
       filter="url(#glow)"/>
 
 <!-- Minute hand -->
@@ -195,7 +195,7 @@ viewBox="0 0 900 360">
       stroke="#4da3ff"
       stroke-width="4"
       stroke-linecap="round"
-      transform="rotate(98.3 270 205)"
+      transform="rotate(220.7 270 205)"
       filter="url(#glow)"/>
 
 <!-- Second hand -->
@@ -206,13 +206,13 @@ viewBox="0 0 900 360">
       stroke="#e63946"
       stroke-width="2"
       stroke-linecap="round"
-      transform="rotate(138 270 205)">
+      transform="rotate(282 270 205)">
 
   <animateTransform
     attributeName="transform"
     type="rotate"
-    from="138 270 205"
-    to="498 270 205"
+    from="282 270 205"
+    to="642 270 205"
     dur="60s"
     repeatCount="indefinite"/>
 
@@ -238,7 +238,7 @@ viewBox="0 0 900 360">
       font-size="48"
       font-weight="bold"
       letter-spacing="3">
-  15:16:23
+  21:36:47
 </text>
 
 <!-- Date -->
