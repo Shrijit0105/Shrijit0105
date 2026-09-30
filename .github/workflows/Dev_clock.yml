@@ -1,367 +1,44 @@
-name: Developer Clock HUD
+name: Deploy Live Regional Clock
 
 on:
-  schedule:
-    # Every 5 minutes
-    - cron: "*/5 * * * *"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/live-clock.yml"
+      - "clock/**"
 
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "live-clock"
+  cancel-in-progress: true
 
 jobs:
-  generate-clock:
+  deploy:
     runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
 
-      - name: Generate Clock HUD
-        shell: python
-        run: |
-          from datetime import datetime, timezone, timedelta
-          from pathlib import Path
-          import math
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v5
 
-          # India Standard Time
-          IST = timezone(timedelta(hours=5, minutes=30))
-          now = datetime.now(timezone.utc).astimezone(IST)
+      - name: Upload clock site
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: "./clock"
 
-          hour = now.hour
-          minute = now.minute
-          second = now.second
-
-          date_text = now.strftime("%d %b %Y").upper()
-          day_text = now.strftime("%A").upper()
-          time_text = now.strftime("%H:%M:%S")
-
-          # Clock hand angles
-          second_angle = second * 6
-          minute_angle = minute * 6 + second * 0.1
-          hour_angle = (hour % 12) * 30 + minute * 0.5
-
-          width = 900
-          height = 360
-
-          svg = f'''<svg xmlns="http://www.w3.org/2000/svg"
-          width="{width}"
-          height="{height}"
-          viewBox="0 0 {width} {height}">
-
-          <defs>
-
-            <!-- Background -->
-            <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stop-color="#05070d"/>
-              <stop offset="100%" stop-color="#0b101c"/>
-            </linearGradient>
-
-            <!-- Glow -->
-            <filter id="glow">
-              <feGaussianBlur stdDeviation="4" result="blur"/>
-              <feMerge>
-                <feMergeNode in="blur"/>
-                <feMergeNode in="SourceGraphic"/>
-              </feMerge>
-            </filter>
-
-            <!-- Grid -->
-            <pattern id="grid"
-                     width="30"
-                     height="30"
-                     patternUnits="userSpaceOnUse">
-              <path d="M 30 0 L 0 0 0 30"
-                    fill="none"
-                    stroke="#18243a"
-                    stroke-width="1"/>
-            </pattern>
-
-          </defs>
-
-          <!-- Background -->
-          <rect width="900" height="360"
-                rx="22"
-                fill="url(#bg)"/>
-
-          <rect x="1" y="1"
-                width="898"
-                height="358"
-                rx="21"
-                fill="url(#grid)"
-                opacity="0.35"/>
-
-          <!-- Outer frame -->
-          <rect x="1.5" y="1.5"
-                width="897"
-                height="357"
-                rx="21"
-                fill="none"
-                stroke="#20324f"
-                stroke-width="2"/>
-
-          <!-- Animated border heartbeat -->
-          <rect x="3" y="3"
-                width="894"
-                height="354"
-                rx="19"
-                fill="none"
-                stroke="#e63946"
-                stroke-width="1"
-                opacity="0.35">
-
-            <animate
-              attributeName="opacity"
-              values="0.25;0.65;0.25"
-              dur="2.8s"
-              repeatCount="indefinite"/>
-
-          </rect>
-
-          <!-- Header -->
-          <text x="55"
-                y="55"
-                fill="#e63946"
-                font-family="monospace"
-                font-size="15"
-                font-weight="bold"
-                letter-spacing="4">
-            SYSTEM TIME
-          </text>
-
-          <text x="845"
-                y="55"
-                text-anchor="end"
-                fill="#4da3ff"
-                font-family="monospace"
-                font-size="12"
-                letter-spacing="2">
-            ONLINE
-          </text>
-
-          <!-- Status pulse -->
-          <circle cx="810"
-                  cy="50"
-                  r="4"
-                  fill="#e63946">
-
-            <animate
-              attributeName="r"
-              values="3;6;3"
-              dur="2s"
-              repeatCount="indefinite"/>
-
-            <animate
-              attributeName="opacity"
-              values="1;0.35;1"
-              dur="2s"
-              repeatCount="indefinite"/>
-
-          </circle>
-
-          <!-- Clock outer rings -->
-          <circle cx="270"
-                  cy="205"
-                  r="115"
-                  fill="none"
-                  stroke="#16263f"
-                  stroke-width="2"/>
-
-          <circle cx="270"
-                  cy="205"
-                  r="103"
-                  fill="none"
-                  stroke="#e63946"
-                  stroke-width="1"
-                  stroke-dasharray="3 9"
-                  opacity="0.7">
-
-            <animateTransform
-              attributeName="transform"
-              type="rotate"
-              from="0 270 205"
-              to="360 270 205"
-              dur="30s"
-              repeatCount="indefinite"/>
-
-          </circle>
-
-          <circle cx="270"
-                  cy="205"
-                  r="88"
-                  fill="#070b13"
-                  stroke="#263d5f"
-                  stroke-width="2"/>
-
-          <!-- Clock ticks -->
-
-          <g stroke="#4da3ff"
-             stroke-width="2"
-             opacity="0.75">
-
-            <line x1="270" y1="122" x2="270" y2="132"/>
-            <line x1="353" y1="205" x2="343" y2="205"/>
-            <line x1="270" y1="288" x2="270" y2="278"/>
-            <line x1="187" y1="205" x2="197" y2="205"/>
-
-          </g>
-
-          <!-- Minor ticks -->
-
-          <g stroke="#263d5f"
-             stroke-width="1">
-
-            <line x1="311" y1="134" x2="307" y2="141"/>
-            <line x1="341" y1="164" x2="334" y2="168"/>
-            <line x1="341" y1="246" x2="334" y2="242"/>
-            <line x1="311" y1="276" x2="307" y2="269"/>
-            <line x1="229" y1="276" x2="233" y2="269"/>
-            <line x1="199" y1="246" x2="206" y2="242"/>
-            <line x1="199" y1="164" x2="206" y2="168"/>
-            <line x1="229" y1="134" x2="233" y2="141"/>
-
-          </g>
-
-          <!-- Hour hand -->
-          <line x1="270"
-                y1="205"
-                x2="270"
-                y2="155"
-                stroke="#e8edf5"
-                stroke-width="6"
-                stroke-linecap="round"
-                transform="rotate({hour_angle} 270 205)"
-                filter="url(#glow)"/>
-
-          <!-- Minute hand -->
-          <line x1="270"
-                y1="205"
-                x2="270"
-                y2="140"
-                stroke="#4da3ff"
-                stroke-width="4"
-                stroke-linecap="round"
-                transform="rotate({minute_angle} 270 205)"
-                filter="url(#glow)"/>
-
-          <!-- Second hand -->
-          <line x1="270"
-                y1="205"
-                x2="270"
-                y2="132"
-                stroke="#e63946"
-                stroke-width="2"
-                stroke-linecap="round"
-                transform="rotate({second_angle} 270 205)">
-
-            <animateTransform
-              attributeName="transform"
-              type="rotate"
-              from="{second_angle} 270 205"
-              to="{second_angle + 360} 270 205"
-              dur="60s"
-              repeatCount="indefinite"/>
-
-          </line>
-
-          <!-- Center -->
-          <circle cx="270"
-                  cy="205"
-                  r="7"
-                  fill="#e63946"
-                  filter="url(#glow)"/>
-
-          <circle cx="270"
-                  cy="205"
-                  r="3"
-                  fill="#ffffff"/>
-
-          <!-- Digital time -->
-          <text x="450"
-                y="155"
-                fill="#4da3ff"
-                font-family="monospace"
-                font-size="48"
-                font-weight="bold"
-                letter-spacing="3">
-            {time_text}
-          </text>
-
-          <!-- Date -->
-          <text x="452"
-                y="195"
-                fill="#e8edf5"
-                font-family="monospace"
-                font-size="17"
-                letter-spacing="3">
-            {date_text}
-          </text>
-
-          <text x="452"
-                y="225"
-                fill="#637896"
-                font-family="monospace"
-                font-size="12"
-                letter-spacing="3">
-            {day_text} • INDIA STANDARD TIME
-          </text>
-
-          <!-- UTC -->
-          <text x="452"
-                y="270"
-                fill="#e63946"
-                font-family="monospace"
-                font-size="12"
-                letter-spacing="2">
-            UTC +05:30
-          </text>
-
-          <!-- Footer -->
-          <line x1="55"
-                y1="320"
-                x2="845"
-                y2="320"
-                stroke="#1d2d47"
-                stroke-width="1"/>
-
-          <text x="55"
-                y="342"
-                fill="#415572"
-                font-family="monospace"
-                font-size="10"
-                letter-spacing="2">
-            DEVELOPER TELEMETRY
-          </text>
-
-          <text x="845"
-                y="342"
-                text-anchor="end"
-                fill="#415572"
-                font-family="monospace"
-                font-size="10"
-                letter-spacing="2">
-            CLOCK NODE // ACTIVE
-          </text>
-
-          </svg>'''
-
-          Path("assets").mkdir(exist_ok=True)
-          Path("assets/clock.svg").write_text(svg, encoding="utf-8")
-
-          print(f"Generated clock: {time_text} IST")
-
-      - name: Commit Clock HUD
-        shell: bash
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          git add assets/clock.svg
-
-          if git diff --cached --quiet; then
-            echo "No clock update required."
-          else
-            git commit -m "chore: update developer clock"
-            git push
-          fi
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
