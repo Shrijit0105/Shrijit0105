@@ -139,3 +139,13 @@
     alt="GitHub Activity Command Center"
   />
 </p>
+
+<h2 align="center">🕒SYSTEM CLOCK</h2>
+
+<p align="center">
+  <img
+    src="./assets/clock.svg"
+    width="900"
+    alt="Developer System Clock"
+  />
+</p>
