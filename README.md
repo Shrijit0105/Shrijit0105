@@ -1,6 +1,4 @@
-# <p align="center">💫 About Me: </p>
 <h2 align="center">👋 INTRODUCTION</h2>
-
 <p align="center">
   <img
     src="./assets/introduction.svg"
