@@ -514,7 +514,7 @@
       font-size="25"
       font-weight="bold"
       text-anchor="middle">
-      7
+      6
     </text>
     
 
@@ -755,7 +755,7 @@
     <rect
       x="82"
       y="337"
-      width="414"
+      width="394"
       height="18"
       rx="5"
       fill="#00ff88"
@@ -777,7 +777,7 @@
       fill="#b9d7c4"
       font-family="monospace"
       font-size="10">
-      21
+      20
     </text>
     
 
@@ -805,7 +805,7 @@
     <rect
       x="82"
       y="364"
-      width="157"
+      width="197"
       height="18"
       rx="5"
       fill="#00ff88"
@@ -827,7 +827,7 @@
       fill="#b9d7c4"
       font-family="monospace"
       font-size="10">
-      8
+      10
     </text>
     
 
@@ -1005,7 +1005,7 @@
     <rect
       x="82"
       y="472"
-      width="177"
+      width="157"
       height="18"
       rx="5"
       fill="#00ff88"
@@ -1027,7 +1027,7 @@
       fill="#b9d7c4"
       font-family="monospace"
       font-size="10">
-      9
+      8
     </text>
     
 
