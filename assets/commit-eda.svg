@@ -277,9 +277,9 @@
     
     <rect
       x="260"
-      y="418.5365853658536"
+      y="330.7317073170732"
       width="65"
-      height="61.463414634146346"
+      height="149.2682926829268"
       rx="4"
       fill="#ef4444"
       opacity="0.85">
@@ -306,20 +306,20 @@
 
     <text
       x="292.5"
-      y="408.5365853658536"
+      y="320.7317073170732"
       text-anchor="middle"
       fill="#f8fafc"
       font-family="monospace"
       font-size="11">
 
-      14
+      34
     </text>
     
     <rect
       x="345"
-      y="409.7560975609756"
+      y="405.3658536585366"
       width="65"
-      height="70.2439024390244"
+      height="74.6341463414634"
       rx="4"
       fill="#ef4444"
       opacity="0.85">
@@ -346,20 +346,20 @@
 
     <text
       x="377.5"
-      y="399.7560975609756"
+      y="395.3658536585366"
       text-anchor="middle"
       fill="#f8fafc"
       font-family="monospace"
       font-size="11">
 
-      16
+      17
     </text>
     
     <rect
       x="430"
-      y="304.390243902439"
+      y="396.5853658536585"
       width="65"
-      height="175.60975609756096"
+      height="83.41463414634147"
       rx="4"
       fill="#ef4444"
       opacity="0.85">
@@ -386,13 +386,13 @@
 
     <text
       x="462.5"
-      y="294.390243902439"
+      y="386.5853658536585"
       text-anchor="middle"
       fill="#f8fafc"
       font-family="monospace"
       font-size="11">
 
-      40
+      19
     </text>
     
     <rect
