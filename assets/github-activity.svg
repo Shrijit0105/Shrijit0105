@@ -514,7 +514,7 @@
       font-size="25"
       font-weight="bold"
       text-anchor="middle">
-      6
+      4
     </text>
     
 
@@ -705,7 +705,7 @@
     <rect
       x="82"
       y="310"
-      width="39"
+      width="35"
       height="18"
       rx="5"
       fill="#00ff88"
@@ -755,7 +755,7 @@
     <rect
       x="82"
       y="337"
-      width="394"
+      width="353"
       height="18"
       rx="5"
       fill="#00ff88"
@@ -805,7 +805,7 @@
     <rect
       x="82"
       y="364"
-      width="197"
+      width="141"
       height="18"
       rx="5"
       fill="#00ff88"
@@ -827,7 +827,7 @@
       fill="#b9d7c4"
       font-family="monospace"
       font-size="10">
-      10
+      8
     </text>
     
 
@@ -877,7 +877,7 @@
       fill="#b9d7c4"
       font-family="monospace"
       font-size="10">
-      35
+      39
     </text>
     
 
@@ -905,7 +905,7 @@
     <rect
       x="82"
       y="418"
-      width="414"
+      width="353"
       height="18"
       rx="5"
       fill="#00ff88"
@@ -927,7 +927,7 @@
       fill="#b9d7c4"
       font-family="monospace"
       font-size="10">
-      21
+      20
     </text>
     
 
@@ -955,7 +955,7 @@
     <rect
       x="82"
       y="445"
-      width="78"
+      width="53"
       height="18"
       rx="5"
       fill="#00ff88"
@@ -977,7 +977,7 @@
       fill="#b9d7c4"
       font-family="monospace"
       font-size="10">
-      4
+      3
     </text>
     
 
@@ -1005,7 +1005,7 @@
     <rect
       x="82"
       y="472"
-      width="157"
+      width="141"
       height="18"
       rx="5"
       fill="#00ff88"
