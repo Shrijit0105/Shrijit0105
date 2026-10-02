@@ -114,7 +114,7 @@
     font-size="28"
     font-weight="bold">
 
-    159
+    180
   </text>
 
 
@@ -197,9 +197,9 @@
   
     <rect
       x="90"
-      y="418.5365853658536"
+      y="425.2173913043478"
       width="65"
-      height="61.463414634146346"
+      height="54.78260869565218"
       rx="4"
       fill="#ef4444"
       opacity="0.85">
@@ -226,7 +226,7 @@
 
     <text
       x="122.5"
-      y="408.5365853658536"
+      y="415.2173913043478"
       text-anchor="middle"
       fill="#f8fafc"
       font-family="monospace"
@@ -237,9 +237,9 @@
     
     <rect
       x="175"
-      y="427.3170731707317"
+      y="433.04347826086956"
       width="65"
-      height="52.68292682926829"
+      height="46.95652173913043"
       rx="4"
       fill="#ef4444"
       opacity="0.85">
@@ -266,7 +266,7 @@
 
     <text
       x="207.5"
-      y="417.3170731707317"
+      y="423.04347826086956"
       text-anchor="middle"
       fill="#f8fafc"
       font-family="monospace"
@@ -277,9 +277,9 @@
     
     <rect
       x="260"
-      y="330.7317073170732"
+      y="346.95652173913044"
       width="65"
-      height="149.2682926829268"
+      height="133.04347826086956"
       rx="4"
       fill="#ef4444"
       opacity="0.85">
@@ -306,7 +306,7 @@
 
     <text
       x="292.5"
-      y="320.7317073170732"
+      y="336.95652173913044"
       text-anchor="middle"
       fill="#f8fafc"
       font-family="monospace"
@@ -317,9 +317,9 @@
     
     <rect
       x="345"
-      y="405.3658536585366"
+      y="300.0"
       width="65"
-      height="74.6341463414634"
+      height="180.0"
       rx="4"
       fill="#ef4444"
       opacity="0.85">
@@ -346,20 +346,20 @@
 
     <text
       x="377.5"
-      y="395.3658536585366"
+      y="290.0"
       text-anchor="middle"
       fill="#f8fafc"
       font-family="monospace"
       font-size="11">
 
-      17
+      46
     </text>
     
     <rect
       x="430"
-      y="396.5853658536585"
+      y="436.95652173913044"
       width="65"
-      height="83.41463414634147"
+      height="43.04347826086957"
       rx="4"
       fill="#ef4444"
       opacity="0.85">
@@ -386,20 +386,20 @@
 
     <text
       x="462.5"
-      y="386.5853658536585"
+      y="426.95652173913044"
       text-anchor="middle"
       fill="#f8fafc"
       font-family="monospace"
       font-size="11">
 
-      19
+      11
     </text>
     
     <rect
       x="515"
-      y="383.4146341463414"
+      y="393.9130434782609"
       width="65"
-      height="96.58536585365854"
+      height="86.08695652173914"
       rx="4"
       fill="#ef4444"
       opacity="0.85">
@@ -426,7 +426,7 @@
 
     <text
       x="547.5"
-      y="373.4146341463414"
+      y="383.9130434782609"
       text-anchor="middle"
       fill="#f8fafc"
       font-family="monospace"
@@ -437,9 +437,9 @@
     
     <rect
       x="600"
-      y="300.0"
+      y="319.5652173913044"
       width="65"
-      height="180.0"
+      height="160.43478260869566"
       rx="4"
       fill="#ef4444"
       opacity="0.85">
@@ -466,7 +466,7 @@
 
     <text
       x="632.5"
-      y="290.0"
+      y="309.5652173913044"
       text-anchor="middle"
       fill="#f8fafc"
       font-family="monospace"
@@ -550,7 +550,7 @@
       font-family="monospace"
       font-size="11">
 
-      Zomato_Sentiment_Analy
+      Restraunt_Pred
     </text>
 
     <rect
@@ -564,7 +564,7 @@
     <rect
       x="785"
       y="411"
-      width="53.9"
+      width="61.25"
       height="6"
       rx="3"
       fill="#60a5fa">
@@ -585,7 +585,7 @@
       font-family="monospace"
       font-size="10">
 
-      22
+      25
     </text>
     
     <text
@@ -595,7 +595,7 @@
       font-family="monospace"
       font-size="11">
 
-      Covid19-Adverse-effect
+      Zomato_Sentiment_Analy
     </text>
 
     <rect
@@ -609,7 +609,7 @@
     <rect
       x="785"
       y="449"
-      width="41.650000000000006"
+      width="53.9"
       height="6"
       rx="3"
       fill="#60a5fa">
@@ -630,7 +630,7 @@
       font-family="monospace"
       font-size="10">
 
-      17
+      22
     </text>
     
     <text
@@ -640,7 +640,7 @@
       font-family="monospace"
       font-size="11">
 
-      Java
+      Covid19-Adverse-effect
     </text>
 
     <rect
@@ -654,7 +654,7 @@
     <rect
       x="785"
       y="487"
-      width="19.6"
+      width="41.650000000000006"
       height="6"
       rx="3"
       fill="#60a5fa">
@@ -675,7 +675,7 @@
       font-family="monospace"
       font-size="10">
 
-      8
+      17
     </text>
     
     <text
@@ -685,7 +685,7 @@
       font-family="monospace"
       font-size="11">
 
-      Task2
+      Java
     </text>
 
     <rect
@@ -699,7 +699,7 @@
     <rect
       x="785"
       y="525"
-      width="14.7"
+      width="19.6"
       height="6"
       rx="3"
       fill="#60a5fa">
@@ -720,7 +720,7 @@
       font-family="monospace"
       font-size="10">
 
-      6
+      8
     </text>
     
     <text
@@ -730,7 +730,7 @@
       font-family="monospace"
       font-size="11">
 
-      Restraunt_Pred
+      Task2
     </text>
 
     <rect
@@ -744,7 +744,7 @@
     <rect
       x="785"
       y="563"
-      width="9.8"
+      width="14.7"
       height="6"
       rx="3"
       fill="#60a5fa">
@@ -765,7 +765,7 @@
       font-family="monospace"
       font-size="10">
 
-      4
+      6
     </text>
     
 
