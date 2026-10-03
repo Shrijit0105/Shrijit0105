@@ -1,657 +1,608 @@
-name: Project Health Monitor
+name: Project Status UI
 
 on:
-  schedule:
-    - cron: "30 0 * * *"
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - "assets/project-status.svg"
 
   workflow_dispatch:
+
+  schedule:
+    - cron: "0 18 * * *"
 
 permissions:
   contents: write
 
 jobs:
-  project-health:
+  update-project-ui:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Generate Project Health SVG
+      - name: Generate Project Status SVG
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO_NAME: ${{ github.repository }}
+          BRANCH_NAME: ${{ github.ref_name }}
+          EVENT_NAME: ${{ github.event_name }}
+          ACTOR_NAME: ${{ github.actor }}
         run: |
           python3 <<'PY'
-          import json
-          import urllib.request
-          import urllib.error
+          import os
+          import subprocess
+          import html
+          from pathlib import Path
           from datetime import datetime, timezone
-          from xml.sax.saxutils import escape
 
-          # ============================================================
-          # PROJECTS TO MONITOR
-          # ============================================================
+          # --------------------------------------------------
+          # Repository information
+          # --------------------------------------------------
 
-          PROJECTS = [
-              "Shrijit0105",
-              "Covid19-Adverse-effects",
-              "Restaurant_Pred",
-              "Shopper_Spectrum"
+          repo = os.environ.get("REPO_NAME", "Unknown Repository")
+          branch = os.environ.get("BRANCH_NAME", "main")
+          event = os.environ.get("EVENT_NAME", "push")
+
+          def git(command):
+              try:
+                  return subprocess.check_output(
+                      command,
+                      shell=True,
+                      text=True,
+                      stderr=subprocess.DEVNULL
+                  ).strip()
+              except:
+                  return ""
+
+          commit_count = git("git rev-list --count HEAD") or "0"
+
+          latest_commit = git(
+              "git log -1 --pretty=%s"
+          ) or "No commits found"
+
+          latest_author = git(
+              "git log -1 --pretty=%an"
+          ) or "Unknown"
+
+          latest_sha = git(
+              "git log -1 --pretty=%h"
+          ) or "------"
+
+          latest_date = git(
+              "git log -1 --date=format:'%d %b %Y %H:%M' "
+              "--format='%ad'"
+          ) or "Unknown"
+
+          # --------------------------------------------------
+          # Repository structure detection
+          # --------------------------------------------------
+
+          def exists(path):
+              return Path(path).exists()
+
+          def has_files(directory):
+              path = Path(directory)
+              return path.exists() and any(path.rglob("*"))
+
+          files = [
+              p for p in Path(".").rglob("*")
+              if p.is_file()
+              and ".git" not in p.parts
+              and "assets" not in p.parts
           ]
 
-          USERNAME = "Shrijit0105"
+          file_count = len(files)
 
-          # ============================================================
-          # SVG DIMENSIONS
-          # ============================================================
+          # --------------------------------------------------
+          # ML project stages
+          # --------------------------------------------------
 
-          WIDTH = 980
+          data_progress = 0
+          cleaning_progress = 0
+          eda_progress = 0
+          feature_progress = 0
+          model_progress = 0
+          evaluation_progress = 0
 
-          HEADER_HEIGHT = 125
-          CARD_HEIGHT = 82
-          CARD_GAP = 18
-          FOOTER_HEIGHT = 70
-          PADDING = 25
+          # Data
+          if exists("data") or exists("data/raw"):
+              data_progress = 100
 
-          TOTAL_HEIGHT = (
-              HEADER_HEIGHT
-              + len(PROJECTS) * CARD_HEIGHT
-              + max(0, len(PROJECTS) - 1) * CARD_GAP
-              + FOOTER_HEIGHT
-              + PADDING
-          )
+          # Cleaning / preprocessing
+          if (
+              exists("data/processed")
+              or exists("notebooks/02_Preprocessing.ipynb")
+              or exists("notebooks/02_Preprocessing")
+          ):
+              cleaning_progress = 100
 
-          # ============================================================
-          # GITHUB API
-          # ============================================================
+          # EDA
+          if (
+              exists("notebooks/01_EDA.ipynb")
+              or exists("notebooks/01_EDA")
+              or exists("outputs/plots")
+          ):
+              eda_progress = 100
 
-          TOKEN = __import__("os").environ["GH_TOKEN"]
+          # Feature engineering
+          if (
+              exists("notebooks/02_Preprocessing.ipynb")
+              or exists("outputs/features")
+              or exists("features")
+          ):
+              feature_progress = 85
 
-          def github_request(url):
-              request = urllib.request.Request(
-                  url,
-                  headers={
-                      "Authorization": f"Bearer {TOKEN}",
-                      "Accept": "application/vnd.github+json",
-                      "X-GitHub-Api-Version": "2022-11-28",
-                      "User-Agent": "Project-Health-Monitor"
-                  }
-              )
+          # Model training
+          if (
+              exists("notebooks/03_Model_Training.ipynb")
+              or exists("models")
+          ):
+              model_progress = 60
 
-              try:
-                  with urllib.request.urlopen(request, timeout=15) as response:
-                      return json.loads(response.read().decode("utf-8"))
+          # Evaluation
+          if (
+              exists("notebooks/04_Model_Evaluation.ipynb")
+              or exists("outputs/reports")
+              or exists("outputs/evaluation")
+          ):
+              evaluation_progress = 40
 
-              except urllib.error.HTTPError as error:
-                  print(f"GitHub API error {error.code}: {url}")
-                  return None
+          # --------------------------------------------------
+          # Detect current focus from latest commit
+          # --------------------------------------------------
 
-              except Exception as error:
-                  print(f"Request error: {error}")
-                  return None
+          changed_files = git(
+              "git diff-tree --no-commit-id --name-only -r HEAD"
+          ).lower()
 
-          # ============================================================
-          # CHECK PROJECTS
-          # ============================================================
+          commit_text = latest_commit.lower()
 
-          project_data = []
+          focus = "Repository Development"
 
-          print("Checking repositories...")
+          if any(x in changed_files or x in commit_text for x in [
+              "01_eda",
+              "eda",
+              "exploration",
+              "visualization"
+          ]):
+              focus = "Exploratory Data Analysis"
 
-          for repo in PROJECTS:
+          elif any(x in changed_files or x in commit_text for x in [
+              "02_preprocessing",
+              "preprocess",
+              "clean",
+              "cleaning"
+          ]):
+              focus = "Data Preprocessing"
 
-              print(f"Checking {repo}...")
+          elif any(x in changed_files or x in commit_text for x in [
+              "feature",
+              "engineering"
+          ]):
+              focus = "Feature Engineering"
 
-              data = github_request(
-                  f"https://api.github.com/repos/{USERNAME}/{repo}"
-              )
+          elif any(x in changed_files or x in commit_text for x in [
+              "03_model",
+              "model_training",
+              "train",
+              "training",
+              "models/"
+          ]):
+              focus = "Model Development"
 
-              if data is None:
-                  project_data.append({
-                      "name": repo,
-                      "status": "UNAVAILABLE",
-                      "branch": "UNKNOWN",
-                      "updated": "N/A",
-                      "color": "#ff4d6d"
-                  })
-                  continue
+          elif any(x in changed_files or x in commit_text for x in [
+              "04_model_evaluation",
+              "evaluation",
+              "evaluate",
+              "metric"
+          ]):
+              focus = "Model Evaluation"
 
-              default_branch = data.get(
-                  "default_branch",
-                  "main"
-              )
+          elif any(x in changed_files or x in commit_text for x in [
+              "readme",
+              "workflow",
+              ".yml",
+              ".yaml"
+          ]):
+              focus = "Project Infrastructure"
 
-              updated_at = data.get(
-                  "pushed_at",
-                  data.get("updated_at", "")
-              )
+          # --------------------------------------------------
+          # Overall progress
+          # --------------------------------------------------
 
-              if updated_at:
-                  try:
-                      dt = datetime.fromisoformat(
-                          updated_at.replace("Z", "+00:00")
-                      )
+          stages = [
+              data_progress,
+              cleaning_progress,
+              eda_progress,
+              feature_progress,
+              model_progress,
+              evaluation_progress
+          ]
 
-                      updated = dt.strftime(
-                          "%Y-%m-%d %H:%M UTC"
-                      )
+          overall = round(sum(stages) / len(stages))
 
-                  except Exception:
-                      updated = "Unknown"
-
-              else:
-                  updated = "Unknown"
-
-              project_data.append({
-                  "name": repo,
-                  "status": "ONLINE",
-                  "branch": default_branch,
-                  "updated": updated,
-                  "color": "#00ff88"
-              })
-
-          # ============================================================
-          # XML ESCAPE
-          # ============================================================
+          # --------------------------------------------------
+          # Escape SVG text
+          # --------------------------------------------------
 
           def esc(value):
-              return escape(str(value))
+              return html.escape(str(value))
 
-          # ============================================================
-          # SVG HELPERS
-          # ============================================================
+          # --------------------------------------------------
+          # SVG
+          # --------------------------------------------------
 
-          svg = []
+          svg = f'''<svg
+          width="1000"
+          height="650"
+          viewBox="0 0 1000 650"
+          xmlns="http://www.w3.org/2000/svg">
 
-          svg.append(
-              f'''<svg xmlns="http://www.w3.org/2000/svg"
-              width="{WIDTH}"
-              height="{TOTAL_HEIGHT}"
-              viewBox="0 0 {WIDTH} {TOTAL_HEIGHT}">'''
-          )
-
-          # ============================================================
-          # DEFINITIONS
-          # ============================================================
-
-          svg.append(f'''
           <defs>
 
-            <linearGradient
-              id="bgGradient"
-              x1="0"
-              y1="0"
-              x2="1"
-              y2="1">
-
-              <stop offset="0%" stop-color="#05080c"/>
-              <stop offset="50%" stop-color="#07110e"/>
-              <stop offset="100%" stop-color="#030607"/>
-
+            <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#050505"/>
+              <stop offset="100%" stop-color="#111111"/>
             </linearGradient>
 
-            <linearGradient
-              id="scannerGradient"
-              x1="0"
-              y1="0"
-              x2="1"
-              y2="0">
-
-              <stop
-                offset="0%"
-                stop-color="#00ff88"
-                stop-opacity="0"/>
-
-              <stop
-                offset="50%"
-                stop-color="#00ff88"
-                stop-opacity="0.75"/>
-
-              <stop
-                offset="100%"
-                stop-color="#00ff88"
-                stop-opacity="0"/>
-
+            <linearGradient id="line" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#00ff88"/>
+              <stop offset="100%" stop-color="#00ccff"/>
             </linearGradient>
 
             <filter id="glow">
-              <feGaussianBlur
-                stdDeviation="3"
-                result="blur"/>
+              <feGaussianBlur stdDeviation="4" result="blur"/>
+              <feMerge>
+                <feMergeNode in="blur"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
             </filter>
 
-            <clipPath id="hudClip">
+            <style>
 
-              <rect
-                x="2"
-                y="2"
-                width="{WIDTH - 4}"
-                height="{TOTAL_HEIGHT - 4}"
-                rx="22"/>
+              .title {{
+                font-family: monospace;
+                font-size: 26px;
+                font-weight: bold;
+                fill: #ffffff;
+              }}
 
-            </clipPath>
+              .subtitle {{
+                font-family: monospace;
+                font-size: 13px;
+                fill: #888888;
+              }}
+
+              .label {{
+                font-family: monospace;
+                font-size: 13px;
+                fill: #bbbbbb;
+              }}
+
+              .value {{
+                font-family: monospace;
+                font-size: 14px;
+                fill: #ffffff;
+              }}
+
+              .small {{
+                font-family: monospace;
+                font-size: 11px;
+                fill: #777777;
+              }}
+
+              .bar {{
+                fill: #222222;
+              }}
+
+              .fill {{
+                fill: url(#line);
+              }}
+
+              .pulse {{
+                animation: pulse 1.6s infinite;
+              }}
+
+              @keyframes pulse {{
+                0%,100% {{ opacity: 1; }}
+                50% {{ opacity: .35; }}
+              }}
+
+              .scan {{
+                animation: scan 4s linear infinite;
+              }}
+
+              @keyframes scan {{
+                0% {{ transform: translateX(0); opacity: .1; }}
+                50% {{ opacity: .7; }}
+                100% {{ transform: translateX(1000px); opacity: .1; }}
+              }}
+
+            </style>
 
           </defs>
-          ''')
 
-          # ============================================================
-          # BACKGROUND
-          # ============================================================
+          <!-- Background -->
 
-          svg.append(f'''
-          <rect
-            x="2"
-            y="2"
-            width="{WIDTH - 4}"
-            height="{TOTAL_HEIGHT - 4}"
-            rx="22"
-            fill="url(#bgGradient)"
-            stroke="#00ff88"
-            stroke-opacity="0.35"
-            stroke-width="2"/>
-          ''')
+          <rect width="1000" height="650" rx="18" fill="url(#bg)"/>
 
-          # ============================================================
-          # GRID
-          # ============================================================
+          <!-- Header -->
 
-          grid_lines = []
-
-          for x in range(40, WIDTH, 40):
-
-              grid_lines.append(
-                  f'''
-                  <line
-                    x1="{x}"
-                    y1="0"
-                    x2="{x}"
-                    y2="{TOTAL_HEIGHT}"
-                    stroke="#00ff88"
-                    stroke-opacity="0.045"/>
-                  '''
-              )
-
-          for y in range(40, TOTAL_HEIGHT, 40):
-
-              grid_lines.append(
-                  f'''
-                  <line
-                    x1="0"
-                    y1="{y}"
-                    x2="{WIDTH}"
-                    y2="{y}"
-                    stroke="#00ff88"
-                    stroke-opacity="0.045"/>
-                  '''
-              )
-
-          svg.append(
-              '<g clip-path="url(#hudClip)">'
-              + "".join(grid_lines)
-              + '</g>'
-          )
-
-          # ============================================================
-          # HEADER
-          # ============================================================
-
-          svg.append('''
-          <text
-            x="42"
-            y="48"
-            fill="#00ff88"
-            font-family="monospace"
-            font-size="25"
-            font-weight="bold"
-            letter-spacing="2">
-            PROJECT HEALTH MONITOR
+          <text x="45" y="55" class="title">
+            RESTAURANT RATING PREDICTION
           </text>
-          ''')
 
-          svg.append('''
-          <text
-            x="43"
-            y="76"
-            fill="#8aa89a"
-            font-family="monospace"
-            font-size="13"
-            letter-spacing="1">
-            REAL-TIME REPOSITORY STATUS
+          <text x="45" y="78" class="subtitle">
+            AI / ML PROJECT MONITOR
           </text>
-          ''')
 
-          # ============================================================
-          # MONITORING INDICATOR
-          # ============================================================
-
-          svg.append('''
           <circle
-            cx="900"
-            cy="50"
-            r="6"
-            fill="#00ff88">
-
-            <animate
-              attributeName="r"
-              values="5;9;5"
-              dur="1.8s"
-              repeatCount="indefinite"
-              calcMode="spline"
-              keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
-
-            <animate
-              attributeName="opacity"
-              values="0.45;1;0.45"
-              dur="1.8s"
-              repeatCount="indefinite"/>
-
-          </circle>
-          ''')
-
-          svg.append('''
-          <text
-            x="918"
-            y="55"
+            cx="920"
+            cy="52"
+            r="7"
             fill="#00ff88"
-            font-family="monospace"
-            font-size="11"
-            text-anchor="end"
-            letter-spacing="1">
-            MONITORING
+            filter="url(#glow)"
+            class="pulse"
+          />
+
+          <text x="935" y="57" class="label">
+            ACTIVE
           </text>
-          ''')
 
-          # ============================================================
-          # PROJECT CARDS
-          # ============================================================
+          <!-- Overall progress -->
 
-          card_start_y = HEADER_HEIGHT
-
-          for index, project in enumerate(project_data):
-
-              y = card_start_y + index * (
-                  CARD_HEIGHT + CARD_GAP
-              )
-
-              name = esc(project["name"])
-              status = esc(project["status"])
-              branch = esc(project["branch"])
-              updated = esc(project["updated"])
-              color = project["color"]
-
-              # Card background
-              svg.append(f'''
-              <rect
-                x="35"
-                y="{y}"
-                width="{WIDTH - 70}"
-                height="{CARD_HEIGHT}"
-                rx="14"
-                fill="#07100d"
-                stroke="#00ff88"
-                stroke-opacity="0.18"
-                stroke-width="1.5"/>
-              ''')
-
-              # Left status indicator
-              svg.append(f'''
-              <circle
-                cx="62"
-                cy="{y + 41}"
-                r="6"
-                fill="{color}">
-
-                <animate
-                  attributeName="r"
-                  values="5;8;5"
-                  dur="2s"
-                  begin="{index * 0.25}s"
-                  repeatCount="indefinite"
-                  calcMode="spline"
-                  keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
-
-                <animate
-                  attributeName="opacity"
-                  values="0.55;1;0.55"
-                  dur="2s"
-                  begin="{index * 0.25}s"
-                  repeatCount="indefinite"/>
-
-              </circle>
-              ''')
-
-              # Project name
-              svg.append(f'''
-              <text
-                x="85"
-                y="{y + 32}"
-                fill="#e8fff3"
-                font-family="monospace"
-                font-size="16"
-                font-weight="bold">
-                {name}
-              </text>
-              ''')
-
-              # Status
-              svg.append(f'''
-              <text
-                x="85"
-                y="{y + 56}"
-                fill="{color}"
-                font-family="monospace"
-                font-size="11"
-                letter-spacing="1">
-                STATUS: {status}
-              </text>
-              ''')
-
-              # Branch
-              svg.append(f'''
-              <text
-                x="500"
-                y="{y + 32}"
-                fill="#9ab4a5"
-                font-family="monospace"
-                font-size="12">
-                BRANCH
-              </text>
-              ''')
-
-              svg.append(f'''
-              <text
-                x="500"
-                y="{y + 55}"
-                fill="#d9eee2"
-                font-family="monospace"
-                font-size="13">
-                {branch}
-              </text>
-              ''')
-
-              # Last update
-              svg.append(f'''
-              <text
-                x="700"
-                y="{y + 32}"
-                fill="#9ab4a5"
-                font-family="monospace"
-                font-size="12">
-                LAST UPDATE
-              </text>
-              ''')
-
-              svg.append(f'''
-              <text
-                x="700"
-                y="{y + 55}"
-                fill="#d9eee2"
-                font-family="monospace"
-                font-size="11">
-                {updated}
-              </text>
-              ''')
-
-          # ============================================================
-          # SCANNER BEAM
-          # ============================================================
-
-          scanner_top = HEADER_HEIGHT - 5
-          scanner_height = (
-              len(PROJECTS) * CARD_HEIGHT
-              + max(0, len(PROJECTS) - 1) * CARD_GAP
-          )
-
-          svg.append(f'''
-          <g clip-path="url(#hudClip)">
-
-            <rect
-              x="35"
-              y="{scanner_top}"
-              width="18"
-              height="{scanner_height}"
-              fill="url(#scannerGradient)"
-              opacity="0.20">
-
-              <animate
-                attributeName="x"
-                values="35;927;35"
-                dur="5s"
-                repeatCount="indefinite"
-                calcMode="spline"
-                keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
-
-            </rect>
-
-            <rect
-              x="44"
-              y="{scanner_top}"
-              width="2"
-              height="{scanner_height}"
-              fill="#00ff88"
-              opacity="0.8">
-
-              <animate
-                attributeName="x"
-                values="44;936;44"
-                dur="5s"
-                repeatCount="indefinite"
-                calcMode="spline"
-                keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
-
-            </rect>
-
-          </g>
-          ''')
-
-          # ============================================================
-          # FOOTER
-          # ============================================================
-
-          footer_y = (
-              HEADER_HEIGHT
-              + len(PROJECTS) * CARD_HEIGHT
-              + max(0, len(PROJECTS) - 1) * CARD_GAP
-              + 32
-          )
-
-          svg.append(f'''
-          <line
-            x1="42"
-            y1="{footer_y}"
-            x2="{WIDTH - 42}"
-            y2="{footer_y}"
-            stroke="#00ff88"
-            stroke-opacity="0.15"/>
-          ''')
-
-          svg.append(f'''
-          <text
-            x="42"
-            y="{footer_y + 30}"
-            fill="#63796d"
-            font-family="monospace"
-            font-size="11">
-            AUTO-SCAN • GITHUB ACTIONS
+          <text x="45" y="125" class="label">
+            PROJECT PROGRESS
           </text>
-          ''')
 
-          svg.append(f'''
-          <text
-            x="{WIDTH - 42}"
-            y="{footer_y + 30}"
-            fill="#63796d"
-            font-family="monospace"
-            font-size="11"
-            text-anchor="end">
-            LAST SCAN: {datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")}
+          <text x="880" y="125" class="value">
+            {overall}%
           </text>
-          ''')
 
-          # ============================================================
-          # OUTER SCAN BORDER PULSE
-          # ============================================================
-
-          svg.append(f'''
           <rect
-            x="3"
-            y="3"
-            width="{WIDTH - 6}"
-            height="{TOTAL_HEIGHT - 6}"
-            rx="21"
-            fill="none"
-            stroke="#00ff88"
-            stroke-width="1"
-            stroke-opacity="0.25">
+            x="45"
+            y="140"
+            width="910"
+            height="10"
+            rx="5"
+            class="bar"
+          />
 
-            <animate
-              attributeName="stroke-opacity"
-              values="0.15;0.45;0.15"
-              dur="3.5s"
-              repeatCount="indefinite"
-              calcMode="spline"
-              keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
+          <rect
+            x="45"
+            y="140"
+            width="{9.1 * overall}"
+            height="10"
+            rx="5"
+            class="fill"
+          />
 
-          </rect>
-          ''')
+          <!-- Pipeline -->
 
-          # ============================================================
-          # CLOSE SVG
-          # ============================================================
+          <text x="45" y="195" class="title">
+            ML PIPELINE
+          </text>
 
-          svg.append("</svg>")
+          <!-- Data -->
 
-          # ============================================================
-          # WRITE FILE
-          # ============================================================
+          <text x="45" y="230" class="label">
+            DATA
+          </text>
 
-          output = "\n".join(svg)
+          <text x="400" y="230" class="value">
+            {data_progress}%
+          </text>
 
-          with open(
-              "assets/project-health.svg",
-              "w",
+          <rect x="45" y="240" width="400" height="8" rx="4" class="bar"/>
+          <rect x="45" y="240" width="{4 * data_progress}" height="8" rx="4" class="fill"/>
+
+          <!-- Cleaning -->
+
+          <text x="500" y="230" class="label">
+            CLEANING
+          </text>
+
+          <text x="855" y="230" class="value">
+            {cleaning_progress}%
+          </text>
+
+          <rect x="500" y="240" width="400" height="8" rx="4" class="bar"/>
+          <rect x="500" y="240" width="{4 * cleaning_progress}" height="8" rx="4" class="fill"/>
+
+          <!-- EDA -->
+
+          <text x="45" y="285" class="label">
+            EDA
+          </text>
+
+          <text x="400" y="285" class="value">
+            {eda_progress}%
+          </text>
+
+          <rect x="45" y="295" width="400" height="8" rx="4" class="bar"/>
+          <rect x="45" y="295" width="{4 * eda_progress}" height="8" rx="4" class="fill"/>
+
+          <!-- Features -->
+
+          <text x="500" y="285" class="label">
+            FEATURES
+          </text>
+
+          <text x="855" y="285" class="value">
+            {feature_progress}%
+          </text>
+
+          <rect x="500" y="295" width="400" height="8" rx="4" class="bar"/>
+          <rect x="500" y="295" width="{4 * feature_progress}" height="8" rx="4" class="fill"/>
+
+          <!-- Model -->
+
+          <text x="45" y="340" class="label">
+            MODEL TRAINING
+          </text>
+
+          <text x="400" y="340" class="value">
+            {model_progress}%
+          </text>
+
+          <rect x="45" y="350" width="400" height="8" rx="4" class="bar"/>
+          <rect x="45" y="350" width="{4 * model_progress}" height="8" rx="4" class="fill"/>
+
+          <!-- Evaluation -->
+
+          <text x="500" y="340" class="label">
+            EVALUATION
+          </text>
+
+          <text x="855" y="340" class="value">
+            {evaluation_progress}%
+          </text>
+
+          <rect x="500" y="350" width="400" height="8" rx="4" class="bar"/>
+          <rect x="500" y="350" width="{4 * evaluation_progress}" height="8" rx="4" class="fill"/>
+
+          <!-- Current focus -->
+
+          <rect
+            x="45"
+            y="395"
+            width="910"
+            height="70"
+            rx="10"
+            fill="#0c0c0c"
+            stroke="#222222"
+          />
+
+          <text x="65" y="420" class="small">
+            CURRENT FOCUS
+          </text>
+
+          <text x="65" y="447" class="value">
+            {esc(focus)}
+          </text>
+
+          <!-- Repository -->
+
+          <text x="45" y="510" class="title">
+            REPOSITORY STATUS
+          </text>
+
+          <text x="45" y="540" class="label">
+            REPOSITORY
+          </text>
+
+          <text x="180" y="540" class="value">
+            {esc(repo)}
+          </text>
+
+          <text x="500" y="540" class="label">
+            BRANCH
+          </text>
+
+          <text x="590" y="540" class="value">
+            {esc(branch)}
+          </text>
+
+          <text x="45" y="565" class="label">
+            COMMITS
+          </text>
+
+          <text x="180" y="565" class="value">
+            {esc(commit_count)}
+          </text>
+
+          <text x="500" y="565" class="label">
+            FILES
+          </text>
+
+          <text x="590" y="565" class="value">
+            {esc(file_count)}
+          </text>
+
+          <text x="45" y="590" class="label">
+            LAST COMMIT
+          </text>
+
+          <text x="180" y="590" class="value">
+            {esc(latest_sha)}
+          </text>
+
+          <text x="500" y="590" class="label">
+            EVENT
+          </text>
+
+          <text x="590" y="590" class="value">
+            {esc(event)}
+          </text>
+
+          <!-- Footer -->
+
+          <text x="45" y="625" class="small">
+            {esc(latest_date)} • {esc(latest_author)}
+          </text>
+
+          <rect
+            x="0"
+            y="0"
+            width="3"
+            height="650"
+            fill="#00ff88"
+            opacity=".25"
+            class="scan"
+          />
+
+          </svg>
+          '''
+
+          # --------------------------------------------------
+          # Write SVG
+          # --------------------------------------------------
+
+          Path("assets").mkdir(exist_ok=True)
+
+          Path("assets/project-status.svg").write_text(
+              svg,
               encoding="utf-8"
-          ) as file:
-
-              file.write(output)
-
-          print(
-              f"Generated project-health.svg "
-              f"({WIDTH}x{TOTAL_HEIGHT})"
           )
 
+          print("========================================")
+          print("PROJECT STATUS UI GENERATED")
+          print("========================================")
+          print(f"Repository : {repo}")
+          print(f"Branch     : {branch}")
+          print(f"Commits    : {commit_count}")
+          print(f"Files      : {file_count}")
+          print(f"Focus      : {focus}")
+          print(f"Progress   : {overall}%")
+          print(f"Latest     : {latest_commit}")
+          print("========================================")
           PY
 
-      - name: Commit Project Health SVG
+      - name: Configure Git
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add assets/project-health.svg
+      - name: Commit updated UI
+        run: |
+          git add assets/project-status.svg
 
           if git diff --cached --quiet; then
-            echo "No changes detected."
-          else
-            git commit -m "Update project health monitor"
-            git push
+            echo "No UI changes detected."
+            exit 0
           fi
+
+          git commit -m "chore: update project status UI"
+
+      - name: Sync with remote
+        run: |
+          git fetch origin main
+          git rebase origin/main
+
+      - name: Push UI
+        run: |
+          git push origin HEAD:main
