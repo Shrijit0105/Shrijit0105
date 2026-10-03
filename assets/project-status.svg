@@ -1,0 +1,320 @@
+<svg
+width="1000"
+height="650"
+viewBox="0 0 1000 650"
+xmlns="http://www.w3.org/2000/svg">
+
+<defs>
+
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stop-color="#050505"/>
+    <stop offset="100%" stop-color="#111111"/>
+  </linearGradient>
+
+  <linearGradient id="line" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0%" stop-color="#00ff88"/>
+    <stop offset="100%" stop-color="#00ccff"/>
+  </linearGradient>
+
+  <filter id="glow">
+    <feGaussianBlur stdDeviation="4" result="blur"/>
+    <feMerge>
+      <feMergeNode in="blur"/>
+      <feMergeNode in="SourceGraphic"/>
+    </feMerge>
+  </filter>
+
+  <style>
+
+    .title {
+      font-family: monospace;
+      font-size: 26px;
+      font-weight: bold;
+      fill: #ffffff;
+    }
+
+    .subtitle {
+      font-family: monospace;
+      font-size: 13px;
+      fill: #888888;
+    }
+
+    .label {
+      font-family: monospace;
+      font-size: 13px;
+      fill: #bbbbbb;
+    }
+
+    .value {
+      font-family: monospace;
+      font-size: 14px;
+      fill: #ffffff;
+    }
+
+    .small {
+      font-family: monospace;
+      font-size: 11px;
+      fill: #777777;
+    }
+
+    .bar {
+      fill: #222222;
+    }
+
+    .fill {
+      fill: url(#line);
+    }
+
+    .pulse {
+      animation: pulse 1.6s infinite;
+    }
+
+    @keyframes pulse {
+      0%,100% { opacity: 1; }
+      50% { opacity: .35; }
+    }
+
+    .scan {
+      animation: scan 4s linear infinite;
+    }
+
+    @keyframes scan {
+      0% { transform: translateX(0); opacity: .1; }
+      50% { opacity: .7; }
+      100% { transform: translateX(1000px); opacity: .1; }
+    }
+
+  </style>
+
+</defs>
+
+<!-- Background -->
+
+<rect width="1000" height="650" rx="18" fill="url(#bg)"/>
+
+<!-- Header -->
+
+<text x="45" y="55" class="title">
+  RESTAURANT RATING PREDICTION
+</text>
+
+<text x="45" y="78" class="subtitle">
+  AI / ML PROJECT MONITOR
+</text>
+
+<circle
+  cx="920"
+  cy="52"
+  r="7"
+  fill="#00ff88"
+  filter="url(#glow)"
+  class="pulse"
+/>
+
+<text x="935" y="57" class="label">
+  ACTIVE
+</text>
+
+<!-- Overall progress -->
+
+<text x="45" y="125" class="label">
+  PROJECT PROGRESS
+</text>
+
+<text x="880" y="125" class="value">
+  0%
+</text>
+
+<rect
+  x="45"
+  y="140"
+  width="910"
+  height="10"
+  rx="5"
+  class="bar"
+/>
+
+<rect
+  x="45"
+  y="140"
+  width="0.0"
+  height="10"
+  rx="5"
+  class="fill"
+/>
+
+<!-- Pipeline -->
+
+<text x="45" y="195" class="title">
+  ML PIPELINE
+</text>
+
+<!-- Data -->
+
+<text x="45" y="230" class="label">
+  DATA
+</text>
+
+<text x="400" y="230" class="value">
+  0%
+</text>
+
+<rect x="45" y="240" width="400" height="8" rx="4" class="bar"/>
+<rect x="45" y="240" width="0" height="8" rx="4" class="fill"/>
+
+<!-- Cleaning -->
+
+<text x="500" y="230" class="label">
+  CLEANING
+</text>
+
+<text x="855" y="230" class="value">
+  0%
+</text>
+
+<rect x="500" y="240" width="400" height="8" rx="4" class="bar"/>
+<rect x="500" y="240" width="0" height="8" rx="4" class="fill"/>
+
+<!-- EDA -->
+
+<text x="45" y="285" class="label">
+  EDA
+</text>
+
+<text x="400" y="285" class="value">
+  0%
+</text>
+
+<rect x="45" y="295" width="400" height="8" rx="4" class="bar"/>
+<rect x="45" y="295" width="0" height="8" rx="4" class="fill"/>
+
+<!-- Features -->
+
+<text x="500" y="285" class="label">
+  FEATURES
+</text>
+
+<text x="855" y="285" class="value">
+  0%
+</text>
+
+<rect x="500" y="295" width="400" height="8" rx="4" class="bar"/>
+<rect x="500" y="295" width="0" height="8" rx="4" class="fill"/>
+
+<!-- Model -->
+
+<text x="45" y="340" class="label">
+  MODEL TRAINING
+</text>
+
+<text x="400" y="340" class="value">
+  0%
+</text>
+
+<rect x="45" y="350" width="400" height="8" rx="4" class="bar"/>
+<rect x="45" y="350" width="0" height="8" rx="4" class="fill"/>
+
+<!-- Evaluation -->
+
+<text x="500" y="340" class="label">
+  EVALUATION
+</text>
+
+<text x="855" y="340" class="value">
+  0%
+</text>
+
+<rect x="500" y="350" width="400" height="8" rx="4" class="bar"/>
+<rect x="500" y="350" width="0" height="8" rx="4" class="fill"/>
+
+<!-- Current focus -->
+
+<rect
+  x="45"
+  y="395"
+  width="910"
+  height="70"
+  rx="10"
+  fill="#0c0c0c"
+  stroke="#222222"
+/>
+
+<text x="65" y="420" class="small">
+  CURRENT FOCUS
+</text>
+
+<text x="65" y="447" class="value">
+  Project Infrastructure
+</text>
+
+<!-- Repository -->
+
+<text x="45" y="510" class="title">
+  REPOSITORY STATUS
+</text>
+
+<text x="45" y="540" class="label">
+  REPOSITORY
+</text>
+
+<text x="180" y="540" class="value">
+  Shrijit0105/Shrijit0105
+</text>
+
+<text x="500" y="540" class="label">
+  BRANCH
+</text>
+
+<text x="590" y="540" class="value">
+  main
+</text>
+
+<text x="45" y="565" class="label">
+  COMMITS
+</text>
+
+<text x="180" y="565" class="value">
+  250
+</text>
+
+<text x="500" y="565" class="label">
+  FILES
+</text>
+
+<text x="590" y="565" class="value">
+  13
+</text>
+
+<text x="45" y="590" class="label">
+  LAST COMMIT
+</text>
+
+<text x="180" y="590" class="value">
+  072dd0d
+</text>
+
+<text x="500" y="590" class="label">
+  EVENT
+</text>
+
+<text x="590" y="590" class="value">
+  push
+</text>
+
+<!-- Footer -->
+
+<text x="45" y="625" class="small">
+  03 Oct 2026 23:22 • Shrijit Sengupta
+</text>
+
+<rect
+  x="0"
+  y="0"
+  width="3"
+  height="650"
+  fill="#00ff88"
+  opacity=".25"
+  class="scan"
+/>
+
+</svg>
