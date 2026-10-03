@@ -1,1126 +1,604 @@
+
 <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="980"
-    height="620"
-    viewBox="0 0 980 620">
-
-<defs>
-
-  <linearGradient
-    id="bg"
-    x1="0"
-    y1="0"
-    x2="1"
-    y2="1">
-
-    <stop
-      offset="0%"
-      stop-color="#05090d"/>
-
-    <stop
-      offset="55%"
-      stop-color="#07130e"/>
-
-    <stop
-      offset="100%"
-      stop-color="#030607"/>
-
-  </linearGradient>
-
-  <linearGradient
-    id="scanner"
-    x1="0"
-    y1="0"
-    x2="1"
-    y2="0">
-
-    <stop
-      offset="0%"
-      stop-color="#00ff88"
-      stop-opacity="0"/>
-
-    <stop
-      offset="50%"
-      stop-color="#00ff88"
-      stop-opacity="0.8"/>
-
-    <stop
-      offset="100%"
-      stop-color="#00ff88"
-      stop-opacity="0"/>
-
-  </linearGradient>
-
-  <clipPath id="clip">
-
-    <rect
-      x="2"
-      y="2"
-      width="976"
-      height="616"
-      rx="22"/>
-
-  </clipPath>
-
-</defs>
-
-
-<rect
-  x="2"
-  y="2"
-  width="976"
-  height="616"
-  rx="22"
-  fill="url(#bg)"
-  stroke="#00ff88"
-  stroke-opacity="0.35"
-  stroke-width="2"/>
-
-<g clip-path="url(#clip)">
-        <line
-          x1="40"
-          y1="0"
-          x2="40"
-          y2="620"
-          stroke="#00ff88"
-          stroke-opacity="0.035"/>
-        
-        <line
-          x1="80"
-          y1="0"
-          x2="80"
-          y2="620"
-          stroke="#00ff88"
-          stroke-opacity="0.035"/>
-        
-        <line
-          x1="120"
-          y1="0"
-          x2="120"
-          y2="620"
-          stroke="#00ff88"
-          stroke-opacity="0.035"/>
-        
-        <line
-          x1="160"
-          y1="0"
-          x2="160"
-          y2="620"
-          stroke="#00ff88"
-          stroke-opacity="0.035"/>
-        
-        <line
-          x1="200"
-          y1="0"
-          x2="200"
-          y2="620"
-          stroke="#00ff88"
-          stroke-opacity="0.035"/>
-        
-        <line
-          x1="240"
-          y1="0"
-          x2="240"
-          y2="620"
-          stroke="#00ff88"
-          stroke-opacity="0.035"/>
-        
-        <line
-          x1="280"
-          y1="0"
-          x2="280"
-          y2="620"
-          stroke="#00ff88"
-          stroke-opacity="0.035"/>
-        
-        <line
-          x1="320"
-          y1="0"
-          x2="320"
-          y2="620"
-          stroke="#00ff88"
-          stroke-opacity="0.035"/>
-        
-        <line
-          x1="360"
-          y1="0"
-          x2="360"
-          y2="620"
-          stroke="#00ff88"
-          stroke-opacity="0.035"/>
-        
-        <line
-          x1="400"
-          y1="0"
-          x2="400"
-          y2="620"
-          stroke="#00ff88"
-          stroke-opacity="0.035"/>
-        
-        <line
-          x1="440"
-          y1="0"
-          x2="440"
-          y2="620"
-          stroke="#00ff88"
-          stroke-opacity="0.035"/>
-        
-        <line
-          x1="480"
-          y1="0"
-          x2="480"
-          y2="620"
-          stroke="#00ff88"
-          stroke-opacity="0.035"/>
-        
-        <line
-          x1="520"
-          y1="0"
-          x2="520"
-          y2="620"
-          stroke="#00ff88"
-          stroke-opacity="0.035"/>
-        
-        <line
-          x1="560"
-          y1="0"
-          x2="560"
-          y2="620"
-          stroke="#00ff88"
-          stroke-opacity="0.035"/>
-        
-        <line
-          x1="600"
-          y1="0"
-          x2="600"
-          y2="620"
-          stroke="#00ff88"
-          stroke-opacity="0.035"/>
-        
-        <line
-          x1="640"
-          y1="0"
-          x2="640"
-          y2="620"
-          stroke="#00ff88"
-          stroke-opacity="0.035"/>
-        
-        <line
-          x1="680"
-          y1="0"
-          x2="680"
-          y2="620"
-          stroke="#00ff88"
-          stroke-opacity="0.035"/>
-        
-        <line
-          x1="720"
-          y1="0"
-          x2="720"
-          y2="620"
-          stroke="#00ff88"
-          stroke-opacity="0.035"/>
-        
-        <line
-          x1="760"
-          y1="0"
-          x2="760"
-          y2="620"
-          stroke="#00ff88"
-          stroke-opacity="0.035"/>
-        
-        <line
-          x1="800"
-          y1="0"
-          x2="800"
-          y2="620"
-          stroke="#00ff88"
-          stroke-opacity="0.035"/>
-        
-        <line
-          x1="840"
-          y1="0"
-          x2="840"
-          y2="620"
-          stroke="#00ff88"
-          stroke-opacity="0.035"/>
-        
-        <line
-          x1="880"
-          y1="0"
-          x2="880"
-          y2="620"
-          stroke="#00ff88"
-          stroke-opacity="0.035"/>
-        
-        <line
-          x1="920"
-          y1="0"
-          x2="920"
-          y2="620"
-          stroke="#00ff88"
-          stroke-opacity="0.035"/>
-        
-        <line
-          x1="960"
-          y1="0"
-          x2="960"
-          y2="620"
-          stroke="#00ff88"
-          stroke-opacity="0.035"/>
-        
-        <line
-          x1="0"
-          y1="40"
-          x2="980"
-          y2="40"
-          stroke="#00ff88"
-          stroke-opacity="0.035"/>
-        
-        <line
-          x1="0"
-          y1="80"
-          x2="980"
-          y2="80"
-          stroke="#00ff88"
-          stroke-opacity="0.035"/>
-        
-        <line
-          x1="0"
-          y1="120"
-          x2="980"
-          y2="120"
-          stroke="#00ff88"
-          stroke-opacity="0.035"/>
-        
-        <line
-          x1="0"
-          y1="160"
-          x2="980"
-          y2="160"
-          stroke="#00ff88"
-          stroke-opacity="0.035"/>
-        
-        <line
-          x1="0"
-          y1="200"
-          x2="980"
-          y2="200"
-          stroke="#00ff88"
-          stroke-opacity="0.035"/>
-        
-        <line
-          x1="0"
-          y1="240"
-          x2="980"
-          y2="240"
-          stroke="#00ff88"
-          stroke-opacity="0.035"/>
-        
-        <line
-          x1="0"
-          y1="280"
-          x2="980"
-          y2="280"
-          stroke="#00ff88"
-          stroke-opacity="0.035"/>
-        
-        <line
-          x1="0"
-          y1="320"
-          x2="980"
-          y2="320"
-          stroke="#00ff88"
-          stroke-opacity="0.035"/>
-        
-        <line
-          x1="0"
-          y1="360"
-          x2="980"
-          y2="360"
-          stroke="#00ff88"
-          stroke-opacity="0.035"/>
-        
-        <line
-          x1="0"
-          y1="400"
-          x2="980"
-          y2="400"
-          stroke="#00ff88"
-          stroke-opacity="0.035"/>
-        
-        <line
-          x1="0"
-          y1="440"
-          x2="980"
-          y2="440"
-          stroke="#00ff88"
-          stroke-opacity="0.035"/>
-        
-        <line
-          x1="0"
-          y1="480"
-          x2="980"
-          y2="480"
-          stroke="#00ff88"
-          stroke-opacity="0.035"/>
-        
-        <line
-          x1="0"
-          y1="520"
-          x2="980"
-          y2="520"
-          stroke="#00ff88"
-          stroke-opacity="0.035"/>
-        
-        <line
-          x1="0"
-          y1="560"
-          x2="980"
-          y2="560"
-          stroke="#00ff88"
-          stroke-opacity="0.035"/>
-        
-        <line
-          x1="0"
-          y1="600"
-          x2="980"
-          y2="600"
-          stroke="#00ff88"
-          stroke-opacity="0.035"/>
-        </g>
-
-<text
-  x="42"
-  y="48"
-  fill="#00ff88"
-  font-family="monospace"
-  font-size="24"
-  font-weight="bold"
-  letter-spacing="2">
-  GITHUB ACTIVITY COMMAND CENTER
-</text>
-
-
-<text
-  x="43"
-  y="76"
-  fill="#8aa89a"
-  font-family="monospace"
-  font-size="12"
-  letter-spacing="1">
-  DEVELOPER ACTIVITY TELEMETRY
-</text>
-
-
-<circle
-  cx="875"
-  cy="49"
-  r="6"
-  fill="#00ff88">
-
-  <animate
-    attributeName="r"
-    values="5;9;5"
-    dur="1.8s"
-    repeatCount="indefinite"
-    calcMode="spline"
-    keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
-
-  <animate
-    attributeName="opacity"
-    values="0.45;1;0.45"
-    dur="1.8s"
-    repeatCount="indefinite"/>
-
-</circle>
-
-
-<text
-  x="895"
-  y="54"
-  fill="#00ff88"
-  font-family="monospace"
-  font-size="10"
-  text-anchor="start"
-  letter-spacing="1">
-  ONLINE
-</text>
-
-
-    <rect
-      x="35"
-      y="125"
-      width="145"
-      height="105"
-      rx="13"
-      fill="#07100d"
-      stroke="#00ff88"
-      stroke-opacity="0.18"/>
-    
-
-    <text
-      x="107.5"
-      y="162"
-      fill="#738d7d"
-      font-family="monospace"
-      font-size="10"
-      text-anchor="middle"
-      letter-spacing="1">
-      COMMITS
-    </text>
-    
-
-    <text
-      x="107.5"
-      y="201"
-      fill="#e8fff3"
-      font-family="monospace"
-      font-size="25"
-      font-weight="bold"
-      text-anchor="middle">
-      0
-    </text>
-    
-
-    <rect
-      x="195"
-      y="125"
-      width="145"
-      height="105"
-      rx="13"
-      fill="#07100d"
-      stroke="#00ff88"
-      stroke-opacity="0.18"/>
-    
-
-    <text
-      x="267.5"
-      y="162"
-      fill="#738d7d"
-      font-family="monospace"
-      font-size="10"
-      text-anchor="middle"
-      letter-spacing="1">
-      ACTIVE REPOS
-    </text>
-    
-
-    <text
-      x="267.5"
-      y="201"
-      fill="#e8fff3"
-      font-family="monospace"
-      font-size="25"
-      font-weight="bold"
-      text-anchor="middle">
-      4
-    </text>
-    
-
-    <rect
-      x="355"
-      y="125"
-      width="145"
-      height="105"
-      rx="13"
-      fill="#07100d"
-      stroke="#00ff88"
-      stroke-opacity="0.18"/>
-    
-
-    <text
-      x="427.5"
-      y="162"
-      fill="#738d7d"
-      font-family="monospace"
-      font-size="10"
-      text-anchor="middle"
-      letter-spacing="1">
-      PUBLIC REPOS
-    </text>
-    
-
-    <text
-      x="427.5"
-      y="201"
-      fill="#e8fff3"
-      font-family="monospace"
-      font-size="25"
-      font-weight="bold"
-      text-anchor="middle">
-      13
-    </text>
-    
-
-    <rect
-      x="515"
-      y="125"
-      width="145"
-      height="105"
-      rx="13"
-      fill="#07100d"
-      stroke="#00ff88"
-      stroke-opacity="0.18"/>
-    
-
-    <text
-      x="587.5"
-      y="162"
-      fill="#738d7d"
-      font-family="monospace"
-      font-size="10"
-      text-anchor="middle"
-      letter-spacing="1">
-      PULL REQUESTS
-    </text>
-    
-
-    <text
-      x="587.5"
-      y="201"
-      fill="#e8fff3"
-      font-family="monospace"
-      font-size="25"
-      font-weight="bold"
-      text-anchor="middle">
-      0
-    </text>
-    
-
-    <rect
-      x="675"
-      y="125"
-      width="145"
-      height="105"
-      rx="13"
-      fill="#07100d"
-      stroke="#00ff88"
-      stroke-opacity="0.18"/>
-    
-
-    <text
-      x="747.5"
-      y="162"
-      fill="#738d7d"
-      font-family="monospace"
-      font-size="10"
-      text-anchor="middle"
-      letter-spacing="1">
-      ISSUES
-    </text>
-    
-
-    <text
-      x="747.5"
-      y="201"
-      fill="#e8fff3"
-      font-family="monospace"
-      font-size="25"
-      font-weight="bold"
-      text-anchor="middle">
-      0
-    </text>
-    
-
-    <rect
-      x="835"
-      y="125"
-      width="145"
-      height="105"
-      rx="13"
-      fill="#07100d"
-      stroke="#00ff88"
-      stroke-opacity="0.18"/>
-    
-
-    <text
-      x="907.5"
-      y="162"
-      fill="#738d7d"
-      font-family="monospace"
-      font-size="10"
-      text-anchor="middle"
-      letter-spacing="1">
-      STREAK
-    </text>
-    
-
-    <text
-      x="907.5"
-      y="201"
-      fill="#e8fff3"
-      font-family="monospace"
-      font-size="25"
-      font-weight="bold"
-      text-anchor="middle">
-      0
-    </text>
-    
-
-<text
-  x="42"
-  y="288"
-  fill="#00ff88"
-  font-family="monospace"
-  font-size="14"
-  font-weight="bold"
-  letter-spacing="1">
-  CONTRIBUTION ACTIVITY
-</text>
-
-
-<text
-  x="938"
-  y="288"
-  fill="#53695b"
-  font-family="monospace"
-  font-size="10"
-  text-anchor="end">
-  RECENT EVENT TELEMETRY
-</text>
-
-
-    <text
-      x="42"
-      y="323"
-      fill="#728a7a"
-      font-family="monospace"
-      font-size="10">
-      MON
-    </text>
-    
-
-    <rect
-      x="82"
-      y="310"
-      width="690"
-      height="18"
-      rx="5"
-      fill="#07100d"
-      stroke="#00ff88"
-      stroke-opacity="0.08"/>
-    
-
-    <rect
-      x="82"
-      y="310"
-      width="35"
-      height="18"
-      rx="5"
-      fill="#00ff88"
-      opacity="0.55">
-
-      <animate
-        attributeName="opacity"
-        values="0.35;0.65;0.35"
-        dur="3s"
-        begin="0.0s"
-        repeatCount="indefinite"/>
-
-    </rect>
-    
-
-    <text
-      x="790"
-      y="323"
-      fill="#b9d7c4"
-      font-family="monospace"
-      font-size="10">
-      2
-    </text>
-    
-
-    <text
-      x="42"
-      y="350"
-      fill="#728a7a"
-      font-family="monospace"
-      font-size="10">
-      TUE
-    </text>
-    
-
-    <rect
-      x="82"
-      y="337"
-      width="690"
-      height="18"
-      rx="5"
-      fill="#07100d"
-      stroke="#00ff88"
-      stroke-opacity="0.08"/>
-    
-
-    <rect
-      x="82"
-      y="337"
-      width="353"
-      height="18"
-      rx="5"
-      fill="#00ff88"
-      opacity="0.55">
-
-      <animate
-        attributeName="opacity"
-        values="0.35;0.65;0.35"
-        dur="3s"
-        begin="0.18s"
-        repeatCount="indefinite"/>
-
-    </rect>
-    
-
-    <text
-      x="790"
-      y="350"
-      fill="#b9d7c4"
-      font-family="monospace"
-      font-size="10">
-      20
-    </text>
-    
-
-    <text
-      x="42"
-      y="377"
-      fill="#728a7a"
-      font-family="monospace"
-      font-size="10">
-      WED
-    </text>
-    
-
-    <rect
-      x="82"
-      y="364"
-      width="690"
-      height="18"
-      rx="5"
-      fill="#07100d"
-      stroke="#00ff88"
-      stroke-opacity="0.08"/>
-    
-
-    <rect
-      x="82"
-      y="364"
-      width="141"
-      height="18"
-      rx="5"
-      fill="#00ff88"
-      opacity="0.55">
-
-      <animate
-        attributeName="opacity"
-        values="0.35;0.65;0.35"
-        dur="3s"
-        begin="0.36s"
-        repeatCount="indefinite"/>
-
-    </rect>
-    
-
-    <text
-      x="790"
-      y="377"
-      fill="#b9d7c4"
-      font-family="monospace"
-      font-size="10">
-      8
-    </text>
-    
-
-    <text
-      x="42"
-      y="404"
-      fill="#728a7a"
-      font-family="monospace"
-      font-size="10">
-      THU
-    </text>
-    
-
-    <rect
-      x="82"
-      y="391"
-      width="690"
-      height="18"
-      rx="5"
-      fill="#07100d"
-      stroke="#00ff88"
-      stroke-opacity="0.08"/>
-    
-
-    <rect
-      x="82"
-      y="391"
-      width="690"
-      height="18"
-      rx="5"
-      fill="#00ff88"
-      opacity="0.55">
-
-      <animate
-        attributeName="opacity"
-        values="0.35;0.65;0.35"
-        dur="3s"
-        begin="0.54s"
-        repeatCount="indefinite"/>
-
-    </rect>
-    
-
-    <text
-      x="790"
-      y="404"
-      fill="#b9d7c4"
-      font-family="monospace"
-      font-size="10">
-      39
-    </text>
-    
-
-    <text
-      x="42"
-      y="431"
-      fill="#728a7a"
-      font-family="monospace"
-      font-size="10">
-      FRI
-    </text>
-    
-
-    <rect
-      x="82"
-      y="418"
-      width="690"
-      height="18"
-      rx="5"
-      fill="#07100d"
-      stroke="#00ff88"
-      stroke-opacity="0.08"/>
-    
-
-    <rect
-      x="82"
-      y="418"
-      width="353"
-      height="18"
-      rx="5"
-      fill="#00ff88"
-      opacity="0.55">
-
-      <animate
-        attributeName="opacity"
-        values="0.35;0.65;0.35"
-        dur="3s"
-        begin="0.72s"
-        repeatCount="indefinite"/>
-
-    </rect>
-    
-
-    <text
-      x="790"
-      y="431"
-      fill="#b9d7c4"
-      font-family="monospace"
-      font-size="10">
-      20
-    </text>
-    
-
-    <text
-      x="42"
-      y="458"
-      fill="#728a7a"
-      font-family="monospace"
-      font-size="10">
-      SAT
-    </text>
-    
-
-    <rect
-      x="82"
-      y="445"
-      width="690"
-      height="18"
-      rx="5"
-      fill="#07100d"
-      stroke="#00ff88"
-      stroke-opacity="0.08"/>
-    
-
-    <rect
-      x="82"
-      y="445"
-      width="53"
-      height="18"
-      rx="5"
-      fill="#00ff88"
-      opacity="0.55">
-
-      <animate
-        attributeName="opacity"
-        values="0.35;0.65;0.35"
-        dur="3s"
-        begin="0.8999999999999999s"
-        repeatCount="indefinite"/>
-
-    </rect>
-    
-
-    <text
-      x="790"
-      y="458"
-      fill="#b9d7c4"
-      font-family="monospace"
-      font-size="10">
-      3
-    </text>
-    
-
-    <text
-      x="42"
-      y="485"
-      fill="#728a7a"
-      font-family="monospace"
-      font-size="10">
-      SUN
-    </text>
-    
-
-    <rect
-      x="82"
-      y="472"
-      width="690"
-      height="18"
-      rx="5"
-      fill="#07100d"
-      stroke="#00ff88"
-      stroke-opacity="0.08"/>
-    
-
-    <rect
-      x="82"
-      y="472"
-      width="141"
-      height="18"
-      rx="5"
-      fill="#00ff88"
-      opacity="0.55">
-
-      <animate
-        attributeName="opacity"
-        values="0.35;0.65;0.35"
-        dur="3s"
-        begin="1.08s"
-        repeatCount="indefinite"/>
-
-    </rect>
-    
-
-    <text
-      x="790"
-      y="485"
-      fill="#b9d7c4"
-      font-family="monospace"
-      font-size="10">
-      8
-    </text>
-    
-
-<g clip-path="url(#clip)">
+  width="1000"
+  height="650"
+  viewBox="0 0 1000 650"
+  xmlns="http://www.w3.org/2000/svg">
+
+  <defs>
+
+    <linearGradient
+      id="background"
+      x1="0"
+      y1="0"
+      x2="1"
+      y2="1">
+
+      <stop
+        offset="0%"
+        stop-color="#050505"/>
+
+      <stop
+        offset="100%"
+        stop-color="#111111"/>
+
+    </linearGradient>
+
+    <linearGradient
+      id="accent"
+      x1="0"
+      y1="0"
+      x2="1"
+      y2="0">
+
+      <stop
+        offset="0%"
+        stop-color="#00ff88"/>
+
+      <stop
+        offset="100%"
+        stop-color="#00ccff"/>
+
+    </linearGradient>
+
+    <filter id="glow">
+
+      <feGaussianBlur
+        stdDeviation="4"
+        result="blur"/>
+
+      <feMerge>
+
+        <feMergeNode
+          in="blur"/>
+
+        <feMergeNode
+          in="SourceGraphic"/>
+
+      </feMerge>
+
+    </filter>
+
+    <style>
+
+      .title {
+        font-family: monospace;
+        font-size: 27px;
+        font-weight: bold;
+        fill: #ffffff;
+      }
+
+      .subtitle {
+        font-family: monospace;
+        font-size: 12px;
+        fill: #777777;
+        letter-spacing: 2px;
+      }
+
+      .label {
+        font-family: monospace;
+        font-size: 11px;
+        fill: #777777;
+        letter-spacing: 1px;
+      }
+
+      .value {
+        font-family: monospace;
+        font-size: 17px;
+        fill: #ffffff;
+      }
+
+      .big {
+        font-family: monospace;
+        font-size: 29px;
+        font-weight: bold;
+        fill: #ffffff;
+      }
+
+      .sha {
+        font-family: monospace;
+        font-size: 12px;
+        fill: #00ff88;
+      }
+
+      .commit {
+        font-family: monospace;
+        font-size: 12px;
+        fill: #dddddd;
+      }
+
+      .author {
+        font-family: monospace;
+        font-size: 11px;
+        fill: #aaaaaa;
+      }
+
+      .date {
+        font-family: monospace;
+        font-size: 10px;
+        fill: #666666;
+      }
+
+      .pulse {
+        animation: pulse 1.5s infinite;
+      }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: .35; }
+      }
+
+      .scan {
+        animation: scan 4s linear infinite;
+      }
+
+      @keyframes scan {
+        0% {
+          transform: translateX(0);
+          opacity: .05;
+        }
+
+        50% {
+          opacity: .45;
+        }
+
+        100% {
+          transform: translateX(1000px);
+          opacity: .05;
+        }
+      }
+
+    </style>
+
+  </defs>
+
+
+  <!-- =========================================
+       BACKGROUND
+  ========================================== -->
 
   <rect
-    x="80"
-    y="298"
-    width="20"
-    height="182"
-    fill="url(#scanner)"
-    opacity="0.18">
+    width="1000"
+    height="650"
+    rx="18"
+    fill="url(#background)"/>
 
-    <animate
-      attributeName="x"
-      values="70;790;70"
-      dur="5s"
-      repeatCount="indefinite"
-      calcMode="spline"
-      keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
 
-  </rect>
+  <!-- =========================================
+       HEADER
+  ========================================== -->
 
-  <rect
-    x="88"
-    y="298"
-    width="2"
-    height="182"
+  <text
+    x="45"
+    y="52"
+    class="title">
+
+    GITHUB ACTIVITY COMMAND CENTER
+
+  </text>
+
+  <text
+    x="45"
+    y="75"
+    class="subtitle">
+
+    REAL-TIME REPOSITORY TELEMETRY
+
+  </text>
+
+
+  <!-- STATUS -->
+
+  <circle
+    cx="890"
+    cy="48"
+    r="7"
     fill="#00ff88"
-    opacity="0.8">
+    filter="url(#glow)"
+    class="pulse"/>
 
-    <animate
-      attributeName="x"
-      values="88;798;88"
-      dur="5s"
-      repeatCount="indefinite"
-      calcMode="spline"
-      keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
+  <text
+    x="910"
+    y="53"
+    class="label">
 
-  </rect>
+    ACTIVE
 
-</g>
+  </text>
 
 
-<line
-  x1="42"
-  y1="500"
-  x2="938"
-  y2="500"
-  stroke="#00ff88"
-  stroke-opacity="0.15"/>
+  <!-- =========================================
+       TOP STAT CARDS
+  ========================================== -->
+
+  <rect
+    x="45"
+    y="105"
+    width="205"
+    height="90"
+    rx="10"
+    fill="#0c0c0c"
+    stroke="#222222"/>
+
+  <text
+    x="65"
+    y="130"
+    class="label">
+
+    TOTAL COMMITS
+
+  </text>
+
+  <text
+    x="65"
+    y="168"
+    class="big">
+
+    257
+
+  </text>
 
 
-<text
-  x="42"
-  y="532"
-  fill="#63796d"
-  font-family="monospace"
-  font-size="11">
-  ACTIVITY TELEMETRY // GITHUB API
-</text>
+  <rect
+    x="270"
+    y="105"
+    width="205"
+    height="90"
+    rx="10"
+    fill="#0c0c0c"
+    stroke="#222222"/>
+
+  <text
+    x="290"
+    y="130"
+    class="label">
+
+    LAST 7 DAYS
+
+  </text>
+
+  <text
+    x="290"
+    y="168"
+    class="big">
+
+    114
+
+  </text>
 
 
-<text
-  x="938"
-  y="532"
-  fill="#63796d"
-  font-family="monospace"
-  font-size="11"
-  text-anchor="end">
-  AUTO-SCAN // 24H
-</text>
+  <rect
+    x="495"
+    y="105"
+    width="205"
+    height="90"
+    rx="10"
+    fill="#0c0c0c"
+    stroke="#222222"/>
+
+  <text
+    x="515"
+    y="130"
+    class="label">
+
+    LAST 30 DAYS
+
+  </text>
+
+  <text
+    x="515"
+    y="168"
+    class="big">
+
+    246
+
+  </text>
 
 
-<rect
-  x="3"
-  y="3"
-  width="974"
-  height="614"
-  rx="21"
-  fill="none"
-  stroke="#00ff88"
-  stroke-width="1"
-  stroke-opacity="0.2">
+  <rect
+    x="720"
+    y="105"
+    width="235"
+    height="90"
+    rx="10"
+    fill="#0c0c0c"
+    stroke="#222222"/>
 
-  <animate
-    attributeName="stroke-opacity"
-    values="0.15;0.42;0.15"
-    dur="3.5s"
-    repeatCount="indefinite"
-    calcMode="spline"
-    keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
+  <text
+    x="740"
+    y="130"
+    class="label">
 
-</rect>
+    ACTIVITY
+
+  </text>
+
+  <text
+    x="740"
+    y="168"
+    class="value">
+
+    AUTOMATION
+
+  </text>
+
+
+  <!-- =========================================
+       REPOSITORY
+  ========================================== -->
+
+  <text
+    x="45"
+    y="235"
+    class="label">
+
+    REPOSITORY
+
+  </text>
+
+  <text
+    x="45"
+    y="260"
+    class="value">
+
+    Shrijit0105/Shrijit0105
+
+  </text>
+
+
+  <text
+    x="500"
+    y="235"
+    class="label">
+
+    BRANCH
+
+  </text>
+
+  <text
+    x="500"
+    y="260"
+    class="value">
+
+    main
+
+  </text>
+
+
+  <text
+    x="720"
+    y="235"
+    class="label">
+
+    TRACKED FILES
+
+  </text>
+
+  <text
+    x="720"
+    y="260"
+    class="value">
+
+    26
+
+  </text>
+
+
+  <!-- =========================================
+       LATEST COMMIT
+  ========================================== -->
+
+  <rect
+    x="45"
+    y="285"
+    width="910"
+    height="75"
+    rx="10"
+    fill="#0c0c0c"
+    stroke="#222222"/>
+
+  <text
+    x="65"
+    y="310"
+    class="label">
+
+    LATEST COMMIT
+
+  </text>
+
+  <text
+    x="65"
+    y="337"
+    class="commit">
+
+    Update GitHub activity workflow configuration
+
+  </text>
+
+  <text
+    x="780"
+    y="337"
+    class="sha">
+
+    77ef8a7
+
+  </text>
+
+
+  <!-- =========================================
+       RECENT COMMITS
+  ========================================== -->
+
+  <text
+    x="45"
+    y="390"
+    class="label">
+
+    RECENT ACTIVITY
+
+  </text>
+
+
+  
+    <text x="55" y="405" class="sha">
+      77ef8a7
+    </text>
+
+    <text x="135" y="405" class="commit">
+      Update GitHub activity workflow configuration
+    </text>
+
+    <text x="690" y="405" class="author">
+      Shrijit Sengupta
+    </text>
+
+    <text x="875" y="405" class="date">
+      03 Oct 2026
+    </text>
+    
+    <text x="55" y="439" class="sha">
+      d9b28bf
+    </text>
+
+    <text x="135" y="439" class="commit">
+      chore: update GitHub activity
+    </text>
+
+    <text x="690" y="439" class="author">
+      github-actions[bot]
+    </text>
+
+    <text x="875" y="439" class="date">
+      03 Oct 2026
+    </text>
+    
+    <text x="55" y="473" class="sha">
+      ed438f2
+    </text>
+
+    <text x="135" y="473" class="commit">
+      chore: update project status UI
+    </text>
+
+    <text x="690" y="473" class="author">
+      github-actions[bot]
+    </text>
+
+    <text x="875" y="473" class="date">
+      03 Oct 2026
+    </text>
+    
+    <text x="55" y="507" class="sha">
+      faace15
+    </text>
+
+    <text x="135" y="507" class="commit">
+      Rename workflow and update activity generation
+    </text>
+
+    <text x="690" y="507" class="author">
+      Shrijit Sengupta
+    </text>
+
+    <text x="875" y="507" class="date">
+      03 Oct 2026
+    </text>
+    
+    <text x="55" y="541" class="sha">
+      4b36d55
+    </text>
+
+    <text x="135" y="541" class="commit">
+      chore: update project status UI
+    </text>
+
+    <text x="690" y="541" class="author">
+      github-actions[bot]
+    </text>
+
+    <text x="875" y="541" class="date">
+      03 Oct 2026
+    </text>
+    
+
+
+  <!-- =========================================
+       FOOTER
+  ========================================== -->
+
+  <line
+    x1="45"
+    y1="590"
+    x2="955"
+    y2="590"
+    stroke="#222222"/>
+
+
+  <text
+    x="45"
+    y="615"
+    class="label">
+
+    LAST UPDATE
+
+  </text>
+
+  <text
+    x="145"
+    y="615"
+    class="author">
+
+    03 Oct 2026 • 23:45
+
+  </text>
+
+
+  <text
+    x="500"
+    y="615"
+    class="label">
+
+    AUTHOR
+
+  </text>
+
+  <text
+    x="570"
+    y="615"
+    class="author">
+
+    Shrijit Sengupta
+
+  </text>
+
+
+  <text
+    x="800"
+    y="615"
+    class="label">
+
+    EVENT
+
+  </text>
+
+  <text
+    x="850"
+    y="615"
+    class="author">
+
+    push
+
+  </text>
+
+
+  <!-- SCAN EFFECT -->
+
+  <rect
+    x="0"
+    y="0"
+    width="3"
+    height="650"
+    fill="#00ff88"
+    class="scan"/>
 
 </svg>
