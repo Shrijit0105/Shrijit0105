@@ -141,3 +141,37 @@
     />
   </a>
 </p>
+
+<!-- ACTIVITY_START -->
+
+## ⚡ Repository Activity
+
+<div align="center">
+
+| Metric | Value |
+|---|---|
+| 📝 Latest Commit | `Rename workflow and update activity generation` |
+| 👨‍💻 Author | `Shrijit Sengupta` |
+| 🔖 Commit | `faace15` |
+| 🌿 Branch | `main` |
+| 📦 Total Commits | `275` |
+| 📁 Tracked Files | `26` |
+| ⚙️ Trigger | `push` |
+| 🤖 Updated By | `Shrijit0105` |
+| 🕐 Last Updated | `03 Oct 2026 23:36` |
+
+</div>
+
+### 🧬 Recent Commits
+
+| Commit | Author | Message |
+|---|---|---|
+| `faace15` | Shrijit Sengupta | Rename workflow and update activity generation |
+| `4b36d55` | github-actions[bot] | chore: update project status UI |
+| `04f7ed7` | Shrijit Sengupta | Update project health image source in README |
+| `3cf7e4f` | github-actions[bot] | chore: update project status UI |
+| `072dd0d` | Shrijit Sengupta | Rename project health monitor to project status UI |
+
+> 🔄 This section is automatically updated by GitHub Actions.
+
+<!-- ACTIVITY_END -->
