@@ -5,265 +5,902 @@ on:
     branches:
       - main
     paths-ignore:
-      - "README.md"
-
-  pull_request:
-    branches:
-      - main
-
-  issues:
-    types:
-      - opened
-      - closed
+      - "assets/github-activity.svg"
 
   workflow_dispatch:
 
   schedule:
-    - cron: "0 */6 * * *"
+    # Updates once every day
+    - cron: "30 18 * * *"
 
 permissions:
   contents: write
-  pull-requests: read
-  issues: read
 
 jobs:
-  update-activity:
+  activity-monitor:
+
     runs-on: ubuntu-latest
 
     steps:
+
+      # --------------------------------------------------
+      # CHECKOUT COMPLETE REPOSITORY HISTORY
+      # --------------------------------------------------
+
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
-      - name: Generate GitHub Activity
+      # --------------------------------------------------
+      # GENERATE ACTIVITY UI
+      # --------------------------------------------------
+
+      - name: Generate GitHub Activity UI
         env:
-          REPO: ${{ github.repository }}
+          REPOSITORY: ${{ github.repository }}
           BRANCH: ${{ github.ref_name }}
           EVENT: ${{ github.event_name }}
           ACTOR: ${{ github.actor }}
         run: |
+
           python3 <<'PY'
+
           import os
           import subprocess
           import html
           from pathlib import Path
           from datetime import datetime, timezone
 
-          def git(command):
+          # ==================================================
+          # HELPERS
+          # ==================================================
+
+          def git(command, fallback="N/A"):
               try:
-                  return subprocess.check_output(
+                  result = subprocess.check_output(
                       command,
                       shell=True,
                       text=True,
                       stderr=subprocess.DEVNULL
                   ).strip()
-              except:
-                  return ""
+
+                  return result if result else fallback
+
+              except Exception:
+                  return fallback
+
 
           def esc(value):
               return html.escape(str(value))
 
-          # ----------------------------------------
-          # Repository
-          # ----------------------------------------
 
-          repo = os.environ.get("REPO", "Unknown")
-          branch = os.environ.get("BRANCH", "main")
-          event = os.environ.get("EVENT", "unknown")
-          actor = os.environ.get("ACTOR", "unknown")
+          # ==================================================
+          # REPOSITORY INFORMATION
+          # ==================================================
 
-          # ----------------------------------------
+          repository = os.environ.get(
+              "REPOSITORY",
+              "Unknown Repository"
+          )
+
+          branch = os.environ.get(
+              "BRANCH",
+              "main"
+          )
+
+          event = os.environ.get(
+              "EVENT",
+              "push"
+          )
+
+          actor = os.environ.get(
+              "ACTOR",
+              "github-actions"
+          )
+
+
+          # ==================================================
           # REAL GIT HISTORY
-          # ----------------------------------------
+          # ==================================================
 
           total_commits = git(
-              "git rev-list --all --count"
+              "git rev-list --count HEAD",
+              "0"
           )
-
-          if not total_commits:
-              total_commits = git(
-                  "git rev-list HEAD --count"
-              )
-
-          if not total_commits:
-              total_commits = "0"
-
-          latest_message = git(
-              "git log -1 --pretty=%s"
-          ) or "No commit found"
-
-          latest_author = git(
-              "git log -1 --pretty=%an"
-          ) or "Unknown"
 
           latest_sha = git(
-              "git log -1 --pretty=%h"
-          ) or "------"
+              "git log -1 --format=%h",
+              "------"
+          )
+
+          latest_message = git(
+              "git log -1 --format=%s",
+              "No commit found"
+          )
+
+          latest_author = git(
+              "git log -1 --format=%an",
+              "Unknown"
+          )
+
+          latest_email = git(
+              "git log -1 --format=%ae",
+              ""
+          )
 
           latest_date = git(
-              "git log -1 --date=format:'%d %b %Y %H:%M'"
-              " --format='%ad'"
-          ) or "Unknown"
-
-          # ----------------------------------------
-          # Recent commits
-          # ----------------------------------------
-
-          recent_commits = git(
-              "git log -5 --pretty=format:'%h|%an|%s'"
+              "git log -1 --date=format:'%d %b %Y • %H:%M' --format='%ad'",
+              "Unknown"
           )
 
-          recent_rows = []
 
-          if recent_commits:
-              for line in recent_commits.splitlines():
-                  parts = line.split("|", 2)
+          # ==================================================
+          # RECENT COMMITS
+          # ==================================================
 
-                  if len(parts) == 3:
-                      sha, author, message = parts
-
-                      recent_rows.append(
-                          f"| `{esc(sha)}` | "
-                          f"{esc(author)} | "
-                          f"{esc(message[:70])} |"
-                      )
-
-          if not recent_rows:
-              recent_rows.append(
-                  "| `------` | Unknown | No commits found |"
-              )
-
-          # ----------------------------------------
-          # Repository file count
-          # ----------------------------------------
-
-          file_count = git(
-              "git ls-files | wc -l"
-          ) or "0"
-
-          # ----------------------------------------
-          # README activity block
-          # ----------------------------------------
-
-          readme = Path("README.md")
-
-          if not readme.exists():
-              print("README.md not found.")
-              exit(0)
-
-          content = readme.read_text(
-              encoding="utf-8"
+          recent_raw = git(
+              "git log -5 --format='%h|%s|%an|%ad' "
+              "--date=format:'%d %b %Y'",
+              ""
           )
 
-          start_marker = "<!-- ACTIVITY_START -->"
-          end_marker = "<!-- ACTIVITY_END -->"
+          recent_commits = []
 
-          activity = f'''{start_marker}
+          if recent_raw:
 
-          ## ⚡ Repository Activity
+              for line in recent_raw.splitlines():
 
-          <div align="center">
+                  parts = line.split("|", 3)
 
-          | Metric | Value |
-          |---|---|
-          | 📝 Latest Commit | `{esc(latest_message[:80])}` |
-          | 👨‍💻 Author | `{esc(latest_author)}` |
-          | 🔖 Commit | `{esc(latest_sha)}` |
-          | 🌿 Branch | `{esc(branch)}` |
-          | 📦 Total Commits | `{esc(total_commits)}` |
-          | 📁 Tracked Files | `{esc(file_count)}` |
-          | ⚙️ Trigger | `{esc(event)}` |
-          | 🤖 Updated By | `{esc(actor)}` |
-          | 🕐 Last Updated | `{esc(latest_date)}` |
+                  if len(parts) == 4:
 
-          </div>
+                      recent_commits.append({
+                          "sha": parts[0],
+                          "message": parts[1],
+                          "author": parts[2],
+                          "date": parts[3]
+                      })
 
-          ### 🧬 Recent Commits
 
-          | Commit | Author | Message |
-          |---|---|---|
-          {chr(10).join(recent_rows)}
+          # ==================================================
+          # ACTIVITY COUNTS
+          # ==================================================
 
-          > 🔄 This section is automatically updated by GitHub Actions.
+          commits_7_days = git(
+              "git log --since='7 days ago' --oneline | wc -l",
+              "0"
+          )
 
-          {end_marker}'''
+          commits_30_days = git(
+              "git log --since='30 days ago' --oneline | wc -l",
+              "0"
+          )
 
-          # ----------------------------------------
-          # Replace existing section
-          # ----------------------------------------
 
-          if start_marker in content and end_marker in content:
+          # ==================================================
+          # FILE / REPOSITORY STATS
+          # ==================================================
 
-              before = content.split(
-                  start_marker,
-                  1
-              )[0]
+          tracked_files = git(
+              "git ls-files | wc -l",
+              "0"
+          )
 
-              after = content.split(
-                  end_marker,
-                  1
-              )[1]
+          contributors = git(
+              "git log --format='%an' | sort -u | wc -l",
+              "0"
+          )
 
-              new_content = (
-                  before
-                  + activity
-                  + after
-              )
 
+          # ==================================================
+          # LAST COMMIT ACTIVITY
+          # ==================================================
+
+          changed_files = git(
+              "git show --pretty='' --name-only HEAD",
+              ""
+          )
+
+          changed_count = (
+              len(changed_files.splitlines())
+              if changed_files
+              else 0
+          )
+
+
+          # ==================================================
+          # ACTIVITY TYPE
+          # ==================================================
+
+          activity = "REPOSITORY ACTIVITY"
+
+          changed_lower = changed_files.lower()
+
+          if any(x in changed_lower for x in [
+              ".ipynb",
+              ".py",
+              ".csv"
+          ]):
+              activity = "ML DEVELOPMENT"
+
+          elif any(x in changed_lower for x in [
+              "readme",
+              ".md"
+          ]):
+              activity = "DOCUMENTATION"
+
+          elif any(x in changed_lower for x in [
+              ".yml",
+              ".yaml",
+              ".github/"
+          ]):
+              activity = "AUTOMATION"
+
+          elif any(x in changed_lower for x in [
+              "model",
+              ".pkl",
+              ".joblib"
+          ]):
+              activity = "MODEL DEVELOPMENT"
+
+
+          # ==================================================
+          # CURRENT STATUS
+          # ==================================================
+
+          if int(commits_7_days) > 0:
+              status = "ACTIVE"
           else:
+              status = "IDLE"
 
-              new_content = (
-                  content.rstrip()
-                  + "\n\n"
-                  + activity
-                  + "\n"
-              )
 
-          readme.write_text(
-              new_content,
+          # ==================================================
+          # BUILD RECENT COMMIT ROWS
+          # ==================================================
+
+          rows = ""
+
+          y = 405
+
+          for commit in recent_commits:
+
+              message = commit["message"]
+
+              if len(message) > 48:
+                  message = message[:45] + "..."
+
+              rows += f'''
+              <text x="55" y="{y}" class="sha">
+                {esc(commit["sha"])}
+              </text>
+
+              <text x="135" y="{y}" class="commit">
+                {esc(message)}
+              </text>
+
+              <text x="690" y="{y}" class="author">
+                {esc(commit["author"])}
+              </text>
+
+              <text x="875" y="{y}" class="date">
+                {esc(commit["date"])}
+              </text>
+              '''
+
+              y += 34
+
+
+          # ==================================================
+          # SVG
+          # ==================================================
+
+          svg = f'''
+          <svg
+            width="1000"
+            height="650"
+            viewBox="0 0 1000 650"
+            xmlns="http://www.w3.org/2000/svg">
+
+            <defs>
+
+              <linearGradient
+                id="background"
+                x1="0"
+                y1="0"
+                x2="1"
+                y2="1">
+
+                <stop
+                  offset="0%"
+                  stop-color="#050505"/>
+
+                <stop
+                  offset="100%"
+                  stop-color="#111111"/>
+
+              </linearGradient>
+
+              <linearGradient
+                id="accent"
+                x1="0"
+                y1="0"
+                x2="1"
+                y2="0">
+
+                <stop
+                  offset="0%"
+                  stop-color="#00ff88"/>
+
+                <stop
+                  offset="100%"
+                  stop-color="#00ccff"/>
+
+              </linearGradient>
+
+              <filter id="glow">
+
+                <feGaussianBlur
+                  stdDeviation="4"
+                  result="blur"/>
+
+                <feMerge>
+
+                  <feMergeNode
+                    in="blur"/>
+
+                  <feMergeNode
+                    in="SourceGraphic"/>
+
+                </feMerge>
+
+              </filter>
+
+              <style>
+
+                .title {{
+                  font-family: monospace;
+                  font-size: 27px;
+                  font-weight: bold;
+                  fill: #ffffff;
+                }}
+
+                .subtitle {{
+                  font-family: monospace;
+                  font-size: 12px;
+                  fill: #777777;
+                  letter-spacing: 2px;
+                }}
+
+                .label {{
+                  font-family: monospace;
+                  font-size: 11px;
+                  fill: #777777;
+                  letter-spacing: 1px;
+                }}
+
+                .value {{
+                  font-family: monospace;
+                  font-size: 17px;
+                  fill: #ffffff;
+                }}
+
+                .big {{
+                  font-family: monospace;
+                  font-size: 29px;
+                  font-weight: bold;
+                  fill: #ffffff;
+                }}
+
+                .sha {{
+                  font-family: monospace;
+                  font-size: 12px;
+                  fill: #00ff88;
+                }}
+
+                .commit {{
+                  font-family: monospace;
+                  font-size: 12px;
+                  fill: #dddddd;
+                }}
+
+                .author {{
+                  font-family: monospace;
+                  font-size: 11px;
+                  fill: #aaaaaa;
+                }}
+
+                .date {{
+                  font-family: monospace;
+                  font-size: 10px;
+                  fill: #666666;
+                }}
+
+                .pulse {{
+                  animation: pulse 1.5s infinite;
+                }}
+
+                @keyframes pulse {{
+                  0%, 100% {{ opacity: 1; }}
+                  50% {{ opacity: .35; }}
+                }}
+
+                .scan {{
+                  animation: scan 4s linear infinite;
+                }}
+
+                @keyframes scan {{
+                  0% {{
+                    transform: translateX(0);
+                    opacity: .05;
+                  }}
+
+                  50% {{
+                    opacity: .45;
+                  }}
+
+                  100% {{
+                    transform: translateX(1000px);
+                    opacity: .05;
+                  }}
+                }}
+
+              </style>
+
+            </defs>
+
+
+            <!-- =========================================
+                 BACKGROUND
+            ========================================== -->
+
+            <rect
+              width="1000"
+              height="650"
+              rx="18"
+              fill="url(#background)"/>
+
+
+            <!-- =========================================
+                 HEADER
+            ========================================== -->
+
+            <text
+              x="45"
+              y="52"
+              class="title">
+
+              GITHUB ACTIVITY COMMAND CENTER
+
+            </text>
+
+            <text
+              x="45"
+              y="75"
+              class="subtitle">
+
+              REAL-TIME REPOSITORY TELEMETRY
+
+            </text>
+
+
+            <!-- STATUS -->
+
+            <circle
+              cx="890"
+              cy="48"
+              r="7"
+              fill="#00ff88"
+              filter="url(#glow)"
+              class="pulse"/>
+
+            <text
+              x="910"
+              y="53"
+              class="label">
+
+              {esc(status)}
+
+            </text>
+
+
+            <!-- =========================================
+                 TOP STAT CARDS
+            ========================================== -->
+
+            <rect
+              x="45"
+              y="105"
+              width="205"
+              height="90"
+              rx="10"
+              fill="#0c0c0c"
+              stroke="#222222"/>
+
+            <text
+              x="65"
+              y="130"
+              class="label">
+
+              TOTAL COMMITS
+
+            </text>
+
+            <text
+              x="65"
+              y="168"
+              class="big">
+
+              {esc(total_commits)}
+
+            </text>
+
+
+            <rect
+              x="270"
+              y="105"
+              width="205"
+              height="90"
+              rx="10"
+              fill="#0c0c0c"
+              stroke="#222222"/>
+
+            <text
+              x="290"
+              y="130"
+              class="label">
+
+              LAST 7 DAYS
+
+            </text>
+
+            <text
+              x="290"
+              y="168"
+              class="big">
+
+              {esc(commits_7_days)}
+
+            </text>
+
+
+            <rect
+              x="495"
+              y="105"
+              width="205"
+              height="90"
+              rx="10"
+              fill="#0c0c0c"
+              stroke="#222222"/>
+
+            <text
+              x="515"
+              y="130"
+              class="label">
+
+              LAST 30 DAYS
+
+            </text>
+
+            <text
+              x="515"
+              y="168"
+              class="big">
+
+              {esc(commits_30_days)}
+
+            </text>
+
+
+            <rect
+              x="720"
+              y="105"
+              width="235"
+              height="90"
+              rx="10"
+              fill="#0c0c0c"
+              stroke="#222222"/>
+
+            <text
+              x="740"
+              y="130"
+              class="label">
+
+              ACTIVITY
+
+            </text>
+
+            <text
+              x="740"
+              y="168"
+              class="value">
+
+              {esc(activity)}
+
+            </text>
+
+
+            <!-- =========================================
+                 REPOSITORY
+            ========================================== -->
+
+            <text
+              x="45"
+              y="235"
+              class="label">
+
+              REPOSITORY
+
+            </text>
+
+            <text
+              x="45"
+              y="260"
+              class="value">
+
+              {esc(repository)}
+
+            </text>
+
+
+            <text
+              x="500"
+              y="235"
+              class="label">
+
+              BRANCH
+
+            </text>
+
+            <text
+              x="500"
+              y="260"
+              class="value">
+
+              {esc(branch)}
+
+            </text>
+
+
+            <text
+              x="720"
+              y="235"
+              class="label">
+
+              TRACKED FILES
+
+            </text>
+
+            <text
+              x="720"
+              y="260"
+              class="value">
+
+              {esc(tracked_files)}
+
+            </text>
+
+
+            <!-- =========================================
+                 LATEST COMMIT
+            ========================================== -->
+
+            <rect
+              x="45"
+              y="285"
+              width="910"
+              height="75"
+              rx="10"
+              fill="#0c0c0c"
+              stroke="#222222"/>
+
+            <text
+              x="65"
+              y="310"
+              class="label">
+
+              LATEST COMMIT
+
+            </text>
+
+            <text
+              x="65"
+              y="337"
+              class="commit">
+
+              {esc(latest_message[:90])}
+
+            </text>
+
+            <text
+              x="780"
+              y="337"
+              class="sha">
+
+              {esc(latest_sha)}
+
+            </text>
+
+
+            <!-- =========================================
+                 RECENT COMMITS
+            ========================================== -->
+
+            <text
+              x="45"
+              y="390"
+              class="label">
+
+              RECENT ACTIVITY
+
+            </text>
+
+
+            {rows}
+
+
+            <!-- =========================================
+                 FOOTER
+            ========================================== -->
+
+            <line
+              x1="45"
+              y1="590"
+              x2="955"
+              y2="590"
+              stroke="#222222"/>
+
+
+            <text
+              x="45"
+              y="615"
+              class="label">
+
+              LAST UPDATE
+
+            </text>
+
+            <text
+              x="145"
+              y="615"
+              class="author">
+
+              {esc(latest_date)}
+
+            </text>
+
+
+            <text
+              x="500"
+              y="615"
+              class="label">
+
+              AUTHOR
+
+            </text>
+
+            <text
+              x="570"
+              y="615"
+              class="author">
+
+              {esc(latest_author)}
+
+            </text>
+
+
+            <text
+              x="800"
+              y="615"
+              class="label">
+
+              EVENT
+
+            </text>
+
+            <text
+              x="850"
+              y="615"
+              class="author">
+
+              {esc(event)}
+
+            </text>
+
+
+            <!-- SCAN EFFECT -->
+
+            <rect
+              x="0"
+              y="0"
+              width="3"
+              height="650"
+              fill="#00ff88"
+              class="scan"/>
+
+          </svg>
+          '''
+
+
+          # ==================================================
+          # SAVE
+          # ==================================================
+
+          Path("assets").mkdir(exist_ok=True)
+
+          Path(
+              "assets/github-activity.svg"
+          ).write_text(
+              svg,
               encoding="utf-8"
           )
 
-          # ----------------------------------------
-          # Debug output
-          # ----------------------------------------
 
-          print("========================================")
-          print("GITHUB ACTIVITY GENERATED")
-          print("========================================")
-          print(f"Repository       : {repo}")
-          print(f"Branch           : {branch}")
-          print(f"Total commits    : {total_commits}")
-          print(f"Tracked files    : {file_count}")
-          print(f"Latest commit    : {latest_sha}")
-          print(f"Latest author    : {latest_author}")
-          print(f"Latest message   : {latest_message}")
-          print(f"Event            : {event}")
-          print("========================================")
+          # ==================================================
+          # ACTION LOG
+          # ==================================================
+
+          print("")
+          print("==========================================")
+          print(" GITHUB ACTIVITY MONITOR")
+          print("==========================================")
+          print(f" Repository       : {repository}")
+          print(f" Branch           : {branch}")
+          print(f" Total commits    : {total_commits}")
+          print(f" Last 7 days      : {commits_7_days}")
+          print(f" Last 30 days     : {commits_30_days}")
+          print(f" Tracked files    : {tracked_files}")
+          print(f" Contributors     : {contributors}")
+          print(f" Latest commit    : {latest_sha}")
+          print(f" Latest author    : {latest_author}")
+          print(f" Activity         : {activity}")
+          print("==========================================")
+          print(" SVG generated successfully")
+          print("==========================================")
+
           PY
+
+
+      # --------------------------------------------------
+      # COMMIT GENERATED UI
+      # --------------------------------------------------
 
       - name: Configure Git
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Commit activity update
+
+      - name: Commit activity UI
         run: |
-          git add README.md
+
+          git add assets/github-activity.svg
 
           if git diff --cached --quiet; then
-            echo "No README activity changes."
+            echo "No activity UI changes detected."
             exit 0
           fi
 
-          git commit -m "chore: update GitHub activity"
+          git commit -m "chore: update GitHub activity UI"
+
+
+      # --------------------------------------------------
+      # SYNC BEFORE PUSH
+      # --------------------------------------------------
 
       - name: Sync with remote
         run: |
+
           git fetch origin main
+
           git rebase origin/main
 
-      - name: Push activity update
+
+      # --------------------------------------------------
+      # PUSH
+      # --------------------------------------------------
+
+      - name: Push activity UI
         run: |
+
           git push origin HEAD:main
