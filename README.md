@@ -56,7 +56,7 @@
 
 <p align="center">
   <img
-    src="./assets/project-health.svg"
+    src="./assets/project-status.svg"
     width="900"
     alt="Project Health Monitor"
   />
