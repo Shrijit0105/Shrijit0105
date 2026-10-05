@@ -114,7 +114,7 @@
     font-size="28"
     font-weight="bold">
 
-    183
+    184
   </text>
 
 
@@ -197,9 +197,9 @@
   
     <rect
       x="90"
-      y="425.2173913043478"
+      y="448.69565217391306"
       width="65"
-      height="54.78260869565218"
+      height="31.304347826086957"
       rx="4"
       fill="#ef4444"
       opacity="0.85">
@@ -226,13 +226,13 @@
 
     <text
       x="122.5"
-      y="415.2173913043478"
+      y="438.69565217391306"
       text-anchor="middle"
       fill="#f8fafc"
       font-family="monospace"
       font-size="11">
 
-      14
+      8
     </text>
     
     <rect
@@ -437,9 +437,9 @@
     
     <rect
       x="600"
-      y="390.0"
+      y="362.6086956521739"
       width="65"
-      height="90.0"
+      height="117.3913043478261"
       rx="4"
       fill="#ef4444"
       opacity="0.85">
@@ -466,13 +466,13 @@
 
     <text
       x="632.5"
-      y="380.0"
+      y="352.6086956521739"
       text-anchor="middle"
       fill="#f8fafc"
       font-family="monospace"
       font-size="11">
 
-      23
+      30
     </text>
     
 
@@ -564,7 +564,7 @@
     <rect
       x="785"
       y="411"
-      width="66.15"
+      width="68.60000000000001"
       height="6"
       rx="3"
       fill="#60a5fa">
@@ -585,7 +585,7 @@
       font-family="monospace"
       font-size="10">
 
-      27
+      28
     </text>
     
     <text
