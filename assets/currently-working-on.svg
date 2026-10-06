@@ -279,7 +279,7 @@
     font-family="monospace"
     font-size="12"
   >
-    DEVELOPMENT IS HOT
+    ACTIVE DEVELOPMENT
   </text>
 
 
@@ -357,7 +357,7 @@
     font-size="12"
     font-weight="700"
   >
-    86%
+    79%
   </text>
 
 
@@ -386,7 +386,7 @@
     <animate
       attributeName="width"
       from="0"
-      to="748"
+      to="687"
       dur="1.5s"
       fill="freeze"
     />
@@ -529,7 +529,7 @@
     font-family="monospace"
     font-size="10"
   >
-    AUTO UPDATED 2026-10-06 09:54 UTC
+    AUTO UPDATED 2026-10-06 16:35 UTC
   </text>
 
 </svg>
