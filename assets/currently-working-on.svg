@@ -202,7 +202,7 @@
     font-size="10"
     font-weight="700"
   >
-    HIGH ACTIVITY
+    ACTIVE
   </text>
 
 
@@ -357,7 +357,7 @@
     font-size="12"
     font-weight="700"
   >
-    79%
+    51%
   </text>
 
 
@@ -386,7 +386,7 @@
     <animate
       attributeName="width"
       from="0"
-      to="687"
+      to="443"
       dur="1.5s"
       fill="freeze"
     />
@@ -430,7 +430,7 @@
     font-size="20"
     font-weight="700"
   >
-    7
+    1
   </text>
 
 
@@ -529,7 +529,7 @@
     font-family="monospace"
     font-size="10"
   >
-    AUTO UPDATED 2026-10-06 16:35 UTC
+    AUTO UPDATED 2026-10-06 21:29 UTC
   </text>
 
 </svg>
