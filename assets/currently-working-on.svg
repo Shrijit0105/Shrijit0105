@@ -228,7 +228,7 @@
     font-size="25"
     font-weight="700"
   >
-    Zomato_Sentiment_Analysis
+    Daily-Dev-Lab
   </text>
 
 
@@ -254,7 +254,7 @@
     font-size="16"
     font-weight="700"
   >
-    CLOUD / DEVOPS
+    DOCUMENTATION
   </text>
 
 
@@ -307,27 +307,7 @@
           font-family="monospace"
           font-size="11"
         >
-          .github/workflows/project-ui.yml
-        </text>
-        
-        <text
-          x="60"
-          y="389"
-          fill="#9affc7"
-          font-family="monospace"
-          font-size="11"
-        >
           README.md
-        </text>
-        
-        <text
-          x="60"
-          y="410"
-          fill="#9affc7"
-          font-family="monospace"
-          font-size="11"
-        >
-          assets/project-status.svg
         </text>
         
 
@@ -357,7 +337,7 @@
     font-size="12"
     font-weight="700"
   >
-    58%
+    54%
   </text>
 
 
@@ -386,7 +366,7 @@
     <animate
       attributeName="width"
       from="0"
-      to="504"
+      to="469"
       dur="1.5s"
       fill="freeze"
     />
@@ -466,7 +446,7 @@
     font-size="20"
     font-weight="700"
   >
-    3
+    1
   </text>
 
 
@@ -501,7 +481,7 @@
     font-family="monospace"
     font-size="11"
   >
-    2026-10-07 05:25 UTC
+    2026-10-07 13:58 UTC
   </text>
 
 
@@ -529,7 +509,7 @@
     font-family="monospace"
     font-size="10"
   >
-    AUTO UPDATED 2026-10-07 08:20 UTC
+    AUTO UPDATED 2026-10-07 16:12 UTC
   </text>
 
 </svg>
