@@ -145,6 +145,15 @@
 <!-- ACTIVITY_START -->
 
 ## ⚡ Repository Activity
+<h2>⚡ GitHub Activity</h2>
+
+<p align="center">
+  <img
+    src="./assets/github-activity.svg"
+    width="1000"
+    alt="GitHub Activity Command Center"
+  />
+</p>
 
 <div align="center">
 
