@@ -121,18 +121,9 @@
 - Build technology with real-world impact
 
 
-<h2 align="center">🕒 SYSTEM CLOCK</h2>
+## ⏱️ Developer Clock
 
-<p align="center">
-  <a href="https://shrijit0105.github.io/Shrijit0105/">
-    <img
-      src="./assets/clock.svg"
-      width="900"
-      alt="Live Regional System Clock"
-    />
-  </a>
-</p>
-
+[**OPEN LIVE DEV CLOCK ↗**](https://Shrijit0105.github.io/dev-clock/)
 <!-- ACTIVITY_START -->
 
 <h2 align="center">⚡ Repository Activity </h2>
