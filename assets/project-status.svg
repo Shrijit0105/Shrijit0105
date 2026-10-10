@@ -244,7 +244,7 @@ xmlns="http://www.w3.org/2000/svg">
 </text>
 
 <text x="65" y="447" class="value">
-  Repository Development
+  Project Infrastructure
 </text>
 
 <!-- Repository -->
@@ -274,7 +274,7 @@ xmlns="http://www.w3.org/2000/svg">
 </text>
 
 <text x="180" y="565" class="value">
-  336
+  350
 </text>
 
 <text x="500" y="565" class="label">
@@ -290,7 +290,7 @@ xmlns="http://www.w3.org/2000/svg">
 </text>
 
 <text x="180" y="590" class="value">
-  91341fc
+  c7368f1
 </text>
 
 <text x="500" y="590" class="label">
@@ -298,13 +298,13 @@ xmlns="http://www.w3.org/2000/svg">
 </text>
 
 <text x="590" y="590" class="value">
-  schedule
+  push
 </text>
 
 <!-- Footer -->
 
 <text x="45" y="625" class="small">
-  09 Oct 2026 20:46 • github-actions[bot]
+  11 Oct 2026 00:12 • Shrijit Sengupta
 </text>
 
 <rect
