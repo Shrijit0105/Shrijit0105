@@ -1,13 +1,9 @@
-name: Deploy Live Regional Clock
+name: Deploy Dev Clock
 
 on:
   push:
     branches:
       - main
-    paths:
-      - ".github/workflows/live-clock.yml"
-      - "clock/**"
-
   workflow_dispatch:
 
 permissions:
@@ -16,29 +12,72 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "live-clock"
+  group: github-pages
   cancel-in-progress: true
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
 
+    env:
+      CLOCK_TIMEZONE: Asia/Kolkata
+      CLOCK_STYLE: cyber
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Generate clock configuration
+        run: |
+          mkdir -p public
+
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
+
+          timezone = os.environ["CLOCK_TIMEZONE"]
+          style = os.environ["CLOCK_STYLE"]
+
+          try:
+              ZoneInfo(timezone)
+          except ZoneInfoNotFoundError:
+              raise SystemExit(f"Invalid timezone: {timezone}")
+
+          if style not in {"cyber", "minimal"}:
+              raise SystemExit(f"Invalid style: {style}")
+
+          config = {
+              "timezone": timezone,
+              "style": style
+          }
+
+          Path("public/config.json").write_text(
+              json.dumps(config, indent=2),
+              encoding="utf-8"
+          )
+
+          print(json.dumps(config, indent=2))
+          PY
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload website
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+  deploy:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
 
+    runs-on: ubuntu-latest
+    needs: build
+
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v5
-
-      - name: Setup GitHub Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload clock site
-        uses: actions/upload-pages-artifact@v4
-        with:
-          path: "./clock"
-
-      - name: Deploy to GitHub Pages
+      - name: Deploy website
         id: deployment
         uses: actions/deploy-pages@v4
