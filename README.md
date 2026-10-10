@@ -123,7 +123,7 @@
 
 ## ⏱️ Developer Clock
 
-[**OPEN LIVE DEV CLOCK ↗**](https://Shrijit0105.github.io/dev-clock/)
+[**OPEN LIVE DEV CLOCK ↗**](https://shrijit0105.github.io/Dev_clock/)
 <!-- ACTIVITY_START -->
 
 <h2 align="center">⚡ Repository Activity </h2>
