@@ -120,15 +120,6 @@
 - Contribute to open-source projects
 - Build technology with real-world impact
 
-<h2 align="center"> ACTIVITY COMMAND CENTER</h2>
-
-<p align="center">
-  <img
-    src="./assets/github-activity.svg"
-    width="900"
-    alt="GitHub Activity Command Center"
-  />
-</p>
 
 <h2 align="center">🕒 SYSTEM CLOCK</h2>
 
