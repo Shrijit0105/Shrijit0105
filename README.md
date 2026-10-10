@@ -135,7 +135,7 @@
 
 <!-- ACTIVITY_START -->
 
-## <center> ⚡ Repository Activity </center>
+<align="center">## ⚡ Repository Activity 
 <h2 align="center">⚡ GitHub Activity</h2>
 
 <p align="center">
