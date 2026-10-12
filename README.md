@@ -121,11 +121,19 @@
 - Build technology with real-world impact
 
 
-## ⏱️ Developer Clock
+## ⏱️ DEVELOPER CLOCK
 <p align="center">
   <a href="https://Shrijit0105.github.io/Dev_clock/">
-    <img src="https://raw.githubusercontent.com/Shrijit0105/Dev_clock/main/assets/dev-clock.svg" alt="Developer Clock" width="800" />
+    <img
+      src="https://raw.githubusercontent.com/Shrijit0105/Dev_clock/main/assets/dev-clock.svg"
+      alt="Developer Clock | Asia/Kolkata"
+      width="800"
+    />
   </a>
+</p>
+
+<p align="center">
+  <sub>⚡ Powered by GitHub Actions · Updated every 15 minutes · IST</sub>
 </p>
 <!-- ACTIVITY_START -->
 
