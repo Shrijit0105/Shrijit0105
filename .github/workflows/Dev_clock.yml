@@ -1,83 +1,167 @@
-name: Deploy Dev Clock
+
+name: Update Developer Clock SVG
 
 on:
+  schedule:
+    - cron: "*/15 * * * *"
+
+  workflow_dispatch:
+
   push:
     branches:
       - main
-  workflow_dispatch:
+    paths-ignore:
+      - "assets/dev-clock.svg"
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
-  group: github-pages
-  cancel-in-progress: true
+  group: update-clock-svg
+  cancel-in-progress: false
 
 jobs:
-  build:
+  update-clock:
     runs-on: ubuntu-latest
 
     env:
       CLOCK_TIMEZONE: Asia/Kolkata
-      CLOCK_STYLE: cyber
 
     steps:
-      - name: Checkout repository
+      - name: Checkout latest main
         uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 0
 
-      - name: Generate clock configuration
+      - name: Generate clock SVG
         run: |
-          mkdir -p public
+          mkdir -p assets
 
           python3 - <<'PY'
-          import json
+          import html
           import os
+          from datetime import datetime
           from pathlib import Path
           from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
           timezone = os.environ["CLOCK_TIMEZONE"]
-          style = os.environ["CLOCK_STYLE"]
 
           try:
-              ZoneInfo(timezone)
+              now = datetime.now(ZoneInfo(timezone))
           except ZoneInfoNotFoundError:
               raise SystemExit(f"Invalid timezone: {timezone}")
 
-          if style not in {"cyber", "minimal"}:
-              raise SystemExit(f"Invalid style: {style}")
+          time_text = html.escape(now.strftime("%H:%M:%S"))
+          date_text = html.escape(now.strftime("%A, %d %B %Y"))
+          zone_text = html.escape(now.tzname() or timezone)
+          timezone_text = html.escape(timezone)
 
-          config = {
-              "timezone": timezone,
-              "style": style
-          }
+          svg = f'''<svg xmlns="http://www.w3.org/2000/svg"
+            width="800" height="230" viewBox="0 0 800 230"
+            role="img" aria-labelledby="title desc">
+            <title id="title">Developer Clock</title>
+            <desc id="desc">Clock snapshot at {time_text},
+            {date_text}, timezone {timezone_text}.</desc>
 
-          Path("public/config.json").write_text(
-              json.dumps(config, indent=2),
-              encoding="utf-8"
-          )
+            <defs>
+              <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#101f32"/>
+                <stop offset="100%" stop-color="#070c16"/>
+              </linearGradient>
+              <linearGradient id="line" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#52f7c8"/>
+                <stop offset="100%" stop-color="#398bff"/>
+              </linearGradient>
+              <pattern id="grid" width="24" height="24"
+                patternUnits="userSpaceOnUse">
+                <path d="M24 0H0V24" fill="none"
+                  stroke="#173044" stroke-width="0.6"/>
+              </pattern>
+            </defs>
 
-          print(json.dumps(config, indent=2))
+            <rect x="1" y="1" width="798" height="228" rx="16"
+              fill="url(#bg)" stroke="#244357" stroke-width="1.5"/>
+            <rect x="2" y="2" width="796" height="226" rx="15"
+              fill="url(#grid)" opacity="0.45"/>
+
+            <path d="M24 52H776" stroke="#244357"/>
+            <path d="M24 53H185" stroke="url(#line)" stroke-width="2"/>
+
+            <circle cx="28" cy="28" r="4" fill="#52f7c8"/>
+            <text x="42" y="32" fill="#b4cbd6" font-size="12"
+              font-family="monospace" letter-spacing="2">
+              DEV CLOCK / SYSTEM TIME
+            </text>
+            <text x="773" y="32" text-anchor="end" fill="#52f7c8"
+              font-size="11" font-family="monospace">
+              ● SNAPSHOT
+            </text>
+
+            <text x="30" y="133" fill="#52f7c8"
+              font-size="68" font-weight="700"
+              font-family="monospace" letter-spacing="-3">
+              {time_text}
+            </text>
+            <text x="33" y="163" fill="#d8e8f0"
+              font-size="15" font-family="monospace">
+              {date_text}
+            </text>
+
+            <path d="M30 184H770" stroke="#244357"/>
+
+            <text x="30" y="207" fill="#819eae"
+              font-size="11" font-family="monospace">
+              REGION: {timezone_text}
+            </text>
+            <text x="770" y="207" text-anchor="end" fill="#52f7c8"
+              font-size="11" font-family="monospace">
+              ZONE: {zone_text}
+            </text>
+          </svg>
+          '''
+
+          Path("assets/dev-clock.svg").write_text(svg, encoding="utf-8")
+          print(f"Generated clock for {timezone} at {now.isoformat()}")
           PY
 
-      - name: Configure GitHub Pages
-        uses: actions/configure-pages@v5
+      - name: Commit and push generated SVG
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Upload website
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: public
+          git add assets/dev-clock.svg
 
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+          if git diff --cached --quiet; then
+            echo "Clock SVG has no changes."
+            exit 0
+          fi
 
-    runs-on: ubuntu-latest
-    needs: build
+          git commit -m "chore: refresh developer clock SVG"
 
-    steps:
-      - name: Deploy website
-        id: deployment
-        uses: actions/deploy-pages@v4
+          # Retry if another workflow updates main concurrently.
+          for attempt in 1 2 3; do
+            git fetch origin main
+
+            # Our generated SVG is the desired version.
+            git reset --soft origin/main
+            git add assets/dev-clock.svg
+
+            if git diff --cached --quiet; then
+              echo "Remote already contains the current SVG."
+              exit 0
+            fi
+
+            git commit --amend --no-edit
+
+            if git push origin HEAD:main; then
+              echo "Clock SVG successfully pushed."
+              exit 0
+            fi
+
+            echo "Push attempt $attempt failed; retrying..."
+            sleep 2
+          done
+
+          echo "Unable to push after three attempts."
+          exit 1
