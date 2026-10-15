@@ -274,7 +274,7 @@ xmlns="http://www.w3.org/2000/svg">
 </text>
 
 <text x="180" y="565" class="value">
-  423
+  439
 </text>
 
 <text x="500" y="565" class="label">
@@ -290,7 +290,7 @@ xmlns="http://www.w3.org/2000/svg">
 </text>
 
 <text x="180" y="590" class="value">
-  03de884
+  b8f28e8
 </text>
 
 <text x="500" y="590" class="label">
@@ -304,7 +304,7 @@ xmlns="http://www.w3.org/2000/svg">
 <!-- Footer -->
 
 <text x="45" y="625" class="small">
-  14 Oct 2026 20:49 • github-actions[bot]
+  15 Oct 2026 20:43 • github-actions[bot]
 </text>
 
 <rect
