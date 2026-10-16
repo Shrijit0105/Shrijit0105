@@ -114,7 +114,7 @@
     font-size="28"
     font-weight="bold">
 
-    216
+    226
   </text>
 
 
@@ -197,9 +197,9 @@
   
     <rect
       x="90"
-      y="356.25"
+      y="375.7894736842105"
       width="65"
-      height="123.75"
+      height="104.21052631578948"
       rx="4"
       fill="#ef4444"
       opacity="0.85">
@@ -226,7 +226,7 @@
 
     <text
       x="122.5"
-      y="346.25"
+      y="365.7894736842105"
       text-anchor="middle"
       fill="#f8fafc"
       font-family="monospace"
@@ -237,9 +237,9 @@
     
     <rect
       x="175"
-      y="390.0"
+      y="407.36842105263156"
       width="65"
-      height="90.0"
+      height="72.63157894736841"
       rx="4"
       fill="#ef4444"
       opacity="0.85">
@@ -266,20 +266,20 @@
 
     <text
       x="207.5"
-      y="380.0"
+      y="397.36842105263156"
       text-anchor="middle"
       fill="#f8fafc"
       font-family="monospace"
       font-size="11">
 
-      24
+      23
     </text>
     
     <rect
       x="260"
-      y="333.75"
+      y="356.8421052631579"
       width="65"
-      height="146.25"
+      height="123.15789473684211"
       rx="4"
       fill="#ef4444"
       opacity="0.85">
@@ -306,7 +306,7 @@
 
     <text
       x="292.5"
-      y="323.75"
+      y="346.8421052631579"
       text-anchor="middle"
       fill="#f8fafc"
       font-family="monospace"
@@ -317,9 +317,9 @@
     
     <rect
       x="345"
-      y="348.75"
+      y="300.0"
       width="65"
-      height="131.25"
+      height="180.0"
       rx="4"
       fill="#ef4444"
       opacity="0.85">
@@ -346,20 +346,20 @@
 
     <text
       x="377.5"
-      y="338.75"
+      y="290.0"
       text-anchor="middle"
       fill="#f8fafc"
       font-family="monospace"
       font-size="11">
 
-      35
+      57
     </text>
     
     <rect
       x="430"
-      y="431.25"
+      y="448.42105263157896"
       width="65"
-      height="48.75"
+      height="31.57894736842105"
       rx="4"
       fill="#ef4444"
       opacity="0.85">
@@ -386,20 +386,20 @@
 
     <text
       x="462.5"
-      y="421.25"
+      y="438.42105263157896"
       text-anchor="middle"
       fill="#f8fafc"
       font-family="monospace"
       font-size="11">
 
-      13
+      10
     </text>
     
     <rect
       x="515"
-      y="300.0"
+      y="353.6842105263158"
       width="65"
-      height="180.0"
+      height="126.3157894736842"
       rx="4"
       fill="#ef4444"
       opacity="0.85">
@@ -426,20 +426,20 @@
 
     <text
       x="547.5"
-      y="290.0"
+      y="343.6842105263158"
       text-anchor="middle"
       fill="#f8fafc"
       font-family="monospace"
       font-size="11">
 
-      48
+      40
     </text>
     
     <rect
       x="600"
-      y="390.0"
+      y="404.2105263157895"
       width="65"
-      height="90.0"
+      height="75.78947368421052"
       rx="4"
       fill="#ef4444"
       opacity="0.85">
@@ -466,7 +466,7 @@
 
     <text
       x="632.5"
-      y="380.0"
+      y="394.2105263157895"
       text-anchor="middle"
       fill="#f8fafc"
       font-family="monospace"
@@ -564,7 +564,7 @@
     <rect
       x="785"
       y="411"
-      width="93.1"
+      width="95.55"
       height="6"
       rx="3"
       fill="#60a5fa">
@@ -585,7 +585,7 @@
       font-family="monospace"
       font-size="10">
 
-      38
+      39
     </text>
     
     <text
@@ -609,7 +609,7 @@
     <rect
       x="785"
       y="449"
-      width="68.60000000000001"
+      width="83.30000000000001"
       height="6"
       rx="3"
       fill="#60a5fa">
@@ -630,7 +630,7 @@
       font-family="monospace"
       font-size="10">
 
-      28
+      34
     </text>
     
     <text
@@ -699,7 +699,7 @@
     <rect
       x="785"
       y="525"
-      width="36.75"
+      width="44.1"
       height="6"
       rx="3"
       fill="#60a5fa">
@@ -720,7 +720,7 @@
       font-family="monospace"
       font-size="10">
 
-      15
+      18
     </text>
     
     <text
