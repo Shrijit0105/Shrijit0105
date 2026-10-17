@@ -114,7 +114,7 @@
     font-size="28"
     font-weight="bold">
 
-    226
+    227
   </text>
 
 
@@ -277,9 +277,9 @@
     
     <rect
       x="260"
-      y="356.8421052631579"
+      y="382.10526315789474"
       width="65"
-      height="123.15789473684211"
+      height="97.89473684210527"
       rx="4"
       fill="#ef4444"
       opacity="0.85">
@@ -306,13 +306,13 @@
 
     <text
       x="292.5"
-      y="346.8421052631579"
+      y="372.10526315789474"
       text-anchor="middle"
       fill="#f8fafc"
       font-family="monospace"
       font-size="11">
 
-      39
+      31
     </text>
     
     <rect
@@ -357,9 +357,9 @@
     
     <rect
       x="430"
-      y="448.42105263157896"
+      y="385.2631578947369"
       width="65"
-      height="31.57894736842105"
+      height="94.73684210526315"
       rx="4"
       fill="#ef4444"
       opacity="0.85">
@@ -386,20 +386,20 @@
 
     <text
       x="462.5"
-      y="438.42105263157896"
+      y="375.2631578947369"
       text-anchor="middle"
       fill="#f8fafc"
       font-family="monospace"
       font-size="11">
 
-      10
+      30
     </text>
     
     <rect
       x="515"
-      y="353.6842105263158"
+      y="388.42105263157896"
       width="65"
-      height="126.3157894736842"
+      height="91.57894736842105"
       rx="4"
       fill="#ef4444"
       opacity="0.85">
@@ -426,13 +426,13 @@
 
     <text
       x="547.5"
-      y="343.6842105263158"
+      y="378.42105263157896"
       text-anchor="middle"
       fill="#f8fafc"
       font-family="monospace"
       font-size="11">
 
-      40
+      29
     </text>
     
     <rect
@@ -550,7 +550,7 @@
       font-family="monospace"
       font-size="11">
 
-      Restraunt_Pred
+      Dev_clock
     </text>
 
     <rect
@@ -564,7 +564,7 @@
     <rect
       x="785"
       y="411"
-      width="95.55"
+      width="100.44999999999999"
       height="6"
       rx="3"
       fill="#60a5fa">
@@ -585,7 +585,7 @@
       font-family="monospace"
       font-size="10">
 
-      39
+      41
     </text>
     
     <text
@@ -595,7 +595,7 @@
       font-family="monospace"
       font-size="11">
 
-      Dev_clock
+      Restraunt_Pred
     </text>
 
     <rect
@@ -609,7 +609,7 @@
     <rect
       x="785"
       y="449"
-      width="83.30000000000001"
+      width="98.0"
       height="6"
       rx="3"
       fill="#60a5fa">
@@ -630,7 +630,7 @@
       font-family="monospace"
       font-size="10">
 
-      34
+      40
     </text>
     
     <text
@@ -654,7 +654,7 @@
     <rect
       x="785"
       y="487"
-      width="51.449999999999996"
+      width="53.9"
       height="6"
       rx="3"
       fill="#60a5fa">
@@ -675,7 +675,7 @@
       font-family="monospace"
       font-size="10">
 
-      21
+      22
     </text>
     
     <text
@@ -730,7 +730,7 @@
       font-family="monospace"
       font-size="11">
 
-      Java
+      Task2
     </text>
 
     <rect
@@ -744,7 +744,7 @@
     <rect
       x="785"
       y="563"
-      width="19.6"
+      width="9.8"
       height="6"
       rx="3"
       fill="#60a5fa">
@@ -765,7 +765,7 @@
       font-family="monospace"
       font-size="10">
 
-      8
+      4
     </text>
     
 
