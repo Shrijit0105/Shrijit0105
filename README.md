@@ -137,18 +137,20 @@
 </p>
 <!-- ACTIVITY_START -->
 
-<h2 align="center">⚡ Repository Activity </h2>
-<h2 align="center">⚡ GitHub Activity</h2>
+<div align="center">
+
+<!-- ACTIVITY-CENTRE:START -->
 
 <p align="center">
-  <img
-    src="./assets/github-activity.svg"
-    width="1000"
-    alt="GitHub Activity Command Center"
-  />
+  <i>Initializing activity telemetry...</i>
 </p>
+<!-- ACTIVITY-CENTRE:END -->
 
-<div align="center">
+</div>
+
+<p align="center">
+  <sub>Automated via GitHub Actions · Refreshes periodically</sub>
+</p>
 
 | Metric | Value |
 |---|---|
