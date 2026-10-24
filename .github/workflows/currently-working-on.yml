@@ -1,1394 +1,239 @@
-name: Auto Developer Telemetry HUD
+
+name: GitHub Activity Command Centre
 
 on:
+  push:
+    branches:
+      - main
   schedule:
-    # Every hour
-    - cron: "0 * * * *"
-
+    - cron: "17 */6 * * *"
   workflow_dispatch:
 
 permissions:
   contents: write
 
+concurrency:
+  group: github-activity-command-centre
+  cancel-in-progress: false
+
 jobs:
-  generate:
+  update-activity:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
 
     steps:
-
-      # ============================================================
-      # CHECKOUT
-      # ============================================================
-
       - name: Checkout profile repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
 
-
-      # ============================================================
-      # ANALYZE GITHUB ACTIVITY
-      # ============================================================
-
-      - name: Analyze developer activity
+      - name: Generate activity dashboard
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-        shell: python
-
+          GH_TOKEN: ${{ github.token }}
+          GH_USER: Shrijit0105
         run: |
-
+          python3 - <<'PY'
           import json
-          import html
           import os
-          import urllib.request
+          import subprocess
           from datetime import datetime, timezone
+          from pathlib import Path
+          from urllib.request import Request, urlopen
+          from urllib.error import HTTPError, URLError
+          from html import escape
 
+          USER = os.environ["GH_USER"]
+          TOKEN = os.environ["GH_TOKEN"]
+          README = Path("README.md")
 
-          # ========================================================
-          # CONFIG
-          # ========================================================
+          START = "<!-- ACTIVITY-CENTRE:START -->"
+          END = "<!-- ACTIVITY-CENTRE:END -->"
 
-          USERNAME = "Shrijit0105"
+          def github_api(path):
+              req = Request(
+                  "https://api.github.com" + path,
+                  headers={
+                      "Authorization": f"Bearer {TOKEN}",
+                      "Accept": "application/vnd.github+json",
+                      "X-GitHub-Api-Version": "2022-11-28",
+                      "User-Agent": "GitHub-Activity-Command-Centre",
+                  },
+              )
+              with urlopen(req, timeout=20) as response:
+                  return json.load(response)
 
-          API = "https://api.github.com"
+          def safe(value):
+              return escape(str(value or ""), quote=True)
 
-          HEADERS = {
-              "Accept": "application/vnd.github+json",
-              "Authorization": f"Bearer {os.environ['GH_TOKEN']}",
-              "X-GitHub-Api-Version": "2022-11-28",
-              "User-Agent": "Shrijit0105-Developer-Telemetry"
-          }
-
-
-          # ========================================================
-          # GITHUB API
-          # ========================================================
-
-          def github_get(url):
-
-              request = urllib.request.Request(
-                  url,
-                  headers=HEADERS
+          def run_git(args):
+              return subprocess.run(
+                  ["git", *args],
+                  capture_output=True,
+                  text=True,
+                  check=False,
               )
 
-              with urllib.request.urlopen(request) as response:
+          # Fetch profile data.
+          user = github_api(f"/users/{USER}")
+          repos = github_api(
+              f"/users/{USER}/repos?per_page=100&sort=updated&type=owner"
+          )
 
-                  return json.loads(
-                      response.read().decode()
+          # Exclude forks and the profile README repository.
+          owned_repos = [
+              repo for repo in repos
+              if not repo.get("fork")
+              and repo.get("name") != USER
+          ]
+
+          # Count commits from the user's own repositories.
+          # This is a recent-activity count, not a lifetime GitHub total.
+          commits = []
+          errors = []
+
+          for repo in owned_repos:
+              name = repo["full_name"]
+
+              try:
+                  data = github_api(
+                      f"/repos/{name}/commits?author={USER}&per_page=5"
                   )
+                  for item in data:
+                      commit = item.get("commit", {})
+                      author = commit.get("author") or {}
+                      commits.append({
+                          "repo": name,
+                          "sha": item.get("sha", "")[:7],
+                          "message": (
+                              commit.get("message", "").splitlines()[0]
+                              if commit.get("message")
+                              else "Commit"
+                          ),
+                          "date": author.get("date", ""),
+                          "url": item.get("html_url", ""),
+                      })
+              except (HTTPError, URLError, TimeoutError, ValueError) as exc:
+                  errors.append(f"{name}: {type(exc).__name__}")
 
+          commits.sort(key=lambda x: x["date"], reverse=True)
+          commits = commits[:8]
 
-          # ========================================================
-          # TIME
-          # ========================================================
+          # Collect basic account and repository metrics.
+          total_stars = sum(r.get("stargazers_count", 0) for r in owned_repos)
+          total_forks = sum(r.get("forks_count", 0) for r in owned_repos)
+          public_repos = user.get("public_repos", 0)
 
           now = datetime.now(timezone.utc)
+          updated = now.strftime("%d %b %Y · %H:%M UTC")
 
+          rows = []
+          for item in commits:
+              message = safe(item["message"][:75])
+              repo = safe(item["repo"])
+              sha = safe(item["sha"])
+              url = safe(item["url"])
+              date = safe(item["date"][:10])
 
-          def parse_time(value):
-
-              if not value:
-                  return None
-
-              return datetime.fromisoformat(
-                  value.replace("Z", "+00:00")
+              rows.append(
+                  f"| `{date}` | `{repo}` | "
+                  f"[`{sha}`]({url}) | {message} |"
               )
 
-
-          # ========================================================
-          # GET REPOSITORIES
-          # ========================================================
-
-          repos_url = (
-              f"{API}/users/{USERNAME}/repos"
-              "?per_page=100"
-              "&sort=pushed"
-              "&direction=desc"
-          )
-
-          repos = github_get(repos_url)
-
-
-          # ========================================================
-          # FILTER
-          # ========================================================
-
-          repos = [
-
-              repo
-
-              for repo in repos
-
-              if not repo.get("fork", False)
-
-              and repo.get("name") != USERNAME
-
-              and not repo.get("archived", False)
-
-          ]
-
-
-          # ========================================================
-          # REPOSITORY ANALYSIS
-          # ========================================================
-
-          analyzed = []
-
-
-          for repo in repos[:12]:
-
-              repo_name = repo["name"]
-
-              full_name = repo["full_name"]
-
-              pushed_at = parse_time(
-                  repo.get("pushed_at")
-              )
-
-
-              if not pushed_at:
-                  continue
-
-
-              hours_since_push = (
-                  now - pushed_at
-              ).total_seconds() / 3600
-
-
-              # ----------------------------------------------------
-              # RECENCY SCORE
-              # ----------------------------------------------------
-
-              if hours_since_push <= 6:
-
-                  recency_score = 100
-
-              elif hours_since_push <= 24:
-
-                  recency_score = 85
-
-              elif hours_since_push <= 72:
-
-                  recency_score = 65
-
-              elif hours_since_push <= 168:
-
-                  recency_score = 35
-
-              else:
-
-                  recency_score = 10
-
-
-              # ----------------------------------------------------
-              # GET RECENT COMMITS
-              # ----------------------------------------------------
-
-              commits = []
-
-              try:
-
-                  commits_url = (
-                      f"{API}/repos/{full_name}/commits"
-                      "?per_page=20"
-                  )
-
-                  commits = github_get(
-                      commits_url
-                  )
-
-              except Exception:
-
-                  commits = []
-
-
-              # ----------------------------------------------------
-              # COUNT COMMITS
-              # ----------------------------------------------------
-
-              commits_24h = 0
-
-              commits_72h = 0
-
-              recent_files = set()
-
-
-              for commit in commits:
-
-                  commit_info = commit.get(
-                      "commit",
-                      {}
-                  )
-
-                  commit_time = parse_time(
-                      commit_info
-                      .get("author", {})
-                      .get("date")
-                  )
-
-
-                  if not commit_time:
-                      continue
-
-
-                  age_hours = (
-                      now - commit_time
-                  ).total_seconds() / 3600
-
-
-                  if age_hours <= 24:
-
-                      commits_24h += 1
-
-
-                  if age_hours <= 72:
-
-                      commits_72h += 1
-
-
-                  # ------------------------------------------------
-                  # FILES FROM RECENT COMMITS
-                  # ------------------------------------------------
-
-                  if age_hours <= 72:
-
-                      try:
-
-                          sha = commit.get(
-                              "sha"
-                          )
-
-                          detail_url = (
-                              f"{API}/repos/"
-                              f"{full_name}/commits/"
-                              f"{sha}"
-                          )
-
-                          detail = github_get(
-                              detail_url
-                          )
-
-
-                          for file in detail.get(
-                              "files",
-                              []
-                          )[:20]:
-
-                              recent_files.add(
-                                  file.get(
-                                      "filename",
-                                      ""
-                                  )
-                              )
-
-
-                      except Exception:
-
-                          pass
-
-
-              # ----------------------------------------------------
-              # COMMIT SCORE
-              # ----------------------------------------------------
-
-              commit_score = min(
-                  commits_24h * 20,
-                  100
-              )
-
-
-              # ----------------------------------------------------
-              # FILE ACTIVITY SCORE
-              # ----------------------------------------------------
-
-              file_count = len(
-                  recent_files
-              )
-
-              file_score = min(
-                  file_count * 10,
-                  100
-              )
-
-
-              # ----------------------------------------------------
-              # ACTIVITY SCORE
-              # ----------------------------------------------------
-
-              activity_score = round(
-
-                  recency_score * 0.45
-
-                  + commit_score * 0.35
-
-                  + file_score * 0.20
-
-              )
-
-
-              # ----------------------------------------------------
-              # ACTIVITY STATUS
-              # ----------------------------------------------------
-
-              if activity_score >= 75:
-
-                  status = "HIGH ACTIVITY"
-
-
-              elif activity_score >= 45:
-
-                  status = "ACTIVE"
-
-
-              elif activity_score >= 20:
-
-                  status = "RECENTLY ACTIVE"
-
-
-              else:
-
-                  status = "DORMANT"
-
-
-              analyzed.append({
-
-                  "name": repo_name,
-
-                  "full_name": full_name,
-
-                  "pushed_at": pushed_at,
-
-                  "hours_since_push": hours_since_push,
-
-                  "commits_24h": commits_24h,
-
-                  "commits_72h": commits_72h,
-
-                  "files": sorted(
-                      recent_files
-                  )[:6],
-
-                  "file_count": file_count,
-
-                  "score": activity_score,
-
-                  "status": status
-
-              })
-
-
-          # ========================================================
-          # SELECT ACTIVE PROJECT
-          # ========================================================
-
-          analyzed.sort(
-              key=lambda x: (
-                  x["score"],
-                  -x["hours_since_push"]
-              ),
-              reverse=True
-          )
-
-
-          if analyzed:
-
-              active = analyzed[0]
-
+          if rows:
+              commit_table = "\n".join([
+                  "| DATE | REPOSITORY | COMMIT | MESSAGE |",
+                  "|:--|:--|:--|:--|",
+                  *rows,
+              ])
           else:
+              commit_table = (
+                  "| No recent commits found | Check repository access, "
+                  "API limits, and author attribution. | - | - |"
+              )
 
-              active = {
-
-                  "name": "No active project",
-
-                  "full_name": "",
-
-                  "hours_since_push": 999,
-
-                  "commits_24h": 0,
-
-                  "commits_72h": 0,
-
-                  "files": [],
-
-                  "file_count": 0,
-
-                  "score": 0,
-
-                  "status": "NO ACTIVITY"
-
-              }
-
-
-          # ========================================================
-          # GET LATEST COMMIT
-          # ========================================================
-
-          latest_commit_message = (
-              "No recent commit detected."
+          status = "OPERATIONAL" if not errors else "PARTIAL DATA"
+          error_note = (
+              f"\n> API errors: {len(errors)} repository request(s) failed. "
+              "Some recent activity may be missing."
+              if errors else ""
           )
 
-          latest_commit_time = None
-
-          latest_sha = None
-
-
-          if active["full_name"]:
-
-              try:
-
-                  commits_url = (
-                      f"{API}/repos/"
-                      f"{active['full_name']}/commits"
-                      "?per_page=1"
-                  )
-
-                  latest_commit = github_get(
-                      commits_url
-                  )[0]
-
-
-                  latest_sha = latest_commit.get(
-                      "sha"
-                  )
-
-
-                  latest_commit_message = (
-
-                      latest_commit
-                      .get("commit", {})
-                      .get("message", "")
-                      .split("\n")[0]
-
-                  ) or "No commit message."
-
-
-                  latest_commit_time = (
-
-                      latest_commit
-                      .get("commit", {})
-                      .get("author", {})
-                      .get("date")
-
-                  )
-
-              except Exception:
-
-                  pass
-
-
-          # ========================================================
-          # INFER CURRENT DEVELOPMENT AREA
-          # ========================================================
-
-          signal_text = (
-
-              latest_commit_message.lower()
-
-              + " "
-
-              + " ".join(
-                  active["files"]
-              ).lower()
-
-          )
-
-
-          development_area = "SOFTWARE DEVELOPMENT"
-
-
-          signal_groups = [
-
-              (
-
-                  "FEATURE ENGINEERING",
-
-                  [
-                      "feature",
-                      "engineer",
-                      "preprocess",
-                      "encoding",
-                      "transform",
-                      "clean",
-                      "pipeline"
-                  ]
-
-              ),
-
-              (
-
-                  "MACHINE LEARNING",
-
-                  [
-                      "model",
-                      "train",
-                      "predict",
-                      "regression",
-                      "classification",
-                      "randomforest",
-                      "xgboost",
-                      "sklearn",
-                      "tensorflow",
-                      "pytorch"
-                  ]
-
-              ),
-
-              (
-
-                  "DATA ANALYSIS",
-
-                  [
-                      "pandas",
-                      "dataframe",
-                      "analysis",
-                      "eda",
-                      "visualization",
-                      "matplotlib",
-                      "seaborn"
-                  ]
-
-              ),
-
-              (
-
-                  "BACKEND / API",
-
-                  [
-                      "api",
-                      "fastapi",
-                      "flask",
-                      "endpoint",
-                      "backend",
-                      "server",
-                      "route"
-                  ]
-
-              ),
-
-              (
-
-                  "FRONTEND",
-
-                  [
-                      "react",
-                      "component",
-                      "frontend",
-                      "css",
-                      "html",
-                      "javascript",
-                      "typescript"
-                  ]
-
-              ),
-
-              (
-
-                  "CLOUD / DEVOPS",
-
-                  [
-                      "docker",
-                      "kubernetes",
-                      "container",
-                      "helm",
-                      "deploy",
-                      "terraform",
-                      "workflow",
-                      "github-actions"
-                  ]
-
-              ),
-
-              (
-
-                  "TESTING",
-
-                  [
-                      "test",
-                      "pytest",
-                      "unittest",
-                      "spec"
-                  ]
-
-              ),
-
-              (
-
-                  "DOCUMENTATION",
-
-                  [
-                      "readme",
-                      "documentation",
-                      "docs",
-                      "markdown"
-                  ]
-
-              )
-
-          ]
-
-
-          for area, keywords in signal_groups:
-
-              if any(
-                  keyword in signal_text
-                  for keyword in keywords
-              ):
-
-                  development_area = area
-
-                  break
-
-
-          # ========================================================
-          # LAST COMMIT TIME
-          # ========================================================
-
-          if latest_commit_time:
-
-              commit_dt = parse_time(
-                  latest_commit_time
-              )
-
-              commit_display = (
-                  commit_dt.strftime(
-                      "%Y-%m-%d %H:%M UTC"
-                  )
-              )
-
+          section = f"""<!-- ACTIVITY-CENTRE:START -->
+          ## ◈ GITHUB ACTIVITY COMMAND CENTRE
+
+          > `SYSTEM STATUS: {status}` · `LAST SYNC: {updated}`
+
+          <table>
+          <tr>
+          <td width="25%" align="center">
+          <b>PUBLIC REPOS</b><br/>
+          <h2>{public_repos}</h2>
+          </td>
+          <td width="25%" align="center">
+          <b>OWNED REPOS TRACKED</b><br/>
+          <h2>{len(owned_repos)}</h2>
+          </td>
+          <td width="25%" align="center">
+          <b>STARS EARNED</b><br/>
+          <h2>{total_stars}</h2>
+          </td>
+          <td width="25%" align="center">
+          <b>FORKS</b><br/>
+          <h2>{total_forks}</h2>
+          </td>
+          </tr>
+          </table>
+
+          ### `> RECENT_COMMIT_STREAM`
+
+          {commit_table}
+
+          {error_note}
+
+          <sub>
+          Data source: GitHub REST API · Refresh: every 6 hours
+          · Recent commits are limited to the latest 8 results across
+          your owned public repositories.
+          </sub>
+          <!-- ACTIVITY-CENTRE:END -->"""
+
+          if not README.exists():
+              raise SystemExit("README.md was not found.")
+
+          content = README.read_text(encoding="utf-8")
+
+          if START in content and END in content:
+              before, remainder = content.split(START, 1)
+              _, after = remainder.split(END, 1)
+              content = before + section + after
+          elif START not in content and END not in content:
+              content = content.rstrip() + "\n\n" + section + "\n"
           else:
-
-              commit_display = "N/A"
-
-
-          # ========================================================
-          # HUMAN-READABLE ACTIVITY
-          # ========================================================
-
-          if active["hours_since_push"] <= 6:
-
-              activity_message = (
-                  "DEVELOPMENT IS HOT"
+              raise SystemExit(
+                  "README markers are incomplete. Add both START and END "
+                  "markers or remove the broken marker before running."
               )
 
-
-          elif active["hours_since_push"] <= 24:
-
-              activity_message = (
-                  "ACTIVE DEVELOPMENT"
-              )
-
-
-          elif active["hours_since_push"] <= 72:
-
-              activity_message = (
-                  "RECENT DEVELOPMENT"
-              )
-
-
-          elif active["hours_since_push"] <= 168:
-
-              activity_message = (
-                  "PROJECT PAUSED"
-              )
-
-
-          else:
-
-              activity_message = (
-                  "NO RECENT DEVELOPMENT"
-              )
-
-
-          # ========================================================
-          # XML ESCAPING
-          # ========================================================
-
-          repo_name = html.escape(
-              active["name"]
-          )
-
-          development_area = html.escape(
-              development_area
-          )
-
-          activity_status = html.escape(
-              active["status"]
-          )
-
-          activity_message = html.escape(
-              activity_message
-          )
-
-          latest_commit_message = html.escape(
-              latest_commit_message[:90]
-          )
-
-          files = [
-
-              html.escape(
-                  file
-              )
-
-              for file in active["files"]
-
-          ]
-
-
-          # ========================================================
-          # FILE TELEMETRY
-          # ========================================================
-
-          file_lines = []
-
-          y = 368
-
-
-          for file in files:
-
-              file_lines.append(
-                  f'''
-                  <text
-                    x="60"
-                    y="{y}"
-                    fill="#9affc7"
-                    font-family="monospace"
-                    font-size="11"
-                  >
-                    {file[:100]}
-                  </text>
-                  '''
-              )
-
-              y += 21
-
-
-          if not file_lines:
-
-              file_lines.append(
-                  f'''
-                  <text
-                    x="60"
-                    y="{y}"
-                    fill="#35694f"
-                    font-family="monospace"
-                    font-size="11"
-                  >
-                    No recent file telemetry available
-                  </text>
-                  '''
-              )
-
-
-          files_svg = "".join(
-              file_lines
-          )
-
-
-          # ========================================================
-          # ACTIVITY BAR
-          # ========================================================
-
-          score = active["score"]
-
-          bar_width = int(
-              870 * score / 100
-          )
-
-
-          # ========================================================
-          # UPDATE TIME
-          # ========================================================
-
-          updated = now.strftime(
-              "%Y-%m-%d %H:%M UTC"
-          )
-
-
-          # ========================================================
-          # GENERATE SVG
-          # ========================================================
-
-          svg = f'''<svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="980"
-            height="730"
-            viewBox="0 0 980 730"
-          >
-
-            <defs>
-
-              <linearGradient
-                id="hudGradient"
-                x1="0"
-                y1="0"
-                x2="1"
-                y2="0"
-              >
-
-                <stop
-                  offset="0%"
-                  stop-color="#00ff88"
-                />
-
-                <stop
-                  offset="100%"
-                  stop-color="#00ffaa"
-                />
-
-              </linearGradient>
-
-
-              <filter id="glow">
-
-                <feGaussianBlur
-                  stdDeviation="4"
-                  result="blur"
-                />
-
-                <feMerge>
-
-                  <feMergeNode in="blur"/>
-
-                  <feMergeNode
-                    in="SourceGraphic"
-                  />
-
-                </feMerge>
-
-              </filter>
-
-            </defs>
-
-
-            <!-- ================================================= -->
-            <!-- BACKGROUND -->
-            <!-- ================================================= -->
-
-            <rect
-              width="980"
-              height="730"
-              rx="14"
-              fill="#050807"
-            />
-
-
-            <!-- ================================================= -->
-            <!-- BORDER -->
-            <!-- ================================================= -->
-
-            <rect
-              x="1"
-              y="1"
-              width="978"
-              height="728"
-              rx="14"
-              fill="none"
-              stroke="#00ff88"
-              stroke-opacity="0.35"
-            >
-
-              <animate
-                attributeName="stroke-opacity"
-                values="0.25;0.55;0.25"
-                dur="3s"
-                repeatCount="indefinite"
-              />
-
-            </rect>
-
-
-            <!-- ================================================= -->
-            <!-- HEADER -->
-            <!-- ================================================= -->
-
-            <text
-              x="55"
-              y="43"
-              fill="#00ff88"
-              font-family="monospace"
-              font-size="18"
-              font-weight="700"
-              letter-spacing="2"
-            >
-              CURRENTLY WORKING ON
-            </text>
-
-
-            <text
-              x="925"
-              y="43"
-              text-anchor="end"
-              fill="#4d9975"
-              font-family="monospace"
-              font-size="10"
-              letter-spacing="1"
-            >
-              AUTO DEVELOPER TELEMETRY
-            </text>
-
-
-            <!-- ================================================= -->
-            <!-- SCANNER -->
-            <!-- ================================================= -->
-
-            <rect
-              x="40"
-              y="70"
-              width="900"
-              height="1"
-              fill="#00ff88"
-              opacity="0.12"
-            />
-
-
-            <rect
-              x="40"
-              y="69"
-              width="120"
-              height="2"
-              fill="#00ff88"
-              filter="url(#glow)"
-            >
-
-              <animate
-                attributeName="x"
-                values="40;820;40"
-                dur="4s"
-                repeatCount="indefinite"
-              />
-
-            </rect>
-
-
-            <!-- ================================================= -->
-            <!-- MAIN PROJECT PANEL -->
-            <!-- ================================================= -->
-
-            <rect
-              x="40"
-              y="90"
-              width="900"
-              height="235"
-              rx="10"
-              fill="#07100c"
-              stroke="#00ff88"
-              stroke-opacity="0.25"
-            />
-
-
-            <!-- STATUS LIGHT -->
-
-            <circle
-              cx="890"
-              cy="117"
-              r="6"
-              fill="#00ff88"
-              filter="url(#glow)"
-            >
-
-              <animate
-                attributeName="r"
-                values="5;8;5"
-                dur="1.5s"
-                repeatCount="indefinite"
-              />
-
-              <animate
-                attributeName="opacity"
-                values="1;0.4;1"
-                dur="1.5s"
-                repeatCount="indefinite"
-              />
-
-            </circle>
-
-
-            <text
-              x="870"
-              y="122"
-              text-anchor="end"
-              fill="#00ff88"
-              font-family="monospace"
-              font-size="10"
-              font-weight="700"
-            >
-              {activity_status}
-            </text>
-
-
-            <!-- PROJECT -->
-
-            <text
-              x="60"
-              y="130"
-              fill="#4d9975"
-              font-family="monospace"
-              font-size="10"
-              letter-spacing="2"
-            >
-              ACTIVE PROJECT
-            </text>
-
-
-            <text
-              x="60"
-              y="163"
-              fill="#f1fff7"
-              font-family="monospace"
-              font-size="25"
-              font-weight="700"
-            >
-              {repo_name}
-            </text>
-
-
-            <!-- DEVELOPMENT AREA -->
-
-            <text
-              x="60"
-              y="205"
-              fill="#4d9975"
-              font-family="monospace"
-              font-size="10"
-              letter-spacing="2"
-            >
-              CURRENT DEVELOPMENT AREA
-            </text>
-
-
-            <text
-              x="60"
-              y="233"
-              fill="#00ff88"
-              font-family="monospace"
-              font-size="16"
-              font-weight="700"
-            >
-              {development_area}
-            </text>
-
-
-            <!-- SIGNAL -->
-
-            <text
-              x="60"
-              y="275"
-              fill="#4d9975"
-              font-family="monospace"
-              font-size="10"
-              letter-spacing="2"
-            >
-              DEVELOPMENT SIGNAL
-            </text>
-
-
-            <text
-              x="60"
-              y="299"
-              fill="#c8ffe0"
-              font-family="monospace"
-              font-size="12"
-            >
-              {activity_message}
-            </text>
-
-
-            <!-- ================================================= -->
-            <!-- RECENT FILES -->
-            <!-- ================================================= -->
-
-            <text
-              x="60"
-              y="350"
-              fill="#4d9975"
-              font-family="monospace"
-              font-size="10"
-              letter-spacing="2"
-            >
-              RECENTLY TOUCHED FILES
-            </text>
-
-
-            {files_svg}
-
-
-            <!-- ================================================= -->
-            <!-- ACTIVITY SCORE -->
-            <!-- ================================================= -->
-
-            <text
-              x="60"
-              y="510"
-              fill="#4d9975"
-              font-family="monospace"
-              font-size="10"
-              letter-spacing="2"
-            >
-              DEVELOPMENT ACTIVITY
-            </text>
-
-
-            <text
-              x="920"
-              y="510"
-              text-anchor="end"
-              fill="#00ff88"
-              font-family="monospace"
-              font-size="12"
-              font-weight="700"
-            >
-              {score}%
-            </text>
-
-
-            <rect
-              x="60"
-              y="525"
-              width="860"
-              height="15"
-              rx="8"
-              fill="#0b1b14"
-              stroke="#00ff88"
-              stroke-opacity="0.25"
-            />
-
-
-            <rect
-              x="60"
-              y="525"
-              width="0"
-              height="15"
-              rx="8"
-              fill="url(#hudGradient)"
-              filter="url(#glow)"
-            >
-
-              <animate
-                attributeName="width"
-                from="0"
-                to="{bar_width}"
-                dur="1.5s"
-                fill="freeze"
-              />
-
-            </rect>
-
-
-            <!-- ================================================= -->
-            <!-- TELEMETRY CARDS -->
-            <!-- ================================================= -->
-
-            <rect
-              x="60"
-              y="575"
-              width="250"
-              height="70"
-              rx="8"
-              fill="#07100c"
-              stroke="#00ff88"
-              stroke-opacity="0.20"
-            />
-
-
-            <text
-              x="80"
-              y="600"
-              fill="#4d9975"
-              font-family="monospace"
-              font-size="9"
-              letter-spacing="1"
-            >
-              COMMITS / 24H
-            </text>
-
-
-            <text
-              x="80"
-              y="628"
-              fill="#00ff88"
-              font-family="monospace"
-              font-size="20"
-              font-weight="700"
-            >
-              {active["commits_24h"]}
-            </text>
-
-
-            <rect
-              x="325"
-              y="575"
-              width="250"
-              height="70"
-              rx="8"
-              fill="#07100c"
-              stroke="#00ff88"
-              stroke-opacity="0.20"
-            />
-
-
-            <text
-              x="345"
-              y="600"
-              fill="#4d9975"
-              font-family="monospace"
-              font-size="9"
-              letter-spacing="1"
-            >
-              FILES / 72H
-            </text>
-
-
-            <text
-              x="345"
-              y="628"
-              fill="#00ff88"
-              font-family="monospace"
-              font-size="20"
-              font-weight="700"
-            >
-              {active["file_count"]}
-            </text>
-
-
-            <rect
-              x="590"
-              y="575"
-              width="330"
-              height="70"
-              rx="8"
-              fill="#07100c"
-              stroke="#00ff88"
-              stroke-opacity="0.20"
-            />
-
-
-            <text
-              x="610"
-              y="600"
-              fill="#4d9975"
-              font-family="monospace"
-              font-size="9"
-              letter-spacing="1"
-            >
-              LAST COMMIT
-            </text>
-
-
-            <text
-              x="610"
-              y="628"
-              fill="#c8ffe0"
-              font-family="monospace"
-              font-size="11"
-            >
-              {commit_display}
-            </text>
-
-
-            <!-- ================================================= -->
-            <!-- FOOTER -->
-            <!-- ================================================= -->
-
-            <text
-              x="60"
-              y="690"
-              fill="#35694f"
-              font-family="monospace"
-              font-size="10"
-              letter-spacing="1"
-            >
-              GITHUB ACTIVITY TELEMETRY ONLINE
-            </text>
-
-
-            <text
-              x="920"
-              y="690"
-              text-anchor="end"
-              fill="#35694f"
-              font-family="monospace"
-              font-size="10"
-            >
-              AUTO UPDATED {updated}
-            </text>
-
-          </svg>
-          '''
-
-
-          # ========================================================
-          # WRITE SVG
-          # ========================================================
-
-          output = (
-              "assets/currently-working-on.svg"
-          )
-
-          os.makedirs(
-              "assets",
-              exist_ok=True
-          )
-
-          with open(
-              output,
-              "w",
-              encoding="utf-8"
-          ) as f:
-
-              f.write(svg)
-
-
-          print()
-          print("====================================")
-          print("DEVELOPER TELEMETRY")
-          print("====================================")
-          print(
-              f"Active project : {active['name']}"
-          )
-          print(
-              f"Activity score : {score}%"
-          )
-          print(
-              f"Status         : {active['status']}"
-          )
-          print(
-              f"Area           : {development_area}"
-          )
-          print(
-              f"Commits 24h    : {active['commits_24h']}"
-          )
-          print(
-              f"Files 72h      : {active['file_count']}"
-          )
-          print(
-              f"Latest commit  : {latest_commit_message}"
-          )
-          print("====================================")
-
-
-      # ============================================================
-      # COMMIT GENERATED HUD
-      # ============================================================
-
-      - name: Commit generated HUD
+          README.write_text(content, encoding="utf-8")
+          print(f"Updated activity dashboard. Status: {status}")
+          print(f"Repositories tracked: {len(owned_repos)}")
+          print(f"Recent commits displayed: {len(commits)}")
+          print(f"Repository API errors: {len(errors)}")
+          PY
+
+      - name: Commit dashboard changes
         run: |
-
-          git config user.name \
-            "github-actions[bot]"
-
+          git config user.name "github-actions[bot]"
           git config user.email \
             "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add assets/currently-working-on.svg
+          git add README.md
 
           if git diff --cached --quiet; then
-
-            echo "No HUD changes detected."
-
+            echo "Dashboard unchanged."
             exit 0
-
           fi
 
-          git commit \
-            -m "Update developer telemetry HUD"
-
-          git push
+          git commit -m "chore: refresh GitHub activity command centre"
+          git push origin HEAD:main
