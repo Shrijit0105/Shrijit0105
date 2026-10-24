@@ -274,7 +274,7 @@ xmlns="http://www.w3.org/2000/svg">
 </text>
 
 <text x="180" y="565" class="value">
-  577
+  580
 </text>
 
 <text x="500" y="565" class="label">
@@ -290,7 +290,7 @@ xmlns="http://www.w3.org/2000/svg">
 </text>
 
 <text x="180" y="590" class="value">
-  8eb21a3
+  b40f649
 </text>
 
 <text x="500" y="590" class="label">
@@ -304,7 +304,7 @@ xmlns="http://www.w3.org/2000/svg">
 <!-- Footer -->
 
 <text x="45" y="625" class="small">
-  24 Oct 2026 23:54 • Shrijit Sengupta
+  24 Oct 2026 23:57 • Shrijit Sengupta
 </text>
 
 <rect
