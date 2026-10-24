@@ -132,24 +132,21 @@
   </a>
 </p>
 
-<p align="center">
-  <sub>⚡ Powered by GitHub Actions · Updated every 15 minutes · IST</sub>
-</p>
-<!-- ACTIVITY_START -->
+
+## ⚡ ACTIVITY COMMAND CENTRE
 
 <div align="center">
 
-<!-- ACTIVITY-CENTRE:START -->
-
-<p align="center">
-  <i>Initializing activity telemetry...</i>
-</p>
-<!-- ACTIVITY-CENTRE:END -->
+<img
+  src="assets/github-activity.svg"
+  alt="GitHub Activity Command Centre"
+  width="100%"
+/>
 
 </div>
 
 <p align="center">
-  <sub>Automated via GitHub Actions · Refreshes periodically</sub>
+  <sub>LIVE TELEMETRY · AUTO-GENERATED VIA GITHUB ACTIONS</sub>
 </p>
 
 | Metric | Value |
