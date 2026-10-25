@@ -179,3 +179,52 @@
 
 
 Note: The readme file keeps on changing so you might observe new changes regularly
+
+<!-- ACTIVITY-CENTRE:START -->
+## ◈ GITHUB ACTIVITY COMMAND CENTRE
+
+> `SYSTEM STATUS: PARTIAL DATA` · `LAST SYNC: 25 Oct 2026 · 04:43 UTC`
+
+<table>
+<tr>
+<td width="25%" align="center">
+<b>PUBLIC REPOS</b><br/>
+<h2>15</h2>
+</td>
+<td width="25%" align="center">
+<b>OWNED REPOS TRACKED</b><br/>
+<h2>13</h2>
+</td>
+<td width="25%" align="center">
+<b>STARS EARNED</b><br/>
+<h2>0</h2>
+</td>
+<td width="25%" align="center">
+<b>FORKS</b><br/>
+<h2>0</h2>
+</td>
+</tr>
+</table>
+
+### `> RECENT_COMMIT_STREAM`
+
+| DATE | REPOSITORY | COMMIT | MESSAGE |
+|:--|:--|:--|:--|
+| `2026-10-24` | `Shrijit0105/Daily-Dev-Lab` | [`b1ea3f9`](https://github.com/Shrijit0105/Daily-Dev-Lab/commit/b1ea3f9c6e078684d1481f6506b2c0704376667a) | Second_largest number |
+| `2026-10-23` | `Shrijit0105/Daily-Dev-Lab` | [`d6e2b55`](https://github.com/Shrijit0105/Daily-Dev-Lab/commit/d6e2b55c402c20d631a0eaa715adc6987134204d) | Add missing number algorithm and test cases |
+| `2026-10-18` | `Shrijit0105/Daily-Dev-Lab` | [`d8843ce`](https://github.com/Shrijit0105/Daily-Dev-Lab/commit/d8843ce1286b27e83d49a750df4cac5645223486) | Create README.md |
+| `2026-10-15` | `Shrijit0105/Daily-Dev-Lab` | [`7dd20ed`](https://github.com/Shrijit0105/Daily-Dev-Lab/commit/7dd20ede2202873baeae4108989948ad5d239daf) | Problem solve commit |
+| `2026-10-15` | `Shrijit0105/Daily-Dev-Lab` | [`fa193a0`](https://github.com/Shrijit0105/Daily-Dev-Lab/commit/fa193a0439af58fa7539711a9231b2829f43490f) | New commit |
+| `2026-10-12` | `Shrijit0105/Dev_clock` | [`17bd2f7`](https://github.com/Shrijit0105/Dev_clock/commit/17bd2f70643a6ad60699393e68286820700a0481) | Add workflow to update developer clock SVG |
+| `2026-10-12` | `Shrijit0105/Dev_clock` | [`ccde4d4`](https://github.com/Shrijit0105/Dev_clock/commit/ccde4d4d54a9ff788952793e02729067e737354f) | Refactor GitHub Actions workflow for Dev Clock |
+| `2026-10-12` | `Shrijit0105/Dev_clock` | [`dbf3c45`](https://github.com/Shrijit0105/Dev_clock/commit/dbf3c4577809fc8a6ec5a54365d615b42246e211) | Delete .github/workflows/clock.yml |
+
+
+> API errors: 1 repository request(s) failed. Some recent activity may be missing.
+
+<sub>
+Data source: GitHub REST API · Refresh: every 6 hours
+· Recent commits are limited to the latest 8 results across
+your owned public repositories.
+</sub>
+<!-- ACTIVITY-CENTRE:END -->
