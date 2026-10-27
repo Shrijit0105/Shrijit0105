@@ -183,7 +183,7 @@ Note: The readme file keeps on changing so you might observe new changes regular
 <!-- ACTIVITY-CENTRE:START -->
 ## ◈ GITHUB ACTIVITY COMMAND CENTRE
 
-> `SYSTEM STATUS: PARTIAL DATA` · `LAST SYNC: 27 Oct 2026 · 18:04 UTC`
+> `SYSTEM STATUS: PARTIAL DATA` · `LAST SYNC: 27 Oct 2026 · 22:15 UTC`
 
 <table>
 <tr>
@@ -210,11 +210,11 @@ Note: The readme file keeps on changing so you might observe new changes regular
 
 | DATE | REPOSITORY | COMMIT | MESSAGE |
 |:--|:--|:--|:--|
+| `2026-10-27` | `Shrijit0105/Daily-Dev-Lab` | [`4339d4c`](https://github.com/Shrijit0105/Daily-Dev-Lab/commit/4339d4ce4bfe842ab314f102edede1c8c66a19ae) | DSA subarray |
+| `2026-10-27` | `Shrijit0105/Daily-Dev-Lab` | [`c560719`](https://github.com/Shrijit0105/Daily-Dev-Lab/commit/c5607190c712038e6ddacb9259e9faf587323267) | file_extension_analyser |
 | `2026-10-26` | `Shrijit0105/Daily-Dev-Lab` | [`e43f051`](https://github.com/Shrijit0105/Daily-Dev-Lab/commit/e43f051888fd7d633cf9a583b1ee9cfa989b880f) | linux_system |
 | `2026-10-26` | `Shrijit0105/Daily-Dev-Lab` | [`fc208c1`](https://github.com/Shrijit0105/Daily-Dev-Lab/commit/fc208c1096e06b6bf2a26b6d578fac1ba833d061) | Move zeroes |
 | `2026-10-26` | `Shrijit0105/Daily-Dev-Lab` | [`ee235e9`](https://github.com/Shrijit0105/Daily-Dev-Lab/commit/ee235e993df9865dec3b60657def1548439031ab) | Fruits and Vegetables |
-| `2026-10-24` | `Shrijit0105/Daily-Dev-Lab` | [`b1ea3f9`](https://github.com/Shrijit0105/Daily-Dev-Lab/commit/b1ea3f9c6e078684d1481f6506b2c0704376667a) | Second_largest number |
-| `2026-10-23` | `Shrijit0105/Daily-Dev-Lab` | [`d6e2b55`](https://github.com/Shrijit0105/Daily-Dev-Lab/commit/d6e2b55c402c20d631a0eaa715adc6987134204d) | Add missing number algorithm and test cases |
 | `2026-10-12` | `Shrijit0105/Dev_clock` | [`17bd2f7`](https://github.com/Shrijit0105/Dev_clock/commit/17bd2f70643a6ad60699393e68286820700a0481) | Add workflow to update developer clock SVG |
 | `2026-10-12` | `Shrijit0105/Dev_clock` | [`ccde4d4`](https://github.com/Shrijit0105/Dev_clock/commit/ccde4d4d54a9ff788952793e02729067e737354f) | Refactor GitHub Actions workflow for Dev Clock |
 | `2026-10-12` | `Shrijit0105/Dev_clock` | [`dbf3c45`](https://github.com/Shrijit0105/Dev_clock/commit/dbf3c4577809fc8a6ec5a54365d615b42246e211) | Delete .github/workflows/clock.yml |
