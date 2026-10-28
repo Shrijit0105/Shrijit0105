@@ -133,21 +133,22 @@
 </p>
 
 
-## ⚡ ACTIVITY COMMAND CENTRE
+<h2>⚡ ACTIVITY COMMAND CENTRE</h2>
 
 <div align="center">
-
-<img
-  src="assets/github-activity.svg"
-  alt="GitHub Activity Command Centre"
-  width="100%"
-/>
-
+  <img
+    src="https://raw.githubusercontent.com/Shrijit0105/Github_activity_command-/main/assets/github-activity.svg"
+    alt="GitHub Activity Command Centre"
+    width="100%"
+  />
 </div>
 
 <p align="center">
-  <sub>LIVE TELEMETRY · AUTO-GENERATED VIA GITHUB ACTIONS</sub>
+  <sub>PYTHON-POWERED TELEMETRY · AUTOMATED WITH GITHUB ACTIONS</sub>
 </p>
+
+
+
 
 | Metric | Value |
 |---|---|
@@ -180,31 +181,7 @@
 
 Note: The readme file keeps on changing so you might observe new changes regularly
 
-<!-- ACTIVITY-CENTRE:START -->
-## ◈ GITHUB ACTIVITY COMMAND CENTRE
 
-> `SYSTEM STATUS: PARTIAL DATA` · `LAST SYNC: 28 Oct 2026 · 12:57 UTC`
-
-<table>
-<tr>
-<td width="25%" align="center">
-<b>PUBLIC REPOS</b><br/>
-<h2>15</h2>
-</td>
-<td width="25%" align="center">
-<b>OWNED REPOS TRACKED</b><br/>
-<h2>13</h2>
-</td>
-<td width="25%" align="center">
-<b>STARS EARNED</b><br/>
-<h2>0</h2>
-</td>
-<td width="25%" align="center">
-<b>FORKS</b><br/>
-<h2>0</h2>
-</td>
-</tr>
-</table>
 
 ### `> RECENT_COMMIT_STREAM`
 
