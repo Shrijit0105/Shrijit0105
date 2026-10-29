@@ -194,7 +194,7 @@
     font-size="25"
     font-weight="bold">
 
-    14
+    15
 
   </text>
 
@@ -220,7 +220,7 @@
     font-size="25"
     font-weight="bold">
 
-    4,059,517
+    4,067,455
 
   </text>
 
@@ -261,7 +261,7 @@
         <animate
           attributeName="stroke-dashoffset"
           from="138"
-          to="3.2065021528423188"
+          to="3.4695636460637047"
           dur="1.2s"
           begin="0.0s"
           fill="freeze"/>
@@ -309,7 +309,7 @@
         <animate
           attributeName="width"
           from="0"
-          to="420.0087251759261"
+          to="419.18904081298996"
           dur="1.4s"
           begin="0.0s"
           fill="freeze"/>
@@ -328,7 +328,7 @@
         <animate
           attributeName="cx"
           from="280"
-          to="700.0087251759261"
+          to="699.18904081299"
           dur="1.4s"
           begin="0.0s"
           fill="freeze"/>
@@ -353,7 +353,7 @@
         font-size="15"
         font-weight="bold">
 
-        97.7%
+        97.5%
 
       </text>
 
@@ -395,7 +395,7 @@
         cy="258"
         r="22"
         fill="none"
-        stroke="#e34c26"
+        stroke="#3572A5"
         stroke-width="4"
         stroke-linecap="round"
         stroke-dasharray="138"
@@ -405,7 +405,7 @@
         <animate
           attributeName="stroke-dashoffset"
           from="138"
-          to="136.8233250408854"
+          to="136.7705565273617"
           dur="1.2s"
           begin="0.18s"
           fill="freeze"/>
@@ -424,7 +424,7 @@
         font-weight="bold"
         letter-spacing="1">
 
-        HTML
+        Python
 
       </text>
 
@@ -448,12 +448,12 @@
         width="0"
         height="6"
         rx="3"
-        fill="#e34c26">
+        fill="#3572A5">
 
         <animate
           attributeName="width"
           from="0"
-          to="3.6664509595599672"
+          to="3.83087458865556"
           dur="1.4s"
           begin="0.18s"
           fill="freeze"/>
@@ -467,12 +467,12 @@
         cx="280"
         cy="258"
         r="3"
-        fill="#e34c26">
+        fill="#3572A5">
 
         <animate
           attributeName="cx"
           from="280"
-          to="283.66645095956"
+          to="283.83087458865555"
           dur="1.4s"
           begin="0.18s"
           fill="freeze"/>
@@ -492,7 +492,7 @@
       <text
         x="760"
         y="263"
-        fill="#e34c26"
+        fill="#3572A5"
         font-family="monospace"
         font-size="15"
         font-weight="bold">
@@ -512,7 +512,7 @@
         font-family="monospace"
         font-size="10">
 
-        34,614 BYTES
+        36,237 BYTES
 
       </text>
 
@@ -539,7 +539,7 @@
         cy="326"
         r="22"
         fill="none"
-        stroke="#3572A5"
+        stroke="#e34c26"
         stroke-width="4"
         stroke-linecap="round"
         stroke-dasharray="138"
@@ -549,7 +549,7 @@
         <animate
           attributeName="stroke-dashoffset"
           from="138"
-          to="137.0379983628594"
+          to="136.82562142666606"
           dur="1.2s"
           begin="0.36s"
           fill="freeze"/>
@@ -568,7 +568,7 @@
         font-weight="bold"
         letter-spacing="1">
 
-        Python
+        HTML
 
       </text>
 
@@ -592,12 +592,12 @@
         width="0"
         height="6"
         rx="3"
-        fill="#3572A5">
+        fill="#e34c26">
 
         <animate
           attributeName="width"
           from="0"
-          to="2.9975413331191865"
+          to="3.659295554591261"
           dur="1.4s"
           begin="0.36s"
           fill="freeze"/>
@@ -611,12 +611,12 @@
         cx="280"
         cy="326"
         r="3"
-        fill="#3572A5">
+        fill="#e34c26">
 
         <animate
           attributeName="cx"
           from="280"
-          to="282.99754133311916"
+          to="283.65929555459127"
           dur="1.4s"
           begin="0.36s"
           fill="freeze"/>
@@ -636,12 +636,12 @@
       <text
         x="760"
         y="331"
-        fill="#3572A5"
+        fill="#e34c26"
         font-family="monospace"
         font-size="15"
         font-weight="bold">
 
-        0.7%
+        0.9%
 
       </text>
 
@@ -656,7 +656,7 @@
         font-family="monospace"
         font-size="10">
 
-        28,299 BYTES
+        34,614 BYTES
 
       </text>
 
@@ -693,7 +693,7 @@
         <animate
           attributeName="stroke-dashoffset"
           from="138"
-          to="137.22799190149962"
+          to="137.2294985439298"
           dur="1.2s"
           begin="0.54s"
           fill="freeze"/>
@@ -741,7 +741,7 @@
         <animate
           attributeName="width"
           from="0"
-          to="2.4055324808345424"
+          to="2.400837870363655"
           dur="1.4s"
           begin="0.54s"
           fill="freeze"/>
@@ -760,7 +760,7 @@
         <animate
           attributeName="cx"
           from="280"
-          to="282.40553248083455"
+          to="282.40083787036366"
           dur="1.4s"
           begin="0.54s"
           fill="freeze"/>
@@ -837,7 +837,7 @@
         <animate
           attributeName="stroke-dashoffset"
           from="138"
-          to="137.7851907012583"
+          to="137.7856099206998"
           dur="1.2s"
           begin="0.72s"
           fill="freeze"/>
@@ -885,7 +885,7 @@
         <animate
           attributeName="width"
           from="0"
-          to="0.6693333221661592"
+          to="0.6680270586890329"
           dur="1.4s"
           begin="0.72s"
           fill="freeze"/>
@@ -904,7 +904,7 @@
         <animate
           attributeName="cx"
           from="280"
-          to="280.66933332216615"
+          to="280.668027058689"
           dur="1.4s"
           begin="0.72s"
           fill="freeze"/>
@@ -981,7 +981,7 @@
         <animate
           attributeName="stroke-dashoffset"
           from="138"
-          to="137.92551872550357"
+          to="137.9256640823316"
           dur="1.2s"
           begin="0.8999999999999999s"
           fill="freeze"/>
@@ -1029,7 +1029,7 @@
         <animate
           attributeName="width"
           from="0"
-          to="0.23207933357589094"
+          to="0.23162641012623372"
           dur="1.4s"
           begin="0.8999999999999999s"
           fill="freeze"/>
@@ -1048,7 +1048,7 @@
         <animate
           attributeName="cx"
           from="280"
-          to="280.2320793335759"
+          to="280.23162641012624"
           dur="1.4s"
           begin="0.8999999999999999s"
           fill="freeze"/>
@@ -1125,7 +1125,7 @@
         <animate
           attributeName="stroke-dashoffset"
           from="138"
-          to="137.99347311515137"
+          to="137.99348585294737"
           dur="1.2s"
           begin="1.08s"
           fill="freeze"/>
@@ -1173,7 +1173,7 @@
         <animate
           attributeName="width"
           from="0"
-          to="0.020337394818152017"
+          to="0.020297704584316234"
           dur="1.4s"
           begin="1.08s"
           fill="freeze"/>
@@ -1192,7 +1192,7 @@
         <animate
           attributeName="cx"
           from="280"
-          to="280.02033739481817"
+          to="280.0202977045843"
           dur="1.4s"
           begin="1.08s"
           fill="freeze"/>
