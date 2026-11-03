@@ -114,7 +114,7 @@
     font-size="28"
     font-weight="bold">
 
-    315
+    319
   </text>
 
 
@@ -197,9 +197,9 @@
   
     <rect
       x="90"
-      y="356.0655737704918"
+      y="324.82758620689657"
       width="65"
-      height="123.93442622950819"
+      height="155.17241379310343"
       rx="4"
       fill="#ef4444"
       opacity="0.85">
@@ -226,20 +226,20 @@
 
     <text
       x="122.5"
-      y="346.0655737704918"
+      y="314.82758620689657"
       text-anchor="middle"
       fill="#f8fafc"
       font-family="monospace"
       font-size="11">
 
-      42
+      50
     </text>
     
     <rect
       x="175"
-      y="379.672131147541"
+      y="349.65517241379314"
       width="65"
-      height="100.327868852459"
+      height="130.3448275862069"
       rx="4"
       fill="#ef4444"
       opacity="0.85">
@@ -266,20 +266,20 @@
 
     <text
       x="207.5"
-      y="369.672131147541"
+      y="339.65517241379314"
       text-anchor="middle"
       fill="#f8fafc"
       font-family="monospace"
       font-size="11">
 
-      34
+      42
     </text>
     
     <rect
       x="260"
-      y="344.2622950819672"
+      y="337.2413793103448"
       width="65"
-      height="135.7377049180328"
+      height="142.75862068965517"
       rx="4"
       fill="#ef4444"
       opacity="0.85">
@@ -306,7 +306,7 @@
 
     <text
       x="292.5"
-      y="334.2622950819672"
+      y="327.2413793103448"
       text-anchor="middle"
       fill="#f8fafc"
       font-family="monospace"
@@ -317,9 +317,9 @@
     
     <rect
       x="345"
-      y="373.7704918032787"
+      y="371.37931034482756"
       width="65"
-      height="106.22950819672131"
+      height="108.62068965517241"
       rx="4"
       fill="#ef4444"
       opacity="0.85">
@@ -346,20 +346,20 @@
 
     <text
       x="377.5"
-      y="363.7704918032787"
+      y="361.37931034482756"
       text-anchor="middle"
       fill="#f8fafc"
       font-family="monospace"
       font-size="11">
 
-      36
+      35
     </text>
     
     <rect
       x="430"
-      y="367.8688524590164"
+      y="368.2758620689655"
       width="65"
-      height="112.1311475409836"
+      height="111.72413793103449"
       rx="4"
       fill="#ef4444"
       opacity="0.85">
@@ -386,20 +386,20 @@
 
     <text
       x="462.5"
-      y="357.8688524590164"
+      y="358.2758620689655"
       text-anchor="middle"
       fill="#f8fafc"
       font-family="monospace"
       font-size="11">
 
-      38
+      36
     </text>
     
     <rect
       x="515"
-      y="300.0"
+      y="318.62068965517244"
       width="65"
-      height="180.0"
+      height="161.3793103448276"
       rx="4"
       fill="#ef4444"
       opacity="0.85">
@@ -426,20 +426,20 @@
 
     <text
       x="547.5"
-      y="290.0"
+      y="308.62068965517244"
       text-anchor="middle"
       fill="#f8fafc"
       font-family="monospace"
       font-size="11">
 
-      61
+      52
     </text>
     
     <rect
       x="600"
-      y="308.8524590163935"
+      y="300.0"
       width="65"
-      height="171.14754098360655"
+      height="180.0"
       rx="4"
       fill="#ef4444"
       opacity="0.85">
@@ -466,7 +466,7 @@
 
     <text
       x="632.5"
-      y="298.8524590163935"
+      y="290.0"
       text-anchor="middle"
       fill="#f8fafc"
       font-family="monospace"
@@ -609,7 +609,7 @@
     <rect
       x="785"
       y="449"
-      width="83.30000000000001"
+      width="85.75"
       height="6"
       rx="3"
       fill="#60a5fa">
@@ -630,7 +630,7 @@
       font-family="monospace"
       font-size="10">
 
-      34
+      35
     </text>
     
     <text
@@ -699,7 +699,7 @@
     <rect
       x="785"
       y="525"
-      width="68.60000000000001"
+      width="73.5"
       height="6"
       rx="3"
       fill="#60a5fa">
@@ -720,7 +720,7 @@
       font-family="monospace"
       font-size="10">
 
-      28
+      30
     </text>
     
     <text
@@ -744,7 +744,7 @@
     <rect
       x="785"
       y="563"
-      width="46.55"
+      width="51.449999999999996"
       height="6"
       rx="3"
       fill="#60a5fa">
@@ -765,7 +765,7 @@
       font-family="monospace"
       font-size="10">
 
-      19
+      21
     </text>
     
 
