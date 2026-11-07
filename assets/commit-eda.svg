@@ -114,7 +114,7 @@
     font-size="28"
     font-weight="bold">
 
-    326
+    327
   </text>
 
 
@@ -137,7 +137,7 @@
     font-size="17"
     font-weight="bold">
 
-    Dev_clock
+    Shrijit0105
   </text>
 
 
@@ -197,9 +197,9 @@
   
     <rect
       x="90"
-      y="361.875"
+      y="376.72131147540983"
       width="65"
-      height="118.125"
+      height="103.27868852459017"
       rx="4"
       fill="#ef4444"
       opacity="0.85">
@@ -226,20 +226,20 @@
 
     <text
       x="122.5"
-      y="351.875"
+      y="366.72131147540983"
       text-anchor="middle"
       fill="#f8fafc"
       font-family="monospace"
       font-size="11">
 
-      42
+      35
     </text>
     
     <rect
       x="175"
-      y="330.9375"
+      y="323.60655737704917"
       width="65"
-      height="149.0625"
+      height="156.3934426229508"
       rx="4"
       fill="#ef4444"
       opacity="0.85">
@@ -266,7 +266,7 @@
 
     <text
       x="207.5"
-      y="320.9375"
+      y="313.60655737704917"
       text-anchor="middle"
       fill="#f8fafc"
       font-family="monospace"
@@ -312,14 +312,14 @@
       font-family="monospace"
       font-size="11">
 
-      64
+      61
     </text>
     
     <rect
       x="345"
-      y="339.375"
+      y="335.40983606557376"
       width="65"
-      height="140.625"
+      height="144.59016393442624"
       rx="4"
       fill="#ef4444"
       opacity="0.85">
@@ -346,20 +346,20 @@
 
     <text
       x="377.5"
-      y="329.375"
+      y="325.40983606557376"
       text-anchor="middle"
       fill="#f8fafc"
       font-family="monospace"
       font-size="11">
 
-      50
+      49
     </text>
     
     <rect
       x="430"
-      y="378.75"
+      y="341.3114754098361"
       width="65"
-      height="101.25"
+      height="138.68852459016392"
       rx="4"
       fill="#ef4444"
       opacity="0.85">
@@ -386,20 +386,20 @@
 
     <text
       x="462.5"
-      y="368.75"
+      y="331.3114754098361"
       text-anchor="middle"
       fill="#f8fafc"
       font-family="monospace"
       font-size="11">
 
-      36
+      47
     </text>
     
     <rect
       x="515"
-      y="370.3125"
+      y="353.11475409836066"
       width="65"
-      height="109.6875"
+      height="126.88524590163935"
       rx="4"
       fill="#ef4444"
       opacity="0.85">
@@ -426,20 +426,20 @@
 
     <text
       x="547.5"
-      y="360.3125"
+      y="343.11475409836066"
       text-anchor="middle"
       fill="#f8fafc"
       font-family="monospace"
       font-size="11">
 
-      39
+      43
     </text>
     
     <rect
       x="600"
-      y="361.875"
+      y="364.91803278688525"
       width="65"
-      height="118.125"
+      height="115.08196721311477"
       rx="4"
       fill="#ef4444"
       opacity="0.85">
@@ -466,13 +466,13 @@
 
     <text
       x="632.5"
-      y="351.875"
+      y="354.91803278688525"
       text-anchor="middle"
       fill="#f8fafc"
       font-family="monospace"
       font-size="11">
 
-      42
+      39
     </text>
     
 
@@ -505,7 +505,7 @@
       font-family="monospace"
       font-size="11">
 
-      Dev_clock
+      Shrijit0105
     </text>
 
     <rect
@@ -550,7 +550,7 @@
       font-family="monospace"
       font-size="11">
 
-      Shrijit0105
+      Dev_clock
     </text>
 
     <rect
@@ -595,7 +595,7 @@
       font-family="monospace"
       font-size="11">
 
-      Daily-Dev-Lab
+      Restraunt_Pred
     </text>
 
     <rect
@@ -609,7 +609,7 @@
     <rect
       x="785"
       y="449"
-      width="83.30000000000001"
+      width="80.85000000000001"
       height="6"
       rx="3"
       fill="#60a5fa">
@@ -630,7 +630,7 @@
       font-family="monospace"
       font-size="10">
 
-      34
+      33
     </text>
     
     <text
@@ -640,7 +640,7 @@
       font-family="monospace"
       font-size="11">
 
-      Restraunt_Pred
+      Daily-Dev-Lab
     </text>
 
     <rect
@@ -685,7 +685,7 @@
       font-family="monospace"
       font-size="11">
 
-      Zomato_Sentiment_Analy
+      Github_activity_comman
     </text>
 
     <rect
@@ -699,7 +699,7 @@
     <rect
       x="785"
       y="525"
-      width="73.5"
+      width="75.95"
       height="6"
       rx="3"
       fill="#60a5fa">
@@ -720,7 +720,7 @@
       font-family="monospace"
       font-size="10">
 
-      30
+      31
     </text>
     
     <text
@@ -730,7 +730,7 @@
       font-family="monospace"
       font-size="11">
 
-      Github_activity_comman
+      Zomato_Sentiment_Analy
     </text>
 
     <rect
@@ -744,7 +744,7 @@
     <rect
       x="785"
       y="563"
-      width="71.05"
+      width="73.5"
       height="6"
       rx="3"
       fill="#60a5fa">
@@ -765,7 +765,7 @@
       font-family="monospace"
       font-size="10">
 
-      29
+      30
     </text>
     
 
