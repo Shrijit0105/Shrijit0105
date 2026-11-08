@@ -197,9 +197,9 @@
   
     <rect
       x="90"
-      y="376.72131147540983"
+      y="385.57377049180326"
       width="65"
-      height="103.27868852459017"
+      height="94.42622950819673"
       rx="4"
       fill="#ef4444"
       opacity="0.85">
@@ -226,20 +226,20 @@
 
     <text
       x="122.5"
-      y="366.72131147540983"
+      y="375.57377049180326"
       text-anchor="middle"
       fill="#f8fafc"
       font-family="monospace"
       font-size="11">
 
-      35
+      32
     </text>
     
     <rect
       x="175"
-      y="323.60655737704917"
+      y="338.3606557377049"
       width="65"
-      height="156.3934426229508"
+      height="141.63934426229508"
       rx="4"
       fill="#ef4444"
       opacity="0.85">
@@ -266,13 +266,13 @@
 
     <text
       x="207.5"
-      y="313.60655737704917"
+      y="328.3606557377049"
       text-anchor="middle"
       fill="#f8fafc"
       font-family="monospace"
       font-size="11">
 
-      53
+      48
     </text>
     
     <rect
@@ -317,9 +317,9 @@
     
     <rect
       x="345"
-      y="335.40983606557376"
+      y="347.21311475409834"
       width="65"
-      height="144.59016393442624"
+      height="132.78688524590166"
       rx="4"
       fill="#ef4444"
       opacity="0.85">
@@ -346,20 +346,20 @@
 
     <text
       x="377.5"
-      y="325.40983606557376"
+      y="337.21311475409834"
       text-anchor="middle"
       fill="#f8fafc"
       font-family="monospace"
       font-size="11">
 
-      49
+      45
     </text>
     
     <rect
       x="430"
-      y="341.3114754098361"
+      y="344.2622950819672"
       width="65"
-      height="138.68852459016392"
+      height="135.7377049180328"
       rx="4"
       fill="#ef4444"
       opacity="0.85">
@@ -386,20 +386,20 @@
 
     <text
       x="462.5"
-      y="331.3114754098361"
+      y="334.2622950819672"
       text-anchor="middle"
       fill="#f8fafc"
       font-family="monospace"
       font-size="11">
 
-      47
+      46
     </text>
     
     <rect
       x="515"
-      y="353.11475409836066"
+      y="311.8032786885246"
       width="65"
-      height="126.88524590163935"
+      height="168.19672131147541"
       rx="4"
       fill="#ef4444"
       opacity="0.85">
@@ -426,20 +426,20 @@
 
     <text
       x="547.5"
-      y="343.11475409836066"
+      y="301.8032786885246"
       text-anchor="middle"
       fill="#f8fafc"
       font-family="monospace"
       font-size="11">
 
-      43
+      57
     </text>
     
     <rect
       x="600"
-      y="364.91803278688525"
+      y="367.8688524590164"
       width="65"
-      height="115.08196721311477"
+      height="112.1311475409836"
       rx="4"
       fill="#ef4444"
       opacity="0.85">
@@ -466,13 +466,13 @@
 
     <text
       x="632.5"
-      y="354.91803278688525"
+      y="357.8688524590164"
       text-anchor="middle"
       fill="#f8fafc"
       font-family="monospace"
       font-size="11">
 
-      39
+      38
     </text>
     
 
@@ -595,7 +595,7 @@
       font-family="monospace"
       font-size="11">
 
-      Restraunt_Pred
+      Github_activity_comman
     </text>
 
     <rect
@@ -609,7 +609,7 @@
     <rect
       x="785"
       y="449"
-      width="80.85000000000001"
+      width="83.30000000000001"
       height="6"
       rx="3"
       fill="#60a5fa">
@@ -630,7 +630,7 @@
       font-family="monospace"
       font-size="10">
 
-      33
+      34
     </text>
     
     <text
@@ -640,7 +640,7 @@
       font-family="monospace"
       font-size="11">
 
-      Daily-Dev-Lab
+      Restraunt_Pred
     </text>
 
     <rect
@@ -685,7 +685,7 @@
       font-family="monospace"
       font-size="11">
 
-      Github_activity_comman
+      Zomato_Sentiment_Analy
     </text>
 
     <rect
@@ -699,7 +699,7 @@
     <rect
       x="785"
       y="525"
-      width="75.95"
+      width="73.5"
       height="6"
       rx="3"
       fill="#60a5fa">
@@ -720,7 +720,7 @@
       font-family="monospace"
       font-size="10">
 
-      31
+      30
     </text>
     
     <text
@@ -730,7 +730,7 @@
       font-family="monospace"
       font-size="11">
 
-      Zomato_Sentiment_Analy
+      Daily-Dev-Lab
     </text>
 
     <rect
