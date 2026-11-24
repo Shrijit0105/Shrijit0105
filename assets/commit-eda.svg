@@ -114,7 +114,7 @@
     font-size="28"
     font-weight="bold">
 
-    356
+    360
   </text>
 
 
@@ -197,9 +197,9 @@
   
     <rect
       x="90"
-      y="364.91803278688525"
+      y="339.66101694915255"
       width="65"
-      height="115.08196721311477"
+      height="140.33898305084747"
       rx="4"
       fill="#ef4444"
       opacity="0.85">
@@ -226,20 +226,20 @@
 
     <text
       x="122.5"
-      y="354.91803278688525"
+      y="329.66101694915255"
       text-anchor="middle"
       fill="#f8fafc"
       font-family="monospace"
       font-size="11">
 
-      39
+      46
     </text>
     
     <rect
       x="175"
-      y="338.3606557377049"
+      y="309.1525423728814"
       width="65"
-      height="141.63934426229508"
+      height="170.84745762711864"
       rx="4"
       fill="#ef4444"
       opacity="0.85">
@@ -266,20 +266,20 @@
 
     <text
       x="207.5"
-      y="328.3606557377049"
+      y="299.1525423728814"
       text-anchor="middle"
       fill="#f8fafc"
       font-family="monospace"
       font-size="11">
 
-      48
+      56
     </text>
     
     <rect
       x="260"
-      y="338.3606557377049"
+      y="339.66101694915255"
       width="65"
-      height="141.63934426229508"
+      height="140.33898305084747"
       rx="4"
       fill="#ef4444"
       opacity="0.85">
@@ -306,20 +306,20 @@
 
     <text
       x="292.5"
-      y="328.3606557377049"
+      y="329.66101694915255"
       text-anchor="middle"
       fill="#f8fafc"
       font-family="monospace"
       font-size="11">
 
-      48
+      46
     </text>
     
     <rect
       x="345"
-      y="335.40983606557376"
+      y="333.5593220338983"
       width="65"
-      height="144.59016393442624"
+      height="146.4406779661017"
       rx="4"
       fill="#ef4444"
       opacity="0.85">
@@ -346,20 +346,20 @@
 
     <text
       x="377.5"
-      y="325.40983606557376"
+      y="323.5593220338983"
       text-anchor="middle"
       fill="#f8fafc"
       font-family="monospace"
       font-size="11">
 
-      49
+      48
     </text>
     
     <rect
       x="430"
-      y="329.5081967213115"
+      y="324.4067796610169"
       width="65"
-      height="150.49180327868854"
+      height="155.59322033898306"
       rx="4"
       fill="#ef4444"
       opacity="0.85">
@@ -386,7 +386,7 @@
 
     <text
       x="462.5"
-      y="319.5081967213115"
+      y="314.4067796610169"
       text-anchor="middle"
       fill="#f8fafc"
       font-family="monospace"
@@ -432,14 +432,14 @@
       font-family="monospace"
       font-size="11">
 
-      61
+      59
     </text>
     
     <rect
       x="600"
-      y="302.95081967213116"
+      y="315.2542372881356"
       width="65"
-      height="177.04918032786884"
+      height="164.74576271186442"
       rx="4"
       fill="#ef4444"
       opacity="0.85">
@@ -466,13 +466,13 @@
 
     <text
       x="632.5"
-      y="292.95081967213116"
+      y="305.2542372881356"
       text-anchor="middle"
       fill="#f8fafc"
       font-family="monospace"
       font-size="11">
 
-      60
+      54
     </text>
     
 
@@ -609,7 +609,7 @@
     <rect
       x="785"
       y="449"
-      width="164.15"
+      width="169.04999999999998"
       height="6"
       rx="3"
       fill="#60a5fa">
@@ -630,7 +630,7 @@
       font-family="monospace"
       font-size="10">
 
-      67
+      69
     </text>
     
     <text
